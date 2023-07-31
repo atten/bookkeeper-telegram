@@ -1,0 +1,22 @@
+version: '2.4'
+services:
+
+  postgres_dev:
+    container_name: bookkeeper-postgres-dev
+    image: 'postgres:15-alpine'
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DATABASE=bookkeeper
+      - POSTGRES_USER=bookkeeper
+      - POSTGRES_PASSWORD=bookkeeper
+    volumes:
+      - 'postgres_dev:/var/lib/postgresql/data'
+    ports:
+      - '5433:5432'
+
+volumes:
+  postgres_dev: {}
+
+networks:
+  default:
+    name: 'bookkeeper-dev-network'

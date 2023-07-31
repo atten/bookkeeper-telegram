@@ -1,0 +1,35 @@
+plugins {
+    // Apply the application plugin to add support for building a CLI application in Java.
+    id 'application'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Use JUnit Jupiter for testing.
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'
+
+    // database
+    implementation 'jakarta.persistence:jakarta.persistence-api:3.1.0'
+    implementation 'org.hibernate.orm:hibernate-core:6.2.7.Final'
+    implementation 'org.postgresql:postgresql:42.3.8'
+
+    // telegram
+    implementation 'com.github.pengrad:java-telegram-bot-api:6.7.0'
+
+    // logging
+    implementation 'org.slf4j:slf4j-api:2.0.5'
+    implementation 'org.slf4j:slf4j-simple:2.0.5'
+}
+
+application {
+    // Define the main class for the application.
+    mainClass = 'bookkeeper.telegram.App'
+}
+
+tasks.named('test') {
+    // Use JUnit Platform for unit tests.
+    useJUnitPlatform()
+}
