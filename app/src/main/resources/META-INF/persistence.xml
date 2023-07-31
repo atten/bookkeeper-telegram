@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
+             version="2.0">
+    <persistence-unit name="default">
+        <class>bookkeeper.entities.TelegramUser</class>
+        <class>bookkeeper.entities.Account</class>
+        <class>bookkeeper.entities.AccountTransaction</class>
+        <class>bookkeeper.entities.MerchantExpenditure</class>
+        <properties>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+            <property name="jakarta.persistence.jdbc.driver" value="org.postgresql.Driver"/>
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:postgresql://localhost:5433/bookkeeper"/>
+            <property name="jakarta.persistence.jdbc.user" value="bookkeeper"/>
+            <property name="jakarta.persistence.jdbc.password" value="bookkeeper"/>
+        </properties>
+    </persistence-unit>
+</persistence>
