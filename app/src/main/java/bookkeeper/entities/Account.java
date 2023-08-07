@@ -23,6 +23,10 @@ public class Account {
     @Column(nullable = false, name = "created_at")
     private Instant createdAt;
 
+    public String getName() {
+        return name;
+    }
+
     public void setName(String name) {
         this.name = name;
     }

@@ -33,6 +33,14 @@ public class AccountTransaction {
     @Column(nullable = false)
     private Instant timestamp;  // the moment when transaction happened
 
+    public long getId() {
+        return id;
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
     public void setAccount(Account account) {
         this.account = account;
     }
@@ -67,5 +75,13 @@ public class AccountTransaction {
 
     public void setTimestamp(Instant timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public Instant getApprovedAt() {
+        return approvedAt;
+    }
+
+    public void setApprovedAt(Instant approvedAt) {
+        this.approvedAt = approvedAt;
     }
 }
