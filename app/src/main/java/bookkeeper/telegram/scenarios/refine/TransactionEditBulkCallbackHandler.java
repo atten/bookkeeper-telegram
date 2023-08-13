@@ -1,15 +1,15 @@
-package bookkeeper.telegram;
+package bookkeeper.telegram.scenarios.refine;
 
 import bookkeeper.repositories.AccountTransactionRepository;
 import bookkeeper.repositories.TelegramUserRepository;
-import bookkeeper.telegram.callbacks.TransactionEditBulkCallback;
+import bookkeeper.telegram.shared.AbstractHandler;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Update;
 
 import java.util.stream.Collectors;
 
-import static bookkeeper.telegram.responses.TransactionResponseFactory.getResponseKeyboard;
-import static bookkeeper.telegram.responses.TransactionResponseFactory.getResponseMessage;
+import static bookkeeper.telegram.shared.TransactionResponseFactory.getResponseKeyboard;
+import static bookkeeper.telegram.shared.TransactionResponseFactory.getResponseMessage;
 
 
 /**
@@ -18,13 +18,13 @@ import static bookkeeper.telegram.responses.TransactionResponseFactory.getRespon
 public class TransactionEditBulkCallbackHandler extends AbstractHandler {
     private final AccountTransactionRepository transactionRepository;
 
-    TransactionEditBulkCallbackHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository, AccountTransactionRepository transactionRepository) {
+    public TransactionEditBulkCallbackHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository, AccountTransactionRepository transactionRepository) {
         super(bot, telegramUserRepository);
         this.transactionRepository = transactionRepository;
     }
 
     @Override
-    Boolean handle(Update update) {
+    public Boolean handle(Update update) {
         var callbackMessage = getCallbackMessage(update);
         if (!(callbackMessage instanceof TransactionEditBulkCallback))
             return false;

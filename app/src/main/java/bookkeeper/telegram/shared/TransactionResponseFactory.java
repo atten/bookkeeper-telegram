@@ -1,11 +1,11 @@
-package bookkeeper.telegram.responses;
+package bookkeeper.telegram.shared;
 
 import bookkeeper.entities.AccountTransaction;
 import bookkeeper.enums.Expenditure;
-import bookkeeper.telegram.callbacks.ExpenditurePickCallback;
-import bookkeeper.telegram.callbacks.TransactionApproveBulkCallback;
-import bookkeeper.telegram.callbacks.TransactionApproveCallback;
-import bookkeeper.telegram.callbacks.TransactionEditBulkCallback;
+import bookkeeper.telegram.scenarios.refine.SelectExpenditureCallback;
+import bookkeeper.telegram.scenarios.refine.TransactionApproveBulkCallback;
+import bookkeeper.telegram.scenarios.refine.TransactionApproveCallback;
+import bookkeeper.telegram.scenarios.refine.TransactionEditBulkCallback;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 
 import java.math.BigDecimal;
@@ -88,7 +88,7 @@ public class TransactionResponseFactory {
 
     public static InlineKeyboardMarkup getResponseKeyboard(AccountTransaction transaction) {
         var kb = new InlineKeyboardMarkup();
-        var button1 = new ExpenditurePickCallback(transaction.getId()).asButton("Уточнить категорию");
+        var button1 = new SelectExpenditureCallback(transaction.getId()).asButton("Уточнить категорию");
         var button2 = new TransactionApproveCallback(transaction.getId()).asButton("Подтвердить");
 
         if (transaction.isApproved())
@@ -99,7 +99,7 @@ public class TransactionResponseFactory {
 
     public static InlineKeyboardMarkup getResponseKeyboard(AccountTransaction transaction, List<Long> pendingTransactionIds) {
         var kb = new InlineKeyboardMarkup();
-        var button1 = new ExpenditurePickCallback(transaction.getId()).setPendingTransactionIds(pendingTransactionIds).asButton("Уточнить категорию");
+        var button1 = new SelectExpenditureCallback(transaction.getId()).setPendingTransactionIds(pendingTransactionIds).asButton("Уточнить категорию");
         var callback2 = new TransactionApproveCallback(transaction.getId()).setPendingTransactionIds(pendingTransactionIds);
 
         if (transaction.isApproved()) {

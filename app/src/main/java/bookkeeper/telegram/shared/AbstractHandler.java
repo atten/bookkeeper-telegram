@@ -1,9 +1,7 @@
-package bookkeeper.telegram;
+package bookkeeper.telegram.shared;
 
 import bookkeeper.entities.TelegramUser;
 import bookkeeper.repositories.TelegramUserRepository;
-import bookkeeper.telegram.callbacks.CallbackMessage;
-import bookkeeper.telegram.callbacks.CallbackMessageRegistry;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.User;
@@ -26,12 +24,12 @@ public abstract class AbstractHandler {
     private final CallbackMessageRegistry callbackMessageRegistry = new CallbackMessageRegistry();
     protected final Logger logger = LoggerFactory.getLogger(getClass());
 
-    AbstractHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository) {
+    public AbstractHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository) {
         this.bot = bot;
         this.telegramUserRepository = telegramUserRepository;
     }
 
-    abstract Boolean handle(Update update);
+    public abstract Boolean handle(Update update);
 
     protected void sendMessage(Update update, String text, @Nullable Keyboard keyboard, Boolean reply) {
         var telegramUser = getTelegramUser(update);

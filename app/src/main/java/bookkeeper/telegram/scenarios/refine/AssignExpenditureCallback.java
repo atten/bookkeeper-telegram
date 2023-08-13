@@ -1,6 +1,7 @@
-package bookkeeper.telegram.callbacks;
+package bookkeeper.telegram.scenarios.refine;
 
 import bookkeeper.enums.Expenditure;
+import bookkeeper.telegram.shared.CallbackMessage;
 
 import java.text.ParseException;
 import java.util.Arrays;
@@ -8,17 +9,17 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class ExpenditureAssignCallback extends CallbackMessage {
+public class AssignExpenditureCallback extends CallbackMessage {
     private static final String KEYWORD = "assign_expenditure";
     private long transactionId;
     private Expenditure expenditure;
     private List<Long> pendingTransactionIds;
 
-    public ExpenditureAssignCallback() {
+    public AssignExpenditureCallback() {
 
     }
 
-    public ExpenditureAssignCallback(long transactionId, Expenditure expenditure) {
+    public AssignExpenditureCallback(long transactionId, Expenditure expenditure) {
         this.transactionId = transactionId;
         this.expenditure = expenditure;
         this.pendingTransactionIds = List.of();
@@ -28,7 +29,7 @@ public class ExpenditureAssignCallback extends CallbackMessage {
     public CallbackMessage parse(String message) throws ParseException {
         var parts = message.split("/");
         if (parts.length >= 3 && Objects.equals(parts[0], KEYWORD)) {
-            var result = new ExpenditureAssignCallback(Long.parseLong(parts[1]), Expenditure.valueOf(parts[2]));
+            var result = new AssignExpenditureCallback(Long.parseLong(parts[1]), Expenditure.valueOf(parts[2]));
             if (parts.length == 4) {
                 var pendingTransactionIds = Arrays.stream(parts[3].split(",")).map(Long::parseLong).collect(Collectors.toList());
                 result.setPendingTransactionIds(pendingTransactionIds);
@@ -50,7 +51,7 @@ public class ExpenditureAssignCallback extends CallbackMessage {
         return pendingTransactionIds;
     }
 
-    public ExpenditureAssignCallback setPendingTransactionIds(List<Long> pendingTransactionIds) {
+    public AssignExpenditureCallback setPendingTransactionIds(List<Long> pendingTransactionIds) {
         this.pendingTransactionIds = pendingTransactionIds;
         return this;
     }

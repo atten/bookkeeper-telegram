@@ -1,6 +1,7 @@
-package bookkeeper.telegram.callbacks;
+package bookkeeper.telegram.scenarios.refine;
 
 import bookkeeper.enums.Expenditure;
+import bookkeeper.telegram.shared.CallbackMessage;
 
 import java.text.ParseException;
 import java.util.Objects;

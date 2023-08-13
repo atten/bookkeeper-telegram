@@ -1,6 +1,7 @@
 package bookkeeper.telegram;
 
 import bookkeeper.repositories.TelegramUserRepository;
+import bookkeeper.telegram.shared.AbstractHandler;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Update;
 
@@ -10,7 +11,7 @@ import java.util.Objects;
  * Scenario: User starts bot usage.
  */
 public class SlashStartHandler extends AbstractHandler {
-    SlashStartHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository) {
+    public SlashStartHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository) {
         super(bot, telegramUserRepository);
     }
 
@@ -18,7 +19,7 @@ public class SlashStartHandler extends AbstractHandler {
      * Display welcome message.
      */
     @Override
-    Boolean handle(Update update) {
+    public Boolean handle(Update update) {
         if (update.message() == null || !Objects.equals(update.message().text(), "/start"))
             return false;
 

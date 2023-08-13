@@ -6,6 +6,9 @@ import bookkeeper.repositories.AccountTransactionRepository;
 import bookkeeper.repositories.MerchantExpenditureRepository;
 import bookkeeper.repositories.TelegramUserRepository;
 import bookkeeper.services.matchers.shared.ExpenditureMatcherByMerchant;
+import bookkeeper.telegram.scenarios.refine.*;
+import bookkeeper.telegram.scenarios.store.TinkoffSmsHandler;
+import bookkeeper.telegram.shared.AbstractHandler;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.Update;
@@ -38,8 +41,8 @@ public class Bot {
             new SlashStartHandler(bot, telegramUserRepository),
             new SlashClearAssociationsHandler(bot, telegramUserRepository, merchantExpenditureRepository),
             new TinkoffSmsHandler(bot, telegramUserRepository, accountRepository, transactionRepository, merchantBalanceCategoryMatcher),
-            new ExpenditurePickCallbackHandler(bot, telegramUserRepository),
-            new ExpenditureAssignCallbackHandler(bot, telegramUserRepository, transactionRepository, merchantExpenditureRepository),
+            new SelectExpenditureCallbackHandler(bot, telegramUserRepository),
+            new AssignExpenditureCallbackHandler(bot, telegramUserRepository, transactionRepository, merchantExpenditureRepository),
             new MerchantExpenditureRemoveCallbackHandler(bot, telegramUserRepository, merchantExpenditureRepository),
             new TransactionApproveCallbackHandler(bot, telegramUserRepository, transactionRepository),
             new TransactionApproveBulkCallbackHandler(bot, telegramUserRepository, transactionRepository),

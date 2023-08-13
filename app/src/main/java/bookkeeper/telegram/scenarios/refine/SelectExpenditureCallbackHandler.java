@@ -1,9 +1,8 @@
-package bookkeeper.telegram;
+package bookkeeper.telegram.scenarios.refine;
 
 import bookkeeper.enums.Expenditure;
 import bookkeeper.repositories.TelegramUserRepository;
-import bookkeeper.telegram.callbacks.ExpenditureAssignCallback;
-import bookkeeper.telegram.callbacks.ExpenditurePickCallback;
+import bookkeeper.telegram.shared.AbstractHandler;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
@@ -18,9 +17,9 @@ import java.util.stream.Collectors;
 /**
  * Scenario: user assigns transaction expenditure.
  */
-public class ExpenditurePickCallbackHandler extends AbstractHandler {
+public class SelectExpenditureCallbackHandler extends AbstractHandler {
 
-    ExpenditurePickCallbackHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository) {
+    public SelectExpenditureCallbackHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository) {
         super(bot, telegramUserRepository);
     }
 
@@ -28,12 +27,12 @@ public class ExpenditurePickCallbackHandler extends AbstractHandler {
      * Handle "Pick Expenditure" button click: display Expenditures list for given AccountTransaction
      */
     @Override
-    Boolean handle(Update update) {
+    public Boolean handle(Update update) {
         var callbackMessage = getCallbackMessage(update);
-        if (!(callbackMessage instanceof ExpenditurePickCallback))
+        if (!(callbackMessage instanceof SelectExpenditureCallback))
             return false;
 
-        var cm = ((ExpenditurePickCallback) callbackMessage);
+        var cm = ((SelectExpenditureCallback) callbackMessage);
         editMessage(update, getResponseKeyboard(cm.getTransactionId(), cm.getPendingTransactionIds()));
         return true;
     }
@@ -46,7 +45,7 @@ public class ExpenditurePickCallbackHandler extends AbstractHandler {
         Arrays.stream(Expenditure.values())
             .map(expenditure ->
                 // prepare buttons with expenditures selector
-                new ExpenditureAssignCallback(transactionId, expenditure).setPendingTransactionIds(pendingTransactionIds).asButton(expenditure.getName())
+                new AssignExpenditureCallback(transactionId, expenditure).setPendingTransactionIds(pendingTransactionIds).asButton(expenditure.getName())
             ).collect(
                 // split to N map items each contains a list of 3 buttons
                 Collectors.groupingBy(i -> index.getAndIncrement() / groupBy)

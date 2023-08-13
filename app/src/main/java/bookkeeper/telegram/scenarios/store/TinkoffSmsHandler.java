@@ -1,4 +1,4 @@
-package bookkeeper.telegram;
+package bookkeeper.telegram.scenarios.store;
 
 import bookkeeper.entities.AccountTransaction;
 import bookkeeper.entities.TelegramUser;
@@ -8,6 +8,7 @@ import bookkeeper.repositories.TelegramUserRepository;
 import bookkeeper.services.matchers.shared.ExpenditureMatcherByMerchant;
 import bookkeeper.services.registries.TransactionParserRegistry;
 import bookkeeper.services.registries.factories.TransactionParserRegistryFactoryTinkoff;
+import bookkeeper.telegram.shared.AbstractHandler;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Update;
 
@@ -15,8 +16,8 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static bookkeeper.telegram.responses.TransactionResponseFactory.getResponseKeyboard;
-import static bookkeeper.telegram.responses.TransactionResponseFactory.getResponseMessage;
+import static bookkeeper.telegram.shared.TransactionResponseFactory.getResponseKeyboard;
+import static bookkeeper.telegram.shared.TransactionResponseFactory.getResponseMessage;
 
 
 /**
@@ -26,7 +27,7 @@ public class TinkoffSmsHandler extends AbstractHandler {
     private final TransactionParserRegistry transactionParserRegistry;
     private final AccountTransactionRepository transactionRepository;
 
-    TinkoffSmsHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository, AccountRepository accountRepository, AccountTransactionRepository transactionRepository, ExpenditureMatcherByMerchant expenditureMatcherByMerchant) {
+    public TinkoffSmsHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository, AccountRepository accountRepository, AccountTransactionRepository transactionRepository, ExpenditureMatcherByMerchant expenditureMatcherByMerchant) {
         super(bot, telegramUserRepository);
         this.transactionParserRegistry = new TransactionParserRegistryFactoryTinkoff(accountRepository, expenditureMatcherByMerchant).create();
         this.transactionRepository = transactionRepository;
@@ -37,7 +38,7 @@ public class TinkoffSmsHandler extends AbstractHandler {
      * Take Raw SMS list, Transform to AccountTransaction and put to AccountTransactionRepository.
      */
     @Override
-    Boolean handle(Update update) {
+    public Boolean handle(Update update) {
         if (update.message() == null)
             return false;
 

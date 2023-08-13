@@ -1,5 +1,6 @@
-package bookkeeper.telegram.callbacks;
+package bookkeeper.telegram.shared;
 
+import bookkeeper.telegram.scenarios.refine.*;
 import com.pengrad.telegrambot.model.Update;
 import org.jetbrains.annotations.Nullable;
 
@@ -9,8 +10,8 @@ import java.util.Objects;
 
 public class CallbackMessageRegistry {
     List<CallbackMessage> callbackMessages = List.of(
-        new ExpenditurePickCallback(),
-        new ExpenditureAssignCallback(),
+        new SelectExpenditureCallback(),
+        new AssignExpenditureCallback(),
         new MerchantExpenditureRemoveCallback(),
         new TransactionApproveCallback(),
         new TransactionApproveBulkCallback(),

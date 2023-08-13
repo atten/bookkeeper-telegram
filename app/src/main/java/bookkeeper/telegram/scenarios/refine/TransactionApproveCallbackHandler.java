@@ -1,15 +1,15 @@
-package bookkeeper.telegram;
+package bookkeeper.telegram.scenarios.refine;
 
 import bookkeeper.repositories.AccountTransactionRepository;
 import bookkeeper.repositories.TelegramUserRepository;
-import bookkeeper.telegram.callbacks.TransactionApproveCallback;
+import bookkeeper.telegram.shared.AbstractHandler;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Update;
 
 import java.util.stream.Collectors;
 
-import static bookkeeper.telegram.responses.TransactionResponseFactory.getResponseKeyboard;
-import static bookkeeper.telegram.responses.TransactionResponseFactory.getResponseMessage;
+import static bookkeeper.telegram.shared.TransactionResponseFactory.getResponseKeyboard;
+import static bookkeeper.telegram.shared.TransactionResponseFactory.getResponseMessage;
 
 
 /**
@@ -18,7 +18,7 @@ import static bookkeeper.telegram.responses.TransactionResponseFactory.getRespon
 public class TransactionApproveCallbackHandler extends AbstractHandler {
     private final AccountTransactionRepository transactionRepository;
 
-    TransactionApproveCallbackHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository, AccountTransactionRepository transactionRepository) {
+    public TransactionApproveCallbackHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository, AccountTransactionRepository transactionRepository) {
         super(bot, telegramUserRepository);
         this.transactionRepository = transactionRepository;
     }
@@ -27,7 +27,7 @@ public class TransactionApproveCallbackHandler extends AbstractHandler {
      * Handle "Approve transaction" click: mark given transaction as approved.
      */
     @Override
-    Boolean handle(Update update) {
+    public Boolean handle(Update update) {
         var callbackMessage = getCallbackMessage(update);
         if (!(callbackMessage instanceof TransactionApproveCallback))
             return false;

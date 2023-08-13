@@ -1,4 +1,6 @@
-package bookkeeper.telegram.callbacks;
+package bookkeeper.telegram.scenarios.refine;
+
+import bookkeeper.telegram.shared.CallbackMessage;
 
 import java.text.ParseException;
 import java.util.Arrays;
@@ -6,16 +8,16 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class ExpenditurePickCallback extends CallbackMessage {
-    private static final String KEYWORD = "pick_expenditure";
+public class TransactionApproveCallback extends CallbackMessage {
+    private static final String KEYWORD = "approve_transaction";
     private long transactionId;
     private List<Long> pendingTransactionIds;
 
-    public ExpenditurePickCallback() {
+    public TransactionApproveCallback() {
 
     }
 
-    public ExpenditurePickCallback(long transactionId) {
+    public TransactionApproveCallback(long transactionId) {
         this.transactionId = transactionId;
         this.pendingTransactionIds = List.of();
     }
@@ -24,7 +26,7 @@ public class ExpenditurePickCallback extends CallbackMessage {
     public CallbackMessage parse(String message) throws ParseException {
         var parts = message.split("/");
         if (parts.length >= 2 && Objects.equals(parts[0], KEYWORD)) {
-            var result = new ExpenditurePickCallback(Long.parseLong(parts[1]));
+            var result = new TransactionApproveCallback(Long.parseLong(parts[1]));
             if (parts.length == 3) {
                 var pendingTransactionIds = Arrays.stream(parts[2].split(",")).map(Long::parseLong).collect(Collectors.toList());
                 result.setPendingTransactionIds(pendingTransactionIds);
@@ -46,7 +48,7 @@ public class ExpenditurePickCallback extends CallbackMessage {
         return pendingTransactionIds;
     }
 
-    public ExpenditurePickCallback setPendingTransactionIds(List<Long> pendingTransactionIds) {
+    public TransactionApproveCallback setPendingTransactionIds(List<Long> pendingTransactionIds) {
         this.pendingTransactionIds = pendingTransactionIds;
         return this;
     }

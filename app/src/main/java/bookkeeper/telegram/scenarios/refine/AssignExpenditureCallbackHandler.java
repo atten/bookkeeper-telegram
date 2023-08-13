@@ -1,4 +1,4 @@
-package bookkeeper.telegram;
+package bookkeeper.telegram.scenarios.refine;
 
 import bookkeeper.enums.Expenditure;
 import bookkeeper.repositories.AccountTransactionRepository;
@@ -7,8 +7,7 @@ import bookkeeper.repositories.TelegramUserRepository;
 import bookkeeper.services.parsers.Spending;
 import bookkeeper.services.registries.SpendingParserRegistry;
 import bookkeeper.services.registries.factories.SpendingParserRegistryFactoryAll;
-import bookkeeper.telegram.callbacks.ExpenditureAssignCallback;
-import bookkeeper.telegram.callbacks.MerchantExpenditureRemoveCallback;
+import bookkeeper.telegram.shared.AbstractHandler;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
@@ -16,19 +15,19 @@ import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import java.text.ParseException;
 import java.util.stream.Collectors;
 
-import static bookkeeper.telegram.responses.TransactionResponseFactory.getResponseKeyboard;
-import static bookkeeper.telegram.responses.TransactionResponseFactory.getResponseMessage;
+import static bookkeeper.telegram.shared.TransactionResponseFactory.getResponseKeyboard;
+import static bookkeeper.telegram.shared.TransactionResponseFactory.getResponseMessage;
 
 
 /**
  * Scenario: user assigns transaction expenditure.
  */
-public class ExpenditureAssignCallbackHandler extends AbstractHandler {
+public class AssignExpenditureCallbackHandler extends AbstractHandler {
     private final AccountTransactionRepository transactionRepository;
     private final MerchantExpenditureRepository merchantExpenditureRepository;
     private final SpendingParserRegistry spendingParserRegistry = SpendingParserRegistryFactoryAll.create();
 
-    ExpenditureAssignCallbackHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository, AccountTransactionRepository transactionRepository, MerchantExpenditureRepository merchantExpenditureRepository) {
+    public AssignExpenditureCallbackHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository, AccountTransactionRepository transactionRepository, MerchantExpenditureRepository merchantExpenditureRepository) {
         super(bot, telegramUserRepository);
         this.transactionRepository = transactionRepository;
         this.merchantExpenditureRepository = merchantExpenditureRepository;
@@ -40,12 +39,12 @@ public class ExpenditureAssignCallbackHandler extends AbstractHandler {
      * 2. Store association with given merchant for further transactions (if applicable).
      */
     @Override
-    Boolean handle(Update update) {
+    public Boolean handle(Update update) {
         var callbackMessage = getCallbackMessage(update);
-        if (!(callbackMessage instanceof ExpenditureAssignCallback))
+        if (!(callbackMessage instanceof AssignExpenditureCallback))
             return false;
 
-        var cm = ((ExpenditureAssignCallback) callbackMessage);
+        var cm = ((AssignExpenditureCallback) callbackMessage);
         var transaction = transactionRepository.get(cm.getTransactionId());
         var previousExpenditure = transaction.getExpenditure();
         var newExpenditure = cm.getExpenditure();

@@ -2,12 +2,13 @@ package bookkeeper.telegram;
 
 import bookkeeper.repositories.MerchantExpenditureRepository;
 import bookkeeper.repositories.TelegramUserRepository;
+import bookkeeper.telegram.shared.AbstractHandler;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Update;
 
 import java.util.Objects;
 
-import static bookkeeper.telegram.responses.TransactionResponseFactory.getTextPluralForm;
+import static bookkeeper.telegram.shared.TransactionResponseFactory.getTextPluralForm;
 
 /**
  * Scenario: User clears merchant-expenditure associations.
@@ -15,13 +16,13 @@ import static bookkeeper.telegram.responses.TransactionResponseFactory.getTextPl
 public class SlashClearAssociationsHandler extends AbstractHandler {
     private final MerchantExpenditureRepository merchantExpenditureRepository;
 
-    SlashClearAssociationsHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository, MerchantExpenditureRepository merchantExpenditureRepository) {
+    public SlashClearAssociationsHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository, MerchantExpenditureRepository merchantExpenditureRepository) {
         super(bot, telegramUserRepository);
         this.merchantExpenditureRepository = merchantExpenditureRepository;
     }
 
     @Override
-    Boolean handle(Update update) {
+    public Boolean handle(Update update) {
         if (update.message() == null || !Objects.equals(update.message().text(), "/clear_associations"))
             return false;
 
