@@ -33,7 +33,7 @@ public class ExpenditurePickCallbackHandler extends AbstractHandler {
             return false;
 
         var transactionId = ((ExpenditurePickCallback) callbackMessage).getTransactionId();
-        sendMessage(update, "Выберите категорию", getResponseKeyboard(transactionId));
+        editMessage(update, getResponseKeyboard(transactionId));
         return true;
     }
 

@@ -77,8 +77,8 @@ public class AccountTransaction {
         this.timestamp = timestamp;
     }
 
-    public Instant getApprovedAt() {
-        return approvedAt;
+    public boolean isApproved() {
+        return approvedAt != null;
     }
 
     public void setApprovedAt(Instant approvedAt) {

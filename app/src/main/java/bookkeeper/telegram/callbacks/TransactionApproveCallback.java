@@ -19,9 +19,13 @@ public class TransactionApproveCallback extends CallbackMessage {
     public CallbackMessage parse(String message) throws ParseException {
         var parts = message.split("/");
         if (parts.length == 2 && Objects.equals(parts[0], KEYWORD)) {
-            return new TransactionApproveCallback(Long.getLong(parts[1]));
+            return new TransactionApproveCallback(Long.parseLong(parts[1]));
         }
         throw new ParseException("", 0);
+    }
+
+    public long getTransactionId() {
+        return transactionId;
     }
 
     public String toString() {

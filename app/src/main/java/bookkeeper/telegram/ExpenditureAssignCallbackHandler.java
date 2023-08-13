@@ -13,6 +13,9 @@ import com.pengrad.telegrambot.model.Update;
 
 import java.text.ParseException;
 
+import static bookkeeper.telegram.responses.TransactionResponseFactory.getResponseKeyboard;
+import static bookkeeper.telegram.responses.TransactionResponseFactory.getResponseMessage;
+
 
 /**
  * Scenario: user assigns transaction expenditure.
@@ -47,20 +50,19 @@ public class ExpenditureAssignCallbackHandler extends AbstractHandler {
 
         // step 1
         transactionRepository.associateExpenditure(transaction, newExpenditure);
+        editMessage(update, getResponseMessage(transaction), getResponseKeyboard(transaction));
 
         // step 2
         if (useAssociationFurther) {
+            // restore spending from transaction raw message
             Spending spending;
             try {
-                // restore spending from transaction raw message
                 spending = spendingParserRegistry.parse(transaction.getRaw());
             } catch (ParseException e) {
                 throw new RuntimeException(e);
             }
             merchantExpenditureRepository.addMerchantAssociation(spending.getMerchant(), newExpenditure, getTelegramUser(update));
-            sendMessage(update, String.format("Кладём запись в категорию '%s'. Она будет использоваться по умолчанию для последующих записей '%s'.", newExpenditure.getName(), spending.getMerchant()));
-        } else {
-            sendMessage(update, String.format("Кладём запись в категорию '%s'", newExpenditure.getName()));
+            sendMessage(update, String.format("Категория '%s' будет использоваться по умолчанию для последующих записей '%s'.", newExpenditure.getName(), spending.getMerchant()));
         }
 
         return true;
