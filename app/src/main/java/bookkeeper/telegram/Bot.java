@@ -35,6 +35,7 @@ public class Bot {
 
         handlers = List.of(
             new LoggingHandler(bot, telegramUserRepository),
+            new SlashStartHandler(bot, telegramUserRepository),
             new TinkoffSmsHandler(bot, telegramUserRepository, accountRepository, transactionRepository, merchantBalanceCategoryMatcher),
             new ExpenditurePickCallbackHandler(bot, telegramUserRepository),
             new ExpenditureAssignCallbackHandler(bot, telegramUserRepository, transactionRepository, merchantExpenditureRepository),
