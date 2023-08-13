@@ -39,6 +39,7 @@ public class Bot {
             new TinkoffSmsHandler(bot, telegramUserRepository, accountRepository, transactionRepository, merchantBalanceCategoryMatcher),
             new ExpenditurePickCallbackHandler(bot, telegramUserRepository),
             new ExpenditureAssignCallbackHandler(bot, telegramUserRepository, transactionRepository, merchantExpenditureRepository),
+            new MerchantExpenditureRemoveCallbackHandler(bot, telegramUserRepository, merchantExpenditureRepository),
             new TransactionApproveCallbackHandler(bot, telegramUserRepository, transactionRepository),
             new TransactionApproveBulkCallbackHandler(bot, telegramUserRepository, transactionRepository),
             new TransactionEditBulkCallbackHandler(bot, telegramUserRepository, transactionRepository),

@@ -35,6 +35,13 @@ public class MerchantExpenditureRepository {
         return manager.merge(obj);
     }
 
+    public void removeMerchantAssociation(String merchant, Expenditure expenditure, TelegramUser user) {
+        var obj = find(merchant, user);
+        if (obj == null || obj.getExpenditure() != expenditure)
+            return;
+        manager.remove(obj);
+    }
+
     private MerchantExpenditure newItemFactory(String merchant, Expenditure expenditure, TelegramUser user) {
         var obj = new MerchantExpenditure();
         obj.setMerchant(merchant);

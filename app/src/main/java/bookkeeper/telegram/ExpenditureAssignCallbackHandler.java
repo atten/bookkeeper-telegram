@@ -8,8 +8,10 @@ import bookkeeper.services.parsers.Spending;
 import bookkeeper.services.registries.SpendingParserRegistry;
 import bookkeeper.services.registries.factories.SpendingParserRegistryFactoryAll;
 import bookkeeper.telegram.callbacks.ExpenditureAssignCallback;
+import bookkeeper.telegram.callbacks.MerchantExpenditureRemoveCallback;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Update;
+import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 
 import java.text.ParseException;
 import java.util.stream.Collectors;
@@ -70,8 +72,11 @@ public class ExpenditureAssignCallbackHandler extends AbstractHandler {
             } catch (ParseException e) {
                 throw new RuntimeException(e);
             }
-            merchantExpenditureRepository.addMerchantAssociation(spending.getMerchant(), newExpenditure, getTelegramUser(update));
-            sendMessage(update, String.format("Категория '%s' будет использоваться по умолчанию для последующих записей '%s'.", newExpenditure.getName(), spending.getMerchant()));
+            var merchant = spending.getMerchant();
+            merchantExpenditureRepository.addMerchantAssociation(merchant, newExpenditure, getTelegramUser(update));
+            var message = String.format("Категория *%s* будет использоваться по умолчанию для последующих записей `%s`.", newExpenditure.getName(), merchant);
+            var keyboard = new InlineKeyboardMarkup().addRow(new MerchantExpenditureRemoveCallback(merchant, newExpenditure).asButton("Отмена"));
+            sendMessage(update, message, keyboard);
         }
 
         return true;
