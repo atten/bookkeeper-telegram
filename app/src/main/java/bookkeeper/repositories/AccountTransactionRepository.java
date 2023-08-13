@@ -10,6 +10,7 @@ import org.jetbrains.annotations.Nullable;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Currency;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -22,6 +23,12 @@ public class AccountTransactionRepository {
 
     public AccountTransaction get(long transactionId) {
         return manager.find(AccountTransaction.class, transactionId);
+    }
+
+    public List<AccountTransaction> getList(List<Long> transactionIds) {
+        var sql = "SELECT i FROM AccountTransaction i WHERE i.id IN :transactionIds";
+        var query = manager.createQuery(sql, AccountTransaction.class).setParameter("transactionIds", transactionIds);
+        return query.getResultList();
     }
 
     @Nullable

@@ -12,6 +12,7 @@ import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Update;
 
 import java.text.ParseException;
+import java.util.stream.Collectors;
 
 import static bookkeeper.telegram.responses.TransactionResponseFactory.getResponseKeyboard;
 import static bookkeeper.telegram.responses.TransactionResponseFactory.getResponseMessage;
@@ -47,10 +48,18 @@ public class ExpenditureAssignCallbackHandler extends AbstractHandler {
         var previousExpenditure = transaction.getExpenditure();
         var newExpenditure = cm.getExpenditure();
         var useAssociationFurther = previousExpenditure == Expenditure.OTHER && newExpenditure != Expenditure.OTHER;
+        var pendingTransactionsCount = cm.getPendingTransactionIds().size();
 
         // step 1
         transactionRepository.associateExpenditure(transaction, newExpenditure);
-        editMessage(update, getResponseMessage(transaction), getResponseKeyboard(transaction));
+
+        if (pendingTransactionsCount == 0) {
+            editMessage(update, getResponseMessage(transaction), getResponseKeyboard(transaction));
+        } else {
+            var nextPendingTransaction = transactionRepository.get(cm.getPendingTransactionIds().get(0));
+            var remainingTransactionIds = cm.getPendingTransactionIds().stream().skip(1).collect(Collectors.toList());
+            editMessage(update, getResponseMessage(nextPendingTransaction, remainingTransactionIds.size()), getResponseKeyboard(nextPendingTransaction, remainingTransactionIds));
+        }
 
         // step 2
         if (useAssociationFurther) {

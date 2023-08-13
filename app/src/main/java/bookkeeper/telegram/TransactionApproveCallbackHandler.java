@@ -3,9 +3,13 @@ package bookkeeper.telegram;
 import bookkeeper.repositories.AccountTransactionRepository;
 import bookkeeper.repositories.TelegramUserRepository;
 import bookkeeper.telegram.callbacks.TransactionApproveCallback;
-import bookkeeper.telegram.responses.TransactionResponseFactory;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Update;
+
+import java.util.stream.Collectors;
+
+import static bookkeeper.telegram.responses.TransactionResponseFactory.getResponseKeyboard;
+import static bookkeeper.telegram.responses.TransactionResponseFactory.getResponseMessage;
 
 
 /**
@@ -30,10 +34,19 @@ public class TransactionApproveCallbackHandler extends AbstractHandler {
 
         var cm = ((TransactionApproveCallback) callbackMessage);
         var transaction = transactionRepository.get(cm.getTransactionId());
+        var pendingTransactionsCount = cm.getPendingTransactionIds().size();
 
         transactionRepository.approve(transaction);
 
-        editMessage(update, TransactionResponseFactory.getResponseKeyboard(transaction));
+        if (pendingTransactionsCount == 0) {
+            editMessage(update, getResponseKeyboard(transaction));
+        }
+        else {
+            var nextPendingTransaction = transactionRepository.get(cm.getPendingTransactionIds().get(0));
+            var remainingTransactionIds = cm.getPendingTransactionIds().stream().skip(1).collect(Collectors.toList());
+            editMessage(update, getResponseMessage(nextPendingTransaction, remainingTransactionIds.size()), getResponseKeyboard(nextPendingTransaction, remainingTransactionIds));
+        }
+
         return true;
     }
 }

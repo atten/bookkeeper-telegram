@@ -3,8 +3,9 @@ package bookkeeper.telegram.responses;
 import bookkeeper.entities.AccountTransaction;
 import bookkeeper.enums.Expenditure;
 import bookkeeper.telegram.callbacks.ExpenditurePickCallback;
+import bookkeeper.telegram.callbacks.TransactionApproveBulkCallback;
 import bookkeeper.telegram.callbacks.TransactionApproveCallback;
-import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
+import bookkeeper.telegram.callbacks.TransactionEditBulkCallback;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 
 import java.math.BigDecimal;
@@ -12,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 public class TransactionResponseFactory {
 
@@ -58,13 +60,26 @@ public class TransactionResponseFactory {
         return getResponseMessage(List.of(transaction));
     }
 
+    public static String getResponseMessage(AccountTransaction transaction, Integer remainingCount) {
+        return String.format("`%s`\n%s\nОсталось: %s", transaction.getRaw(), getResponseMessage(transaction), remainingCount);
+    }
+
     public static InlineKeyboardMarkup getResponseKeyboard(List<AccountTransaction> transactions) {
         if (transactions.size() == 1) {
             var transaction = transactions.get(0);
             return getResponseKeyboard(transaction);
         }
         var kb = new InlineKeyboardMarkup();
-        return kb.addRow(new InlineKeyboardButton("Уточнить категории"), new InlineKeyboardButton("Подтвердить все"));
+        var transactionIds = transactions.stream().map(AccountTransaction::getId).collect(Collectors.toList());
+        var approvedCount = transactions.stream().map(AccountTransaction::isApproved).filter(aBoolean -> aBoolean).count();
+
+        var button1 = new TransactionEditBulkCallback(transactionIds).asButton("Разобрать");
+        var button2 = new TransactionApproveBulkCallback(transactionIds).asButton("Подтвердить все");
+
+        if (approvedCount == transactionIds.size())
+            return kb.addRow(button1);
+
+        return kb.addRow(button1, button2);
     }
 
     public static InlineKeyboardMarkup getResponseKeyboard(AccountTransaction transaction) {
@@ -73,11 +88,24 @@ public class TransactionResponseFactory {
         var button2 = new TransactionApproveCallback(transaction.getId()).asButton("Подтвердить");
 
         if (transaction.isApproved())
-            kb.addRow(button1);
-        else
-            kb.addRow(button1, button2);
+            return kb.addRow(button1);
 
-        return kb;
+        return kb.addRow(button1, button2);
+    }
+
+    public static InlineKeyboardMarkup getResponseKeyboard(AccountTransaction transaction, List<Long> pendingTransactionIds) {
+        var kb = new InlineKeyboardMarkup();
+        var button1 = new ExpenditurePickCallback(transaction.getId()).setPendingTransactionIds(pendingTransactionIds).asButton("Уточнить категорию");
+        var callback2 = new TransactionApproveCallback(transaction.getId()).setPendingTransactionIds(pendingTransactionIds);
+
+        if (transaction.isApproved()) {
+            if (pendingTransactionIds.size() > 0)
+                return kb.addRow(button1, callback2.asButton("Далее"));
+            else
+                return kb.addRow(button1, callback2.asButton("Готово"));
+        }
+
+        return kb.addRow(button1, callback2.asButton("Подтвердить"));
     }
 
     private static String getTextPlural(Integer count, String single, String few, String many) {

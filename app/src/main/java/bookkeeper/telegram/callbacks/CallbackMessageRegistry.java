@@ -11,7 +11,9 @@ public class CallbackMessageRegistry {
     List<CallbackMessage> callbackMessages = List.of(
         new ExpenditurePickCallback(),
         new ExpenditureAssignCallback(),
-        new TransactionApproveCallback()
+        new TransactionApproveCallback(),
+        new TransactionApproveBulkCallback(),
+        new TransactionEditBulkCallback()
     );
 
     @Nullable public CallbackMessage getCallbackMessage(Update update) {

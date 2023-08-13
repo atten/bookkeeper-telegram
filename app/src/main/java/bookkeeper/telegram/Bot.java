@@ -40,6 +40,8 @@ public class Bot {
             new ExpenditurePickCallbackHandler(bot, telegramUserRepository),
             new ExpenditureAssignCallbackHandler(bot, telegramUserRepository, transactionRepository, merchantExpenditureRepository),
             new TransactionApproveCallbackHandler(bot, telegramUserRepository, transactionRepository),
+            new TransactionApproveBulkCallbackHandler(bot, telegramUserRepository, transactionRepository),
+            new TransactionEditBulkCallbackHandler(bot, telegramUserRepository, transactionRepository),
             new UnknownInputHandler(bot, telegramUserRepository)
         );
     }

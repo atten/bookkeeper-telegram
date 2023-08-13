@@ -67,7 +67,7 @@ public abstract class AbstractHandler {
             result = bot.execute(message);
         }
         else if (text != null) {
-            var message = new EditMessageText(getChatId(update), getMessageId(update), text);
+            var message = new EditMessageText(getChatId(update), getMessageId(update), text).parseMode(ParseMode.Markdown);
 
             if (keyboard != null)
                 message = message.replyMarkup(keyboard);
@@ -78,7 +78,7 @@ public abstract class AbstractHandler {
         }
 
         var resultVerbose = result.description() != null ? result.description() : "OK";
-        logger.info("{} {} <- {} ({})", Instant.now(), telegramUser, keyboard, resultVerbose);
+        logger.info("{} {} <- {} ({})", Instant.now(), telegramUser, text, resultVerbose);
     }
 
     protected void editMessage(Update update, String text) {
