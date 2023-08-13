@@ -34,10 +34,6 @@ public class MerchantExpenditure {
         this.expenditure = expenditure;
     }
 
-    public TelegramUser getTelegramUser() {
-        return telegramUser;
-    }
-
     public void setTelegramUser(TelegramUser telegramUser) {
         this.telegramUser = telegramUser;
     }
@@ -48,10 +44,6 @@ public class MerchantExpenditure {
 
     public void setMerchant(String merchant) {
         this.merchant = merchant;
-    }
-
-    public Instant getCreatedAt() {
-        return createdAt;
     }
 
     public void setCreatedAt(Instant createdAt) {

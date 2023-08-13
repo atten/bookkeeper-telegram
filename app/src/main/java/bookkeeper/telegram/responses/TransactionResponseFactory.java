@@ -30,7 +30,7 @@ public class TransactionResponseFactory {
         });
 
         var totalItemsVerbose = String.format(
-            getTextPlural(transactions.size(), "Добавлена запись", "Добавлены %s записи", "Добавлено %s записей"),
+            getTextPluralForm(transactions.size(), "Добавлена запись", "Добавлены %s записи", "Добавлено %s записей"),
             transactions.size()
         );
 
@@ -62,6 +62,10 @@ public class TransactionResponseFactory {
 
     public static String getResponseMessage(AccountTransaction transaction, Integer remainingCount) {
         return String.format("`%s`\n%s\nОсталось: %s", transaction.getRaw(), getResponseMessage(transaction), remainingCount);
+    }
+
+    public static String getResponseMessage(String merchant, Expenditure expenditure) {
+        return String.format("Категория *%s* будет использоваться по умолчанию для последующих записей `%s`.", expenditure.getName(), merchant);
     }
 
     public static InlineKeyboardMarkup getResponseKeyboard(List<AccountTransaction> transactions) {
@@ -108,7 +112,7 @@ public class TransactionResponseFactory {
         return kb.addRow(button1, callback2.asButton("Подтвердить"));
     }
 
-    private static String getTextPlural(Integer count, String single, String few, String many) {
+    public static String getTextPluralForm(Integer count, String single, String few, String many) {
         if (count == 0)
             return many;
         if (count % 10 == 1)

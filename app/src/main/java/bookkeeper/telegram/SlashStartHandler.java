@@ -19,10 +19,7 @@ public class SlashStartHandler extends AbstractHandler {
      */
     @Override
     Boolean handle(Update update) {
-        if (update.message() == null)
-            return false;
-
-        if (!Objects.equals(update.message().text(), "/start"))
+        if (update.message() == null || !Objects.equals(update.message().text(), "/start"))
             return false;
 
         sendMessage(update, "Добро пожаловать!");

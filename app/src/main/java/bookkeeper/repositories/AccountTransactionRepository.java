@@ -7,12 +7,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import org.jetbrains.annotations.Nullable;
 
-import java.math.BigDecimal;
 import java.time.Instant;
-import java.util.Currency;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 public class AccountTransactionRepository {
     private final EntityManager manager;
@@ -41,17 +37,6 @@ public class AccountTransactionRepository {
         } catch (NoResultException e) {
             return null;
         }
-    }
-
-    public Map<Currency, BigDecimal> getTotalExpenses(Instant start, Instant end, TelegramUser user) {
-        var sql = "SELECT account, SUM(amount) FROM AccountTransaction i WHERE i.telegramUser=:telegramUser GROUP BY i.account";
-        var query = manager.createQuery(sql)
-                .setParameter("telegramUser", user);
-
-        query.getResultStream().collect(Collectors.toList());
-
-        Map<Currency, BigDecimal> result = Map.of();
-        return result;
     }
 
     public void approve(AccountTransaction transaction) {

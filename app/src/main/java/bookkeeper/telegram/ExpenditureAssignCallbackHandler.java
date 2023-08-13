@@ -74,9 +74,8 @@ public class ExpenditureAssignCallbackHandler extends AbstractHandler {
             }
             var merchant = spending.getMerchant();
             merchantExpenditureRepository.addMerchantAssociation(merchant, newExpenditure, getTelegramUser(update));
-            var message = String.format("Категория *%s* будет использоваться по умолчанию для последующих записей `%s`.", newExpenditure.getName(), merchant);
             var keyboard = new InlineKeyboardMarkup().addRow(new MerchantExpenditureRemoveCallback(merchant, newExpenditure).asButton("Отмена"));
-            sendMessage(update, message, keyboard);
+            sendMessage(update, getResponseMessage(merchant, newExpenditure), keyboard);
         }
 
         return true;

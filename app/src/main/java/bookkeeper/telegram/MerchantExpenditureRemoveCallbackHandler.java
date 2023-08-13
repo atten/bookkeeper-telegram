@@ -7,6 +7,8 @@ import bookkeeper.telegram.callbacks.MerchantExpenditureRemoveCallback;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Update;
 
+import static bookkeeper.telegram.responses.TransactionResponseFactory.getResponseMessage;
+
 
 public class MerchantExpenditureRemoveCallbackHandler extends AbstractHandler {
     private final MerchantExpenditureRepository merchantExpenditureRepository;
@@ -24,8 +26,7 @@ public class MerchantExpenditureRemoveCallbackHandler extends AbstractHandler {
 
         var cm = ((MerchantExpenditureRemoveCallback) callbackMessage);
         merchantExpenditureRepository.removeMerchantAssociation(cm.getMerchant(), cm.getExpenditure(), getTelegramUser(update));
-        var message = String.format("Категория *%s* будет использоваться по умолчанию для последующих записей `%s`.", Expenditure.OTHER.getName(), cm.getMerchant());
-        editMessage(update, message);
+        editMessage(update, getResponseMessage(cm.getMerchant(), Expenditure.OTHER));
         return true;
     }
 }

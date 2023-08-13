@@ -30,9 +30,9 @@ public class MerchantExpenditureRepository {
         }
     }
 
-    public MerchantExpenditure addMerchantAssociation(String merchant, Expenditure expenditure, TelegramUser user) {
+    public void addMerchantAssociation(String merchant, Expenditure expenditure, TelegramUser user) {
         var obj = newItemFactory(merchant, expenditure, user);
-        return manager.merge(obj);
+        manager.merge(obj);
     }
 
     public void removeMerchantAssociation(String merchant, Expenditure expenditure, TelegramUser user) {
@@ -40,6 +40,13 @@ public class MerchantExpenditureRepository {
         if (obj == null || obj.getExpenditure() != expenditure)
             return;
         manager.remove(obj);
+    }
+
+    public int removeMerchantAssociations(TelegramUser user) {
+        var sql = "DELETE FROM MerchantExpenditure i WHERE i.telegramUser=:telegramUser";
+        var query = manager.createQuery(sql)
+                .setParameter("telegramUser", user);
+        return query.executeUpdate();
     }
 
     private MerchantExpenditure newItemFactory(String merchant, Expenditure expenditure, TelegramUser user) {
