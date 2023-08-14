@@ -1,0 +1,32 @@
+version: '2.4'
+services:
+
+  app:
+    container_name: bookkeeper-app
+    image: "${DOCKER_IMAGE}"
+    links:
+      - postgres
+    restart: unless-stopped
+    environment:
+      - BOT_TOKEN=${BOT_TOKEN}
+      - jakarta.persistence.jdbc.url=${JDBC_URL}
+      - jakarta.persistence.jdbc.user=${POSTGRES_USER}
+      - jakarta.persistence.jdbc.password=${POSTGRES_PASSWORD}
+
+  postgres:
+    container_name: bookkeeper-postgres
+    image: 'postgres:15-alpine'
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DATABASE=${POSTGRES_DATABASE}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - 'postgres:/var/lib/postgresql/data'
+
+volumes:
+  postgres: {}
+
+networks:
+  default:
+    name: 'bookkeeper-network'
