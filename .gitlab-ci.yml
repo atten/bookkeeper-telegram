@@ -21,7 +21,7 @@ build:
     - key: $CI_PIPELINE_ID
       policy: push
       paths:
-        - build/
+        - app/build/
   script:
     - ./gradlew jibBuildTar --image=$IMAGE
     # build standalone jar and save as job artifact
@@ -36,12 +36,12 @@ docker-push:
     key: $CI_PIPELINE_ID
     policy: pull
     paths:
-      - build/
+      - app/build/
   services:
     - docker:stable-dind
   variables:
     GIT_STRATEGY: none
   script:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
-    - docker load --input build/jib-image.tar
+    - docker load --input app/build/jib-image.tar
     - docker push $IMAGE
