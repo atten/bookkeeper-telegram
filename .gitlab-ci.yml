@@ -13,7 +13,7 @@ build:
   stage: build
   image: openjdk:11
   only:
-    - master
+    - main
   cache:
     - key: $CI_COMMIT_REF_SLUG
       paths:
@@ -31,7 +31,7 @@ docker-push:
   stage: docker-push
   image: docker:stable
   only:
-    - master
+    - main
   cache:
     key: $CI_PIPELINE_ID
     policy: pull
