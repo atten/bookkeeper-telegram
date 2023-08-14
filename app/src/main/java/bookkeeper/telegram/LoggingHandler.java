@@ -5,8 +5,6 @@ import bookkeeper.telegram.shared.AbstractHandler;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Update;
 
-import java.util.Date;
-
 /**
  * Print incoming request to console.
  */
@@ -17,7 +15,7 @@ public class LoggingHandler extends AbstractHandler {
 
     @Override
     public Boolean handle(Update update) {
-        logger.info("{} {} -> {}", new Date(), getTelegramUser(update), updateToString(update));
+        logger.info("{} -> {}", getTelegramUser(update), updateToString(update));
         return false;
     }
 

@@ -16,8 +16,6 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.Instant;
-
 public abstract class AbstractHandler {
     private final TelegramBot bot;
     private final TelegramUserRepository telegramUserRepository;
@@ -45,7 +43,7 @@ public abstract class AbstractHandler {
         var result = bot.execute(message);
         var resultVerbose = result.description() != null ? result.description() : "OK";
 
-        logger.info("{} {} <- {} ({})", Instant.now(), telegramUser, text, resultVerbose);
+        logger.info("{} -> {} ({})", text, telegramUser, resultVerbose);
     }
 
     protected void sendMessage(Update update, String text, Keyboard keyboard) {
@@ -76,7 +74,7 @@ public abstract class AbstractHandler {
         }
 
         var resultVerbose = result.description() != null ? result.description() : "OK";
-        logger.info("{} {} <- {} ({})", Instant.now(), telegramUser, text, resultVerbose);
+        logger.info("{} -> {} ({})", text, telegramUser, resultVerbose);
     }
 
     protected void editMessage(Update update, String text) {
