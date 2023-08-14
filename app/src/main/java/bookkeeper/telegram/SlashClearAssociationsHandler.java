@@ -8,7 +8,7 @@ import com.pengrad.telegrambot.model.Update;
 
 import java.util.Objects;
 
-import static bookkeeper.telegram.shared.TransactionResponseFactory.getTextPluralForm;
+import static bookkeeper.telegram.shared.TransactionResponseFactory.pluralizeTemplate;
 
 /**
  * Scenario: User clears merchant-expenditure associations.
@@ -27,14 +27,11 @@ public class SlashClearAssociationsHandler extends AbstractHandler {
             return false;
 
         var count = merchantExpenditureRepository.removeMerchantAssociations(getTelegramUser(update));
-        var message = String.format(
-            getTextPluralForm(
-                count,
-                "%s привязка категории очищена.",
-                "%s привязки категорий очищены.",
-                "%s привязок категорий очищено."
-            ),
-            count
+        var message = pluralizeTemplate(
+            count,
+            "%s привязка категории очищена.",
+            "%s привязки категорий очищены.",
+            "%s привязок категорий очищено."
         );
 
         sendMessage(update, message);

@@ -23,11 +23,12 @@ public class Bot {
     private final TelegramBot bot;
     private final List<AbstractHandler> handlers;
     // there's only one instance of database writer (the bot itself), so we can use a single persistence context throughout runtime
-    private final EntityManager entityManager = Persistence.createEntityManagerFactory("default").createEntityManager();
+    private final EntityManager entityManager;
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    public Bot(String token) {
-        bot = new TelegramBot(token);
+    public Bot(Config config) {
+        bot = new TelegramBot(config.botToken());
+        entityManager = Persistence.createEntityManagerFactory("default", config.dataSourceConfig()).createEntityManager();
 
         var telegramUserRepository = new TelegramUserRepository(entityManager);
         var merchantExpenditureRepository = new MerchantExpenditureRepository(entityManager);

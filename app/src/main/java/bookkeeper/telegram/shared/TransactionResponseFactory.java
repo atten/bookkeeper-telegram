@@ -29,10 +29,7 @@ public class TransactionResponseFactory {
             counterMap.get(transaction.getExpenditure()).incrementAndGet();
         });
 
-        var totalItemsVerbose = String.format(
-            getTextPluralForm(transactions.size(), "Добавлена запись", "Добавлены %s записи", "Добавлено %s записей"),
-            transactions.size()
-        );
+        var totalItemsVerbose = pluralizeTemplate(transactions.size(), "Добавлена запись", "Добавлены %s записи", "Добавлено %s записей");
 
         String statsVerbose;
 
@@ -112,7 +109,7 @@ public class TransactionResponseFactory {
         return kb.addRow(button1, callback2.asButton("Подтвердить"));
     }
 
-    public static String getTextPluralForm(Integer count, String single, String few, String many) {
+    public static String pluralize(Integer count, String single, String few, String many) {
         if (count == 0)
             return many;
         if (count % 10 == 1)
@@ -120,5 +117,12 @@ public class TransactionResponseFactory {
         if (count % 10 <= 4)
             return few;
         return many;
+    }
+
+    /**
+     * pluralize for %s-strings
+     */
+    public static String pluralizeTemplate(Integer count, String single, String few, String many) {
+        return String.format(pluralize(count, single, few, many), count);
     }
 }
