@@ -37,9 +37,9 @@ public class AssignExpenditureCallbackHandler extends AbstractHandler {
 
     /**
      * Handle expenditure selector click:
-     * 1. Associate specified AccountTransaction with given Expenditure.
-     * 2. Associate pending AccountTransactions with same merchant too (if any).
-     * 3. Store association with given merchant for further transactions (if applicable).
+     * 1. Store association with given merchant for further transactions (if applicable).
+     * 2. Associate specified AccountTransaction with given Expenditure.
+     * 3. Associate pending AccountTransactions with same merchant too (if any).
      */
     @Override
     public Boolean handle(Update update) {
@@ -50,31 +50,44 @@ public class AssignExpenditureCallbackHandler extends AbstractHandler {
         var cm = ((AssignExpenditureCallback) callbackMessage);
         var transaction = transactionRepository.get(cm.getTransactionId());
         var merchant = getSpendingFromTransaction(transaction).getMerchant();
-        var previousExpenditure = transaction.getExpenditure();
         var newExpenditure = cm.getExpenditure();
-        var useAssociationFurther = previousExpenditure == Expenditure.OTHER && newExpenditure != Expenditure.OTHER;
+        var hasAssociation = merchantExpenditureRepository.find(merchant, getTelegramUser(update)) != null;
+        var useAssociationFurther = newExpenditure != Expenditure.OTHER && !hasAssociation;
         var pendingTransactionsCount = cm.getPendingTransactionIds().size();
 
         // step 1
-        transactionRepository.associateExpenditure(transaction, newExpenditure);
-
-        if (pendingTransactionsCount == 0) {
-            editMessage(update, getResponseMessage(transaction), getResponseKeyboard(transaction));
-        } else if (useAssociationFurther) {
-            // step 2
-            var pendingTransactions = transactionRepository.getList(cm.getPendingTransactionIds());
-            updateTransactionsExpenditure(pendingTransactions, merchant, newExpenditure);
-
-            var nextPendingTransaction = pendingTransactions.get(0);
-            var remainingTransactionIds = cm.getPendingTransactionIds().stream().skip(1).collect(Collectors.toList());
-            editMessage(update, getResponseMessage(nextPendingTransaction, remainingTransactionIds.size()), getResponseKeyboard(nextPendingTransaction, remainingTransactionIds));
-        }
-
-        // step 2
         if (useAssociationFurther) {
             merchantExpenditureRepository.addMerchantAssociation(merchant, newExpenditure, getTelegramUser(update));
             var keyboard = new InlineKeyboardMarkup().addRow(new MerchantExpenditureRemoveCallback(merchant, newExpenditure).asButton("Отмена"));
-            sendMessage(update, getResponseMessage(merchant, newExpenditure), keyboard);
+            editMessage(update, getResponseMessage(merchant, newExpenditure), keyboard);
+        }
+
+        // step 2
+        transactionRepository.associateExpenditure(transaction, newExpenditure);
+
+        if (pendingTransactionsCount == 0) {
+            // if message was edited in the step 1, then send a new one, otherwise reuse existing
+            if (useAssociationFurther)
+                sendMessage(update, getResponseMessage(transaction), getResponseKeyboard(transaction));
+            else
+                editMessage(update, getResponseMessage(transaction), getResponseKeyboard(transaction));
+
+        } else {
+            var pendingTransactions = transactionRepository.getList(cm.getPendingTransactionIds());
+
+            if (useAssociationFurther) {
+                // step 3
+                updateTransactionsExpenditure(pendingTransactions, merchant, newExpenditure);
+            }
+
+            var nextPendingTransaction = pendingTransactions.get(0);
+            var remainingTransactionIds = cm.getPendingTransactionIds().stream().skip(1).collect(Collectors.toList());
+
+            if (useAssociationFurther) {
+                sendMessage(update, getResponseMessage(nextPendingTransaction, remainingTransactionIds.size()), getResponseKeyboard(nextPendingTransaction, remainingTransactionIds));
+            } else {
+                editMessage(update, getResponseMessage(nextPendingTransaction, remainingTransactionIds.size()), getResponseKeyboard(nextPendingTransaction, remainingTransactionIds));
+            }
         }
 
         return true;

@@ -58,7 +58,12 @@ public class TransactionResponseFactory {
     }
 
     public static String getResponseMessage(AccountTransaction transaction, Integer remainingCount) {
-        return String.format("`%s`\n%s\nОсталось: %s", transaction.getRaw(), getResponseMessage(transaction), remainingCount);
+        String remaining;
+        if (remainingCount == 0)
+            remaining = "Это последняя запись.";
+        else
+            remaining = String.format("Осталось: %s", remainingCount);
+        return String.format("`%s`\n%s\n%s", transaction.getRaw(), getResponseMessage(transaction), remaining);
     }
 
     public static String getResponseMessage(String merchant, Expenditure expenditure) {
