@@ -11,9 +11,7 @@ public class MerchantExpenditureRemoveCallback extends CallbackMessage {
     private String merchant;
     private Expenditure expenditure;
 
-    public MerchantExpenditureRemoveCallback() {
-
-    }
+    public MerchantExpenditureRemoveCallback() {}
 
     public MerchantExpenditureRemoveCallback(String merchant, Expenditure expenditure) {
         this.merchant = merchant;

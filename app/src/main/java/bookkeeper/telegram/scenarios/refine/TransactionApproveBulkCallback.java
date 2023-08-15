@@ -3,18 +3,14 @@ package bookkeeper.telegram.scenarios.refine;
 import bookkeeper.telegram.shared.CallbackMessage;
 
 import java.text.ParseException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class TransactionApproveBulkCallback extends CallbackMessage {
     private static final String KEYWORD = "approve_transactions";
     private List<Long> transactionIds;
 
-    public TransactionApproveBulkCallback() {
-
-    }
+    public TransactionApproveBulkCallback() {}
 
     public TransactionApproveBulkCallback(List<Long> transactionIds) {
         this.transactionIds = transactionIds;
@@ -24,7 +20,7 @@ public class TransactionApproveBulkCallback extends CallbackMessage {
     public CallbackMessage parse(String message) throws ParseException {
         var parts = message.split("/");
         if (parts.length == 2 && Objects.equals(parts[0], KEYWORD)) {
-            return new TransactionApproveBulkCallback(Arrays.stream(parts[1].split(",")).map(Long::parseLong).collect(Collectors.toList()));
+            return new TransactionApproveBulkCallback(parseIds(parts[1]));
         }
         throw new ParseException("", 0);
     }
@@ -34,6 +30,6 @@ public class TransactionApproveBulkCallback extends CallbackMessage {
     }
 
     public String toString() {
-        return KEYWORD + "/" + transactionIds.stream().map(Object::toString).collect(Collectors.joining(","));
+        return KEYWORD + "/" + idsToString(transactionIds);
     }
 }

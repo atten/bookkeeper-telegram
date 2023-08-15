@@ -4,10 +4,8 @@ import bookkeeper.enums.Expenditure;
 import bookkeeper.telegram.shared.CallbackMessage;
 
 import java.text.ParseException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class AssignExpenditureCallback extends CallbackMessage {
     private static final String KEYWORD = "assign_expenditure";
@@ -15,9 +13,7 @@ public class AssignExpenditureCallback extends CallbackMessage {
     private Expenditure expenditure;
     private List<Long> pendingTransactionIds;
 
-    public AssignExpenditureCallback() {
-
-    }
+    public AssignExpenditureCallback() {}
 
     public AssignExpenditureCallback(long transactionId, Expenditure expenditure) {
         this.transactionId = transactionId;
@@ -31,7 +27,7 @@ public class AssignExpenditureCallback extends CallbackMessage {
         if (parts.length >= 3 && Objects.equals(parts[0], KEYWORD)) {
             var result = new AssignExpenditureCallback(Long.parseLong(parts[1]), Expenditure.valueOf(parts[2]));
             if (parts.length == 4) {
-                var pendingTransactionIds = Arrays.stream(parts[3].split(",")).map(Long::parseLong).collect(Collectors.toList());
+                var pendingTransactionIds = parseIds(parts[3]);
                 result.setPendingTransactionIds(pendingTransactionIds);
             }
             return result;
@@ -57,6 +53,6 @@ public class AssignExpenditureCallback extends CallbackMessage {
     }
 
     public String toString() {
-        return KEYWORD + "/" + transactionId + "/" + expenditure + "/" + pendingTransactionIds.stream().map(Object::toString).collect(Collectors.joining(","));
+        return KEYWORD + "/" + transactionId + "/" + expenditure + "/" + idsToString(pendingTransactionIds);
     }
 }
