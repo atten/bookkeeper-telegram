@@ -61,6 +61,10 @@ public class TinkoffSmsHandler extends AbstractHandler {
 
         for (var message : bankingMessages ) {
             var transaction = transactionParserRegistry.parse(message, user);
+
+            if (transaction.isEmpty())
+                continue;
+
             transactionRepository.save(transaction);
             results.add(transaction);
         }

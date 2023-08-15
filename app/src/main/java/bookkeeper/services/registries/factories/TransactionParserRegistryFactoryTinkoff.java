@@ -16,7 +16,6 @@ public class TransactionParserRegistryFactoryTinkoff {
     public TransactionParserRegistryFactoryTinkoff(AccountRepository accountRepository, ExpenditureMatcherByMerchant expenditureMatcherByMerchant) {
         this.accountRepository = accountRepository;
         this.expenditureMatcherByMerchant = expenditureMatcherByMerchant;
-
     }
 
     public TransactionParserRegistry create() {

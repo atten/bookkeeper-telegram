@@ -66,7 +66,9 @@ public class TransactionResponseFactory {
     }
 
     public static InlineKeyboardMarkup getResponseKeyboard(List<AccountTransaction> transactions) {
-        if (transactions.size() == 1) {
+        if (transactions.size() == 0) {
+            return new InlineKeyboardMarkup();
+        } else if (transactions.size() == 1) {
             var transaction = transactions.get(0);
             return getResponseKeyboard(transaction);
         }
@@ -110,7 +112,10 @@ public class TransactionResponseFactory {
     }
 
     public static String pluralize(Integer count, String single, String few, String many) {
+        var n = count % 100;
         if (count == 0)
+            return many;
+        if (n >= 5 && n <= 20)
             return many;
         if (count % 10 == 1)
             return single;

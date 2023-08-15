@@ -50,6 +50,21 @@ class TransactionParserRegistryFactoryTinkoffTest {
     }
 
     /**
+     * Just check valid messages are parsed into transactions
+     */
+    @Test
+    void parseEmpty() throws ParseException {
+        List<String> rawMessages = List.of(
+            "Покупка, карта *0964. 1 RUB. Mos.Transport. Доступно 649.99 RUB"
+        );
+
+        for (String rawMessage : rawMessages) {
+            var transaction = registry.parse(rawMessage, user);
+            assert(transaction.isEmpty());
+        }
+    }
+
+    /**
      * Just check invalid message results in ParseError
      */
     @Test

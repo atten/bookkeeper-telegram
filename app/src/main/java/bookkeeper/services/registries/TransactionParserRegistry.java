@@ -49,6 +49,19 @@ public class TransactionParserRegistry {
         return this;
     }
 
+    public AccountTransaction parse(String rawMessage, TelegramUser user) throws ParseException {
+        var spending = spendingParserRegistry.parse(rawMessage);
+        var transaction = new AccountTransaction();
+
+        transaction.setAccount(matchAccount(spending, user));
+        transaction.setAmount(matchAmount(spending));
+        transaction.setExpenditure(matchExpenditure(spending, user));
+        transaction.setTimestamp(matchTimestamp(spending));
+        transaction.setRaw(rawMessage);
+
+        return transaction;
+    }
+
     /**
      * First matched account is preferred.
      */
@@ -95,18 +108,5 @@ public class TransactionParserRegistry {
                 .filter(Objects::nonNull)
                 .findFirst()
                 .orElse(Instant.now());
-    }
-
-    public AccountTransaction parse(String rawMessage, TelegramUser user) throws ParseException {
-        var spending = spendingParserRegistry.parse(rawMessage);
-        var transaction = new AccountTransaction();
-
-        transaction.setAccount(matchAccount(spending, user));
-        transaction.setAmount(matchAmount(spending));
-        transaction.setExpenditure(matchExpenditure(spending, user));
-        transaction.setTimestamp(matchTimestamp(spending));
-        transaction.setRaw(rawMessage);
-
-        return transaction;
     }
 }

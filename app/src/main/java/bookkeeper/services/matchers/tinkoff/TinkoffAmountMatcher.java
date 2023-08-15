@@ -6,13 +6,20 @@ import bookkeeper.services.parsers.tinkoff.TinkoffPurchaseSms;
 import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
+import java.util.Currency;
 
 public class TinkoffAmountMatcher implements AmountMatcher {
     @Nullable
     @Override
     public BigDecimal match(Spending spending) {
         if (spending instanceof TinkoffPurchaseSms) {
-            return ((TinkoffPurchaseSms) spending).purchaseSum;
+            var obj = ((TinkoffPurchaseSms) spending);
+
+            // "1 RUB" expenses are ephemeral and should be ignored (e.g. Mos.Transport uses it to check card validity)
+            if (obj.purchaseSum.equals(BigDecimal.ONE) && obj.purchaseCurrency.equals(Currency.getInstance("RUB")))
+                return BigDecimal.ZERO;
+
+            return obj.purchaseSum;
         }
         return null;
     }
