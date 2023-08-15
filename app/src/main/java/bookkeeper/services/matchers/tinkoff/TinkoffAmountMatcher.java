@@ -3,6 +3,7 @@ package bookkeeper.services.matchers.tinkoff;
 import bookkeeper.services.matchers.AmountMatcher;
 import bookkeeper.services.parsers.Spending;
 import bookkeeper.services.parsers.tinkoff.TinkoffPurchaseSms;
+import bookkeeper.services.parsers.tinkoff.TinkoffTransferSms;
 import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
@@ -20,6 +21,10 @@ public class TinkoffAmountMatcher implements AmountMatcher {
                 return BigDecimal.ZERO;
 
             return obj.purchaseSum;
+        }
+        if (spending instanceof TinkoffTransferSms) {
+            var obj = ((TinkoffTransferSms) spending);
+            return obj.transferSum;
         }
         return null;
     }

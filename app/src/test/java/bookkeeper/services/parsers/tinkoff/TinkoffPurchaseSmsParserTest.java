@@ -1,7 +1,5 @@
-package bookkeeper.services.parsers;
+package bookkeeper.services.parsers.tinkoff;
 
-import bookkeeper.services.parsers.tinkoff.TinkoffPurchaseSms;
-import bookkeeper.services.parsers.tinkoff.TinkoffPurchaseSmsParser;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;

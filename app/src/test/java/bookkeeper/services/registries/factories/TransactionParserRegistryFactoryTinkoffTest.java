@@ -40,7 +40,8 @@ class TransactionParserRegistryFactoryTinkoffTest {
     void parseOk() throws ParseException {
         List<String> rawMessages = List.of(
             "Покупка, карта *0964. 621.8 RUB. VKUSVILL 2. Доступно 499.28 RUB",
-            "Покупка 17.07.2023. Карта *0964. 56 RUB. MOS.TRANSP. Доступно 499.28 RUB"
+            "Покупка 17.07.2023. Карта *0964. 56 RUB. MOS.TRANSP. Доступно 499.28 RUB",
+            "Перевод. Счет RUB. 500 RUB. Сергей С. Баланс 653.04 RUB"
         );
 
         for (String rawMessage : rawMessages) {

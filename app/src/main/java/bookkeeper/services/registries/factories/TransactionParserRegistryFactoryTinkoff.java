@@ -7,6 +7,7 @@ import bookkeeper.services.matchers.tinkoff.TinkoffAmountMatcher;
 import bookkeeper.services.matchers.tinkoff.TinkoffTimestampMatcher;
 import bookkeeper.services.parsers.tinkoff.TinkoffPurchaseSmsParser;
 import bookkeeper.services.parsers.tinkoff.TinkoffPurchaseSmsWithDateParser;
+import bookkeeper.services.parsers.tinkoff.TinkoffTransferSmsParser;
 import bookkeeper.services.registries.TransactionParserRegistry;
 
 public class TransactionParserRegistryFactoryTinkoff {
@@ -25,6 +26,7 @@ public class TransactionParserRegistryFactoryTinkoff {
             .addTimestampMatcher(new TinkoffTimestampMatcher())
             .addSpendingParser(new TinkoffPurchaseSmsParser())
             .addSpendingParser(new TinkoffPurchaseSmsWithDateParser())
+            .addSpendingParser(new TinkoffTransferSmsParser())
             .addExpenditureMatcher(expenditureMatcherByMerchant);
     }
 }

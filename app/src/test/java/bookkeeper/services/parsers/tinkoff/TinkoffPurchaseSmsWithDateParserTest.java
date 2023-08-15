@@ -1,4 +1,4 @@
-package bookkeeper.services.parsers;
+package bookkeeper.services.parsers.tinkoff;
 
 import bookkeeper.services.parsers.tinkoff.TinkoffPurchaseSmsWithDate;
 import bookkeeper.services.parsers.tinkoff.TinkoffPurchaseSmsWithDateParser;
