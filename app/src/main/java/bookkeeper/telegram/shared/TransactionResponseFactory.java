@@ -29,19 +29,19 @@ public class TransactionResponseFactory {
             counterMap.get(transaction.getExpenditure()).incrementAndGet();
         });
 
-        var totalItemsVerbose = pluralizeTemplate(transactions.size(), "Добавлена запись", "Добавлены %s записи", "Добавлено %s записей");
+        var totalItemsVerbose = pluralizeTemplate(transactions.size(), "Добавлена", "Добавлены %s записи", "Добавлено %s записей");
 
         String statsVerbose;
 
         if (counterMap.size() == 1) {
             var expenditure = transactions.get(0).getExpenditure();
-            statsVerbose = String.format("в категории \"%s\"", expenditure.getName());
+            statsVerbose = String.format("в *%s*", expenditure.getName());
         } else {
             totalItemsVerbose = totalItemsVerbose + ": ";
             statsVerbose = counterMap
                     .entrySet()
                     .stream()
-                    .map(entry -> String.format("%s в \"%s\"", entry.getValue(), entry.getKey().getName()))
+                    .map(entry -> String.format("%s в *%s*", entry.getValue(), entry.getKey().getName()))
                     .reduce((s, s2) -> s + ", " + s2).orElse("");
         }
 
@@ -63,7 +63,7 @@ public class TransactionResponseFactory {
             remaining = "Это последняя запись.";
         else
             remaining = String.format("Осталось: %s", remainingCount);
-        return String.format("`%s`\n%s\n%s", transaction.getRaw(), getResponseMessage(transaction), remaining);
+        return String.format("`%s`\n\n%s\n\n%s", transaction.getRaw(), getResponseMessage(transaction), remaining);
     }
 
     public static String getResponseMessage(String merchant, Expenditure expenditure) {
