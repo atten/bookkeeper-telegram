@@ -107,10 +107,10 @@ public class TransactionResponseFactory {
         var callback2 = new TransactionApproveCallback(transaction.getId()).setPendingTransactionIds(pendingTransactionIds);
 
         if (transaction.isApproved()) {
-            if (pendingTransactionIds.size() > 0)
-                return kb.addRow(button1, callback2.asButton("Далее"));
-            else
-                return kb.addRow(button1, callback2.asButton("Готово"));
+            var buttonText = "Далее";
+            if (pendingTransactionIds.isEmpty())
+                buttonText = "Готово";
+            return kb.addRow(button1, callback2.asButton(buttonText));
         }
 
         return kb.addRow(button1, callback2.asButton("Подтвердить"));

@@ -42,7 +42,7 @@ public class TinkoffSmsHandler extends AbstractHandler {
         if (update.message() == null)
             return false;
 
-        var smsList = update.message().text().split("\n");
+        var smsList = getMessageText(update).split("\n");
         List<AccountTransaction> transactions;
         try {
             transactions = userSendsBankingMessages(smsList, getTelegramUser(update));

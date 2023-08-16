@@ -16,6 +16,8 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
+
 public abstract class AbstractHandler {
     private final TelegramBot bot;
     private final TelegramUserRepository telegramUserRepository;
@@ -93,6 +95,19 @@ public abstract class AbstractHandler {
 
     protected CallbackMessage getCallbackMessage(Update update) {
         return callbackMessageRegistry.getCallbackMessage(update);
+    }
+
+    protected String getMessageText(Update update) {
+        if (update.message() == null)
+            return "";
+        return cleanString(update.message().text());
+    }
+
+    /**
+     * Replace non-breaking spaces with regular one.
+     */
+    private String cleanString(String input) {
+        return input.replaceAll(Arrays.toString(Character.toChars(160)), " ");
     }
 
     private User getUser(Update update) {
