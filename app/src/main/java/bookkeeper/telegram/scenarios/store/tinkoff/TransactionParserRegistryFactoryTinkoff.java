@@ -7,6 +7,7 @@ import bookkeeper.telegram.scenarios.store.tinkoff.matchers.TinkoffAmountMatcher
 import bookkeeper.telegram.scenarios.store.tinkoff.matchers.TinkoffTimestampMatcher;
 import bookkeeper.telegram.scenarios.store.tinkoff.parsers.TinkoffPurchaseSmsParser;
 import bookkeeper.telegram.scenarios.store.tinkoff.parsers.TinkoffPurchaseSmsWithDateParser;
+import bookkeeper.telegram.scenarios.store.tinkoff.parsers.TinkoffRecurringChargeSmsParser;
 import bookkeeper.telegram.scenarios.store.tinkoff.parsers.TinkoffTransferSmsParser;
 import bookkeeper.services.registries.TransactionParserRegistry;
 
@@ -27,6 +28,7 @@ public class TransactionParserRegistryFactoryTinkoff {
             .addSpendingParser(new TinkoffPurchaseSmsParser())
             .addSpendingParser(new TinkoffPurchaseSmsWithDateParser())
             .addSpendingParser(new TinkoffTransferSmsParser())
+            .addSpendingParser(new TinkoffRecurringChargeSmsParser())
             .addExpenditureMatcher(expenditureMatcherByMerchant);
     }
 }
