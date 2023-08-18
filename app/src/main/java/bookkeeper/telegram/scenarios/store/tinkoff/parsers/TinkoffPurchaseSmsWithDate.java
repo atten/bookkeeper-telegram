@@ -1,4 +1,4 @@
-package bookkeeper.services.parsers.tinkoff;
+package bookkeeper.telegram.scenarios.store.tinkoff.parsers;
 
 import java.time.LocalDate;
 import java.util.Objects;

@@ -1,7 +1,7 @@
 package bookkeeper.telegram.scenarios.refine;
 
-import bookkeeper.repositories.AccountTransactionRepository;
-import bookkeeper.repositories.TelegramUserRepository;
+import bookkeeper.services.repositories.AccountTransactionRepository;
+import bookkeeper.services.repositories.TelegramUserRepository;
 import bookkeeper.telegram.shared.TransactionResponseFactory;
 import bookkeeper.telegram.shared.AbstractHandler;
 import com.pengrad.telegrambot.TelegramBot;

@@ -1,8 +1,8 @@
 package bookkeeper.services.registries.factories;
 
-import bookkeeper.services.parsers.tinkoff.TinkoffPurchaseSmsParser;
-import bookkeeper.services.parsers.tinkoff.TinkoffPurchaseSmsWithDateParser;
-import bookkeeper.services.parsers.tinkoff.TinkoffTransferSmsParser;
+import bookkeeper.telegram.scenarios.store.tinkoff.parsers.TinkoffPurchaseSmsParser;
+import bookkeeper.telegram.scenarios.store.tinkoff.parsers.TinkoffPurchaseSmsWithDateParser;
+import bookkeeper.telegram.scenarios.store.tinkoff.parsers.TinkoffTransferSmsParser;
 import bookkeeper.services.registries.SpendingParserRegistry;
 
 public class SpendingParserRegistryFactoryAll {

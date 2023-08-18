@@ -1,13 +1,13 @@
-package bookkeeper.services.registries.factories;
+package bookkeeper.telegram.scenarios.store.tinkoff;
 
-import bookkeeper.repositories.AccountRepository;
-import bookkeeper.services.matchers.shared.ExpenditureMatcherByMerchant;
-import bookkeeper.services.matchers.tinkoff.TinkoffAccountMatcher;
-import bookkeeper.services.matchers.tinkoff.TinkoffAmountMatcher;
-import bookkeeper.services.matchers.tinkoff.TinkoffTimestampMatcher;
-import bookkeeper.services.parsers.tinkoff.TinkoffPurchaseSmsParser;
-import bookkeeper.services.parsers.tinkoff.TinkoffPurchaseSmsWithDateParser;
-import bookkeeper.services.parsers.tinkoff.TinkoffTransferSmsParser;
+import bookkeeper.services.repositories.AccountRepository;
+import bookkeeper.services.matchers.ExpenditureMatcherByMerchant;
+import bookkeeper.telegram.scenarios.store.tinkoff.matchers.TinkoffAccountMatcher;
+import bookkeeper.telegram.scenarios.store.tinkoff.matchers.TinkoffAmountMatcher;
+import bookkeeper.telegram.scenarios.store.tinkoff.matchers.TinkoffTimestampMatcher;
+import bookkeeper.telegram.scenarios.store.tinkoff.parsers.TinkoffPurchaseSmsParser;
+import bookkeeper.telegram.scenarios.store.tinkoff.parsers.TinkoffPurchaseSmsWithDateParser;
+import bookkeeper.telegram.scenarios.store.tinkoff.parsers.TinkoffTransferSmsParser;
 import bookkeeper.services.registries.TransactionParserRegistry;
 
 public class TransactionParserRegistryFactoryTinkoff {

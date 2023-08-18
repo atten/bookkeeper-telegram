@@ -1,11 +1,12 @@
 package bookkeeper.services.registries.factories;
 
 import bookkeeper.entities.TelegramUser;
-import bookkeeper.repositories.AccountRepository;
-import bookkeeper.repositories.MerchantExpenditureRepository;
-import bookkeeper.repositories.TelegramUserRepository;
-import bookkeeper.services.matchers.shared.ExpenditureMatcherByMerchant;
+import bookkeeper.services.repositories.AccountRepository;
+import bookkeeper.services.repositories.MerchantExpenditureRepository;
+import bookkeeper.services.repositories.TelegramUserRepository;
+import bookkeeper.services.matchers.ExpenditureMatcherByMerchant;
 import bookkeeper.services.registries.TransactionParserRegistry;
+import bookkeeper.telegram.scenarios.store.tinkoff.TransactionParserRegistryFactoryTinkoff;
 import jakarta.persistence.Persistence;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

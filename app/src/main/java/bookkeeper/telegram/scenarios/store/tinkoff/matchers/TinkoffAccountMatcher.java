@@ -1,12 +1,12 @@
-package bookkeeper.services.matchers.tinkoff;
+package bookkeeper.telegram.scenarios.store.tinkoff.matchers;
 
 import bookkeeper.entities.Account;
 import bookkeeper.entities.TelegramUser;
-import bookkeeper.repositories.AccountRepository;
+import bookkeeper.services.repositories.AccountRepository;
 import bookkeeper.services.matchers.AccountMatcher;
 import bookkeeper.services.parsers.Spending;
-import bookkeeper.services.parsers.tinkoff.TinkoffPurchaseSms;
-import bookkeeper.services.parsers.tinkoff.TinkoffTransferSms;
+import bookkeeper.telegram.scenarios.store.tinkoff.parsers.TinkoffPurchaseSms;
+import bookkeeper.telegram.scenarios.store.tinkoff.parsers.TinkoffTransferSms;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Currency;

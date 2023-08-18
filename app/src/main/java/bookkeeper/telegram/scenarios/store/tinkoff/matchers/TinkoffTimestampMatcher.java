@@ -1,8 +1,8 @@
-package bookkeeper.services.matchers.tinkoff;
+package bookkeeper.telegram.scenarios.store.tinkoff.matchers;
 
 import bookkeeper.services.matchers.TimestampMatcher;
 import bookkeeper.services.parsers.Spending;
-import bookkeeper.services.parsers.tinkoff.TinkoffPurchaseSmsWithDate;
+import bookkeeper.telegram.scenarios.store.tinkoff.parsers.TinkoffPurchaseSmsWithDate;
 import org.jetbrains.annotations.Nullable;
 
 import java.time.Instant;

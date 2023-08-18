@@ -1,4 +1,4 @@
-package bookkeeper.repositories;
+package bookkeeper.services.repositories;
 
 import bookkeeper.entities.TelegramUser;
 import com.pengrad.telegrambot.model.User;

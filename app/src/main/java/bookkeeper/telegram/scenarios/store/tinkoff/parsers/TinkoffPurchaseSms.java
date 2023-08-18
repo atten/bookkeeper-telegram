@@ -1,4 +1,4 @@
-package bookkeeper.services.parsers.tinkoff;
+package bookkeeper.telegram.scenarios.store.tinkoff.parsers;
 
 import bookkeeper.services.parsers.Spending;
 import org.jetbrains.annotations.NotNull;

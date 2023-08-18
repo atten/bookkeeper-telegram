@@ -1,9 +1,9 @@
-package bookkeeper.services.matchers.tinkoff;
+package bookkeeper.telegram.scenarios.store.tinkoff.matchers;
 
 import bookkeeper.services.matchers.AmountMatcher;
 import bookkeeper.services.parsers.Spending;
-import bookkeeper.services.parsers.tinkoff.TinkoffPurchaseSms;
-import bookkeeper.services.parsers.tinkoff.TinkoffTransferSms;
+import bookkeeper.telegram.scenarios.store.tinkoff.parsers.TinkoffPurchaseSms;
+import bookkeeper.telegram.scenarios.store.tinkoff.parsers.TinkoffTransferSms;
 import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;

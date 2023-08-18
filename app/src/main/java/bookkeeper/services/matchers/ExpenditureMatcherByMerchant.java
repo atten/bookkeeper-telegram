@@ -1,9 +1,8 @@
-package bookkeeper.services.matchers.shared;
+package bookkeeper.services.matchers;
 
 import bookkeeper.entities.TelegramUser;
 import bookkeeper.enums.Expenditure;
-import bookkeeper.repositories.MerchantExpenditureRepository;
-import bookkeeper.services.matchers.ExpenditureMatcher;
+import bookkeeper.services.repositories.MerchantExpenditureRepository;
 import bookkeeper.services.parsers.Spending;
 import org.jetbrains.annotations.NotNull;
 

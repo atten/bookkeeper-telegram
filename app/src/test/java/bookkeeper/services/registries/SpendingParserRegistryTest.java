@@ -1,8 +1,8 @@
 package bookkeeper.services.registries;
 
 import bookkeeper.services.parsers.Spending;
-import bookkeeper.services.parsers.tinkoff.TinkoffPurchaseSmsParser;
-import bookkeeper.services.parsers.tinkoff.TinkoffPurchaseSmsWithDateParser;
+import bookkeeper.telegram.scenarios.store.tinkoff.parsers.TinkoffPurchaseSmsParser;
+import bookkeeper.telegram.scenarios.store.tinkoff.parsers.TinkoffPurchaseSmsWithDateParser;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

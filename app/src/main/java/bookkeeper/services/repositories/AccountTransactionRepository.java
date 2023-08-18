@@ -1,4 +1,4 @@
-package bookkeeper.repositories;
+package bookkeeper.services.repositories;
 
 import bookkeeper.entities.AccountTransaction;
 import bookkeeper.entities.TelegramUser;

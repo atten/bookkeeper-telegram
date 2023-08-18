@@ -1,13 +1,12 @@
-package bookkeeper.telegram.scenarios.store;
+package bookkeeper.telegram.scenarios.store.tinkoff;
 
 import bookkeeper.entities.AccountTransaction;
 import bookkeeper.entities.TelegramUser;
-import bookkeeper.repositories.AccountRepository;
-import bookkeeper.repositories.AccountTransactionRepository;
-import bookkeeper.repositories.TelegramUserRepository;
-import bookkeeper.services.matchers.shared.ExpenditureMatcherByMerchant;
+import bookkeeper.services.repositories.AccountRepository;
+import bookkeeper.services.repositories.AccountTransactionRepository;
+import bookkeeper.services.repositories.TelegramUserRepository;
+import bookkeeper.services.matchers.ExpenditureMatcherByMerchant;
 import bookkeeper.services.registries.TransactionParserRegistry;
-import bookkeeper.services.registries.factories.TransactionParserRegistryFactoryTinkoff;
 import bookkeeper.telegram.shared.AbstractHandler;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Update;

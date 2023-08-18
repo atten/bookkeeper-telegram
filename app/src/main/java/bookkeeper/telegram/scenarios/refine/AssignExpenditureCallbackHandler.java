@@ -2,9 +2,9 @@ package bookkeeper.telegram.scenarios.refine;
 
 import bookkeeper.entities.AccountTransaction;
 import bookkeeper.enums.Expenditure;
-import bookkeeper.repositories.AccountTransactionRepository;
-import bookkeeper.repositories.MerchantExpenditureRepository;
-import bookkeeper.repositories.TelegramUserRepository;
+import bookkeeper.services.repositories.AccountTransactionRepository;
+import bookkeeper.services.repositories.MerchantExpenditureRepository;
+import bookkeeper.services.repositories.TelegramUserRepository;
 import bookkeeper.services.parsers.Spending;
 import bookkeeper.services.registries.SpendingParserRegistry;
 import bookkeeper.services.registries.factories.SpendingParserRegistryFactoryAll;
