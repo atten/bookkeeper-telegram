@@ -10,6 +10,7 @@ public enum Expenditure {
     HOUSE("Квартира"),
     TRAVEL("Путешествия"),
     TAXES("Налоги"),
+    JOB("Работа"),
     OTHER("Другое");
 
     private final String name;

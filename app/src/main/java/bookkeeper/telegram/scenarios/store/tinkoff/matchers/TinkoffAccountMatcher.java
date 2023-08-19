@@ -5,10 +5,7 @@ import bookkeeper.entities.TelegramUser;
 import bookkeeper.services.repositories.AccountRepository;
 import bookkeeper.services.matchers.AccountMatcher;
 import bookkeeper.services.parsers.Spending;
-import bookkeeper.telegram.scenarios.store.tinkoff.parsers.TinkoffFpsPurchaseSms;
-import bookkeeper.telegram.scenarios.store.tinkoff.parsers.TinkoffPurchaseSms;
-import bookkeeper.telegram.scenarios.store.tinkoff.parsers.TinkoffRecurringChargeSms;
-import bookkeeper.telegram.scenarios.store.tinkoff.parsers.TinkoffTransferSms;
+import bookkeeper.telegram.scenarios.store.tinkoff.parsers.*;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Currency;
@@ -37,6 +34,10 @@ public class TinkoffAccountMatcher implements AccountMatcher {
         }
         if (spending instanceof TinkoffFpsPurchaseSms) {
             var obj = (TinkoffFpsPurchaseSms) spending;
+            return getTinkoffAccount(obj.accountCurrency, user);
+        }
+        if (spending instanceof TinkoffReplenishSimpleSms) {
+            var obj = (TinkoffReplenishSimpleSms) spending;
             return getTinkoffAccount(obj.accountCurrency, user);
         }
         return null;

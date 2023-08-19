@@ -48,6 +48,11 @@ public class AssignExpenditureCallbackHandler extends AbstractHandler {
 
         var cm = ((AssignExpenditureCallback) callbackMessage);
         var transaction = transactionRepository.get(cm.getTransactionId());
+        if (transaction == null) {
+            logger.warn(String.format("AccountTransaction with id=%s not found", cm.getTransactionId()));
+            return false;
+        }
+
         var merchant = getSpendingFromTransaction(transaction).getMerchant();
         var newExpenditure = cm.getExpenditure();
         var hasAssociation = merchantExpenditureRepository.find(merchant, getTelegramUser(update)) != null;

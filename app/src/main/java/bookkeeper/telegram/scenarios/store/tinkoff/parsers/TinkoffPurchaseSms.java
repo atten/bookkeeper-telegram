@@ -1,7 +1,6 @@
 package bookkeeper.telegram.scenarios.store.tinkoff.parsers;
 
 import bookkeeper.services.parsers.Spending;
-import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
 import java.util.Currency;
@@ -19,7 +18,6 @@ public class TinkoffPurchaseSms implements Spending {
     public BigDecimal accountBalance;  // 499.28
     public Currency accountCurrency;  // RUB
 
-    @NotNull
     @Override
     public String getMerchant() {
         return merchant;

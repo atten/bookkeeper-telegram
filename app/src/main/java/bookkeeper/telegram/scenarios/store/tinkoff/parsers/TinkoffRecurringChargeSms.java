@@ -1,7 +1,6 @@
 package bookkeeper.telegram.scenarios.store.tinkoff.parsers;
 
 import bookkeeper.services.parsers.Spending;
-import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
 import java.util.Currency;
@@ -16,7 +15,6 @@ public class TinkoffRecurringChargeSms implements Spending {
     public Currency chargeCurrency;  // RUB
     public String destination;  // на мегафон
 
-    @NotNull
     @Override
     public String getMerchant() {
         return destination;

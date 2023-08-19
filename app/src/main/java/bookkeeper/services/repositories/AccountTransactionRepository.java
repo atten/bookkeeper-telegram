@@ -17,6 +17,7 @@ public class AccountTransactionRepository {
         this.manager = manager;
     }
 
+    @Nullable
     public AccountTransaction get(long transactionId) {
         return manager.find(AccountTransaction.class, transactionId);
     }

@@ -48,7 +48,11 @@ public class TransactionResponseFactory {
         var totalAmount = transactions.stream().map(AccountTransaction::getAmount).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
         var account = transactions.get(0).getAccount();
         var accountVerbose = String.format("на счет %s", account.getName());
-        var totalAccountVerbose = String.format("стоимостью %s %s", totalAmount, account.getCurrency().getSymbol());
+        var totalAccountVerbose = String.format(
+            "стоимостью %s %s",
+            totalAmount.toString().replace("-", "+"),
+            account.getCurrency().getSymbol()
+        );
 
         return totalItemsVerbose + " " + statsVerbose + " " + accountVerbose + " " + totalAccountVerbose + ".";
     }
