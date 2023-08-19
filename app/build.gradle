@@ -18,6 +18,9 @@ dependencies {
     implementation 'org.postgresql:postgresql:42.5.4'
     testImplementation 'com.h2database:h2:2.2.220'
 
+    // infrastructure
+    implementation 'org.reflections:reflections:0.10.2'
+
     // telegram
     implementation 'com.github.pengrad:java-telegram-bot-api:6.7.0'
 

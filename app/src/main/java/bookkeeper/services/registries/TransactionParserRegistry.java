@@ -9,7 +9,7 @@ import bookkeeper.services.matchers.AmountMatcher;
 import bookkeeper.services.matchers.ExpenditureMatcher;
 import bookkeeper.services.matchers.TimestampMatcher;
 import bookkeeper.services.parsers.Spending;
-import bookkeeper.services.parsers.SpendingParser;
+import bookkeeper.services.parsers.SpendingParserRegistry;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class TransactionParserRegistry {
-    private final SpendingParserRegistry spendingParserRegistry = new SpendingParserRegistry();
+    private SpendingParserRegistry spendingParserRegistry = new SpendingParserRegistry();
     private final ArrayList<AccountMatcher> accountMatchers = new ArrayList<>();
     private final ArrayList<AmountMatcher> amountMatchers = new ArrayList<>();
     private final ArrayList<ExpenditureMatcher> expenditureMatchers = new ArrayList<>();
@@ -39,8 +39,8 @@ public class TransactionParserRegistry {
         return this;
     }
 
-    public TransactionParserRegistry addSpendingParser(SpendingParser<? extends Spending> parser) {
-        spendingParserRegistry.add(parser);
+    public TransactionParserRegistry setSpendingParserRegistry(SpendingParserRegistry registry) {
+        this.spendingParserRegistry = registry;
         return this;
     }
 

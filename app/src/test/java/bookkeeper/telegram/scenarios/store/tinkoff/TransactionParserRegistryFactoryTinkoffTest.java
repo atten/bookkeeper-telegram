@@ -11,8 +11,13 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import com.pengrad.telegrambot.model.User;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.ParseException;
-import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -37,34 +42,34 @@ class TransactionParserRegistryFactoryTinkoffTest {
      * Just check valid messages are parsed into transactions
      */
     @Test
-    void parseOk() throws ParseException {
-        List<String> rawMessages = List.of(
-            "Покупка, карта *0964. 621.8 RUB. VKUSVILL 2. Доступно 499.28 RUB",
-            "Покупка 17.07.2023. Карта *0964. 56 RUB. MOS.TRANSP. Доступно 499.28 RUB",
-            "Перевод. Счет RUB. 500 RUB. Сергей С. Баланс 653.04 RUB",
-            "Выполнен регулярный платеж \"на мегафон\" на 360 р.",
-            "Оплата СБП, счет RUB. 1760 RUB. YANDEX.AFISHA. Доступно 694807.79 RUB"
-        );
+    void parseOk() throws ParseException, URISyntaxException, IOException {
+        var path = Path.of(Objects.requireNonNull(this.getClass().getResource("/validMessagesTinkoff.txt")).toURI());
+        var stream = Files.lines(path);
+        var lines = stream.collect(Collectors.toList());
 
-        for (String rawMessage : rawMessages) {
-            var transaction = registry.parse(rawMessage, user);
-            assertNotNull(transaction);
+        for (var line : lines) {
+            var transaction = registry.parse(line, user);
+            assert(!transaction.isEmpty());
         }
+
+        stream.close();
     }
 
     /**
      * Just check valid messages are parsed into transactions
      */
     @Test
-    void parseEmpty() throws ParseException {
-        List<String> rawMessages = List.of(
-            "Покупка, карта *0964. 1 RUB. Mos.Transport. Доступно 649.99 RUB"
-        );
+    void parseEmpty() throws ParseException, URISyntaxException, IOException {
+        var path = Path.of(Objects.requireNonNull(this.getClass().getResource("/emptyMessagesTinkoff.txt")).toURI());
+        var stream = Files.lines(path);
+        var lines = stream.collect(Collectors.toList());
 
-        for (String rawMessage : rawMessages) {
-            var transaction = registry.parse(rawMessage, user);
+        for (var line : lines) {
+            var transaction = registry.parse(line, user);
             assert(transaction.isEmpty());
         }
+
+        stream.close();
     }
 
     /**

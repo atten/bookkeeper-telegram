@@ -1,11 +1,11 @@
 package bookkeeper.telegram.scenarios.store.tinkoff;
 
+import bookkeeper.services.parsers.SpendingParserRegistry;
 import bookkeeper.services.repositories.AccountRepository;
 import bookkeeper.services.matchers.ExpenditureMatcherByMerchant;
 import bookkeeper.telegram.scenarios.store.tinkoff.matchers.TinkoffAccountMatcher;
 import bookkeeper.telegram.scenarios.store.tinkoff.matchers.TinkoffAmountMatcher;
 import bookkeeper.telegram.scenarios.store.tinkoff.matchers.TinkoffTimestampMatcher;
-import bookkeeper.telegram.scenarios.store.tinkoff.parsers.*;
 import bookkeeper.services.registries.TransactionParserRegistry;
 
 public class TransactionParserRegistryFactoryTinkoff {
@@ -22,11 +22,7 @@ public class TransactionParserRegistryFactoryTinkoff {
             .addAccountMatcher(new TinkoffAccountMatcher(accountRepository))
             .addAmountMatcher(new TinkoffAmountMatcher())
             .addTimestampMatcher(new TinkoffTimestampMatcher())
-            .addSpendingParser(new TinkoffPurchaseSmsParser())
-            .addSpendingParser(new TinkoffPurchaseSmsWithDateParser())
-            .addSpendingParser(new TinkoffFpsPurchaseSmsParser())
-            .addSpendingParser(new TinkoffTransferSmsParser())
-            .addSpendingParser(new TinkoffRecurringChargeSmsParser())
+            .setSpendingParserRegistry(SpendingParserRegistry.ofProvider("tinkoff"))
             .addExpenditureMatcher(expenditureMatcherByMerchant);
     }
 }

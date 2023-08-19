@@ -1,12 +1,14 @@
 package bookkeeper.telegram.scenarios.store.tinkoff.parsers;
 
 import bookkeeper.services.parsers.SpendingParser;
+import bookkeeper.services.parsers.MarkSpendingParser;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Currency;
 
+@MarkSpendingParser(provider = "tinkoff")
 public class TinkoffTransferSmsParser implements SpendingParser<TinkoffTransferSms> {
 
     @Override

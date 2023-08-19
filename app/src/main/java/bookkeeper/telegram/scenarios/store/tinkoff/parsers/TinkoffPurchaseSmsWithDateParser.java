@@ -1,12 +1,14 @@
 package bookkeeper.telegram.scenarios.store.tinkoff.parsers;
 
 import bookkeeper.services.parsers.SpendingParser;
+import bookkeeper.services.parsers.MarkSpendingParser;
 
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
+@MarkSpendingParser(provider = "tinkoff")
 public class TinkoffPurchaseSmsWithDateParser implements SpendingParser<TinkoffPurchaseSmsWithDate> {
 
     @Override

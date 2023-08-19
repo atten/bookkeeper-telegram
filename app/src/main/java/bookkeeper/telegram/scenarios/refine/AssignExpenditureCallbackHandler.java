@@ -6,8 +6,7 @@ import bookkeeper.services.repositories.AccountTransactionRepository;
 import bookkeeper.services.repositories.MerchantExpenditureRepository;
 import bookkeeper.services.repositories.TelegramUserRepository;
 import bookkeeper.services.parsers.Spending;
-import bookkeeper.services.registries.SpendingParserRegistry;
-import bookkeeper.telegram.shared.SpendingParserRegistryFactoryAll;
+import bookkeeper.services.parsers.SpendingParserRegistry;
 import bookkeeper.telegram.shared.AbstractHandler;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Update;
@@ -27,7 +26,7 @@ import static bookkeeper.telegram.shared.TransactionResponseFactory.getResponseM
 public class AssignExpenditureCallbackHandler extends AbstractHandler {
     private final AccountTransactionRepository transactionRepository;
     private final MerchantExpenditureRepository merchantExpenditureRepository;
-    private final SpendingParserRegistry spendingParserRegistry = SpendingParserRegistryFactoryAll.create();
+    private final SpendingParserRegistry spendingParserRegistry = SpendingParserRegistry.ofAllParsers();
 
     public AssignExpenditureCallbackHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository, AccountTransactionRepository transactionRepository, MerchantExpenditureRepository merchantExpenditureRepository) {
         super(bot, telegramUserRepository);
