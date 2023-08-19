@@ -2,6 +2,7 @@ package bookkeeper.telegram.scenarios.store.tinkoff.matchers;
 
 import bookkeeper.services.matchers.AmountMatcher;
 import bookkeeper.services.parsers.Spending;
+import bookkeeper.telegram.scenarios.store.tinkoff.parsers.TinkoffFpsPurchaseSms;
 import bookkeeper.telegram.scenarios.store.tinkoff.parsers.TinkoffPurchaseSms;
 import bookkeeper.telegram.scenarios.store.tinkoff.parsers.TinkoffRecurringChargeSms;
 import bookkeeper.telegram.scenarios.store.tinkoff.parsers.TinkoffTransferSms;
@@ -21,6 +22,10 @@ public class TinkoffAmountMatcher implements AmountMatcher {
             if (obj.purchaseSum.equals(BigDecimal.ONE) && obj.purchaseCurrency.equals(Currency.getInstance("RUB")))
                 return BigDecimal.ZERO;
 
+            return obj.purchaseSum;
+        }
+        if (spending instanceof TinkoffFpsPurchaseSms) {
+            var obj = ((TinkoffFpsPurchaseSms) spending);
             return obj.purchaseSum;
         }
         if (spending instanceof TinkoffTransferSms) {

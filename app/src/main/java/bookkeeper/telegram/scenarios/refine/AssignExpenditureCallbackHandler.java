@@ -7,7 +7,7 @@ import bookkeeper.services.repositories.MerchantExpenditureRepository;
 import bookkeeper.services.repositories.TelegramUserRepository;
 import bookkeeper.services.parsers.Spending;
 import bookkeeper.services.registries.SpendingParserRegistry;
-import bookkeeper.services.registries.factories.SpendingParserRegistryFactoryAll;
+import bookkeeper.telegram.shared.SpendingParserRegistryFactoryAll;
 import bookkeeper.telegram.shared.AbstractHandler;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Update;

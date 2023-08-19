@@ -42,7 +42,8 @@ class TransactionParserRegistryFactoryTinkoffTest {
             "Покупка, карта *0964. 621.8 RUB. VKUSVILL 2. Доступно 499.28 RUB",
             "Покупка 17.07.2023. Карта *0964. 56 RUB. MOS.TRANSP. Доступно 499.28 RUB",
             "Перевод. Счет RUB. 500 RUB. Сергей С. Баланс 653.04 RUB",
-            "Выполнен регулярный платеж \"на мегафон\" на 360 р."
+            "Выполнен регулярный платеж \"на мегафон\" на 360 р.",
+            "Оплата СБП, счет RUB. 1760 RUB. YANDEX.AFISHA. Доступно 694807.79 RUB"
         );
 
         for (String rawMessage : rawMessages) {

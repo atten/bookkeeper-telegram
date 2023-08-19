@@ -1,9 +1,6 @@
-package bookkeeper.services.registries.factories;
+package bookkeeper.telegram.shared;
 
-import bookkeeper.telegram.scenarios.store.tinkoff.parsers.TinkoffPurchaseSmsParser;
-import bookkeeper.telegram.scenarios.store.tinkoff.parsers.TinkoffPurchaseSmsWithDateParser;
-import bookkeeper.telegram.scenarios.store.tinkoff.parsers.TinkoffRecurringChargeSmsParser;
-import bookkeeper.telegram.scenarios.store.tinkoff.parsers.TinkoffTransferSmsParser;
+import bookkeeper.telegram.scenarios.store.tinkoff.parsers.*;
 import bookkeeper.services.registries.SpendingParserRegistry;
 
 public class SpendingParserRegistryFactoryAll {
@@ -11,6 +8,7 @@ public class SpendingParserRegistryFactoryAll {
         return new SpendingParserRegistry()
                 .add(new TinkoffTransferSmsParser())
                 .add(new TinkoffRecurringChargeSmsParser())
+                .add(new TinkoffFpsPurchaseSmsParser())
                 .add(new TinkoffPurchaseSmsParser())
                 .add(new TinkoffPurchaseSmsWithDateParser());
     }
