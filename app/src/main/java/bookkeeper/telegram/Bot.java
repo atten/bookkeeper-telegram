@@ -13,7 +13,6 @@ import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.Update;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.Persistence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,13 +21,12 @@ import java.util.List;
 public class Bot {
     private final TelegramBot bot;
     private final List<AbstractHandler> handlers;
-    // there's only one instance of database writer (the bot itself), so we can use a single persistence context throughout runtime
     private final EntityManager entityManager;
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     public Bot(Config config) {
         bot = new TelegramBot(config.botToken());
-        entityManager = Persistence.createEntityManagerFactory("default", config.dataSourceConfig()).createEntityManager();
+        entityManager = config.entityManager();
 
         var telegramUserRepository = new TelegramUserRepository(entityManager);
         var merchantExpenditureRepository = new MerchantExpenditureRepository(entityManager);

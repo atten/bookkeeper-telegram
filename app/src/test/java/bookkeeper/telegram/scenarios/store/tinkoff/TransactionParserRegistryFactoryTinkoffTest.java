@@ -44,15 +44,12 @@ class TransactionParserRegistryFactoryTinkoffTest {
     @Test
     void parseOk() throws ParseException, URISyntaxException, IOException {
         var path = Path.of(Objects.requireNonNull(this.getClass().getResource("/validMessagesTinkoff.txt")).toURI());
-        var stream = Files.lines(path);
-        var lines = stream.collect(Collectors.toList());
+        var lines = Files.readAllLines(path);
 
         for (var line : lines) {
             var transaction = registry.parse(line, user);
             assert(!transaction.isEmpty());
         }
-
-        stream.close();
     }
 
     /**

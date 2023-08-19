@@ -15,7 +15,6 @@ public class MerchantExpenditure {
     @Column(nullable = false)
     private String merchant;
 
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Expenditure expenditure;
 

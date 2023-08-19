@@ -43,6 +43,8 @@ public class SelectExpenditureCallbackHandler extends AbstractHandler {
         AtomicInteger index = new AtomicInteger(0);
 
         Arrays.stream(Expenditure.values())
+            // exclude reserved enum values
+            .filter(expenditure -> !expenditure.name().startsWith("RESERVED"))
             .map(expenditure ->
                 // prepare buttons with expenditures selector
                 new AssignExpenditureCallback(transactionId, expenditure).setPendingTransactionIds(pendingTransactionIds).asButton(expenditure.getName())
