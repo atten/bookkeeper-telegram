@@ -1,7 +1,5 @@
 package bookkeeper.telegram.scenarios.store.tinkoff.parsers;
 
-import bookkeeper.telegram.scenarios.store.tinkoff.parsers.TinkoffTransferSms;
-import bookkeeper.telegram.scenarios.store.tinkoff.parsers.TinkoffTransferSmsParser;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;

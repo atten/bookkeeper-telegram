@@ -1,4 +1,4 @@
-package bookkeeper.services.registries.factories;
+package bookkeeper.telegram.scenarios.store.tinkoff;
 
 import bookkeeper.entities.TelegramUser;
 import bookkeeper.services.repositories.AccountRepository;
@@ -6,7 +6,6 @@ import bookkeeper.services.repositories.MerchantExpenditureRepository;
 import bookkeeper.services.repositories.TelegramUserRepository;
 import bookkeeper.services.matchers.ExpenditureMatcherByMerchant;
 import bookkeeper.services.registries.TransactionParserRegistry;
-import bookkeeper.telegram.scenarios.store.tinkoff.TransactionParserRegistryFactoryTinkoff;
 import jakarta.persistence.Persistence;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -42,7 +41,8 @@ class TransactionParserRegistryFactoryTinkoffTest {
         List<String> rawMessages = List.of(
             "Покупка, карта *0964. 621.8 RUB. VKUSVILL 2. Доступно 499.28 RUB",
             "Покупка 17.07.2023. Карта *0964. 56 RUB. MOS.TRANSP. Доступно 499.28 RUB",
-            "Перевод. Счет RUB. 500 RUB. Сергей С. Баланс 653.04 RUB"
+            "Перевод. Счет RUB. 500 RUB. Сергей С. Баланс 653.04 RUB",
+            "Выполнен регулярный платеж \"на мегафон\" на 360 р."
         );
 
         for (String rawMessage : rawMessages) {

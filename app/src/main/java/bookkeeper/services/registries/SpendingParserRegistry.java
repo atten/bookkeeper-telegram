@@ -5,7 +5,6 @@ import bookkeeper.services.parsers.SpendingParser;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * An aggregate of multiple parsers.
@@ -38,20 +37,5 @@ public class SpendingParserRegistry {
             throw new ParseException("No suitable SmsParser found.", 0);
 
         throw new ParseException("Multiple SmsParser found suitable.", 0);
-    }
-
-    public List<Spending> parseMultiple(String... rawMessages) {
-        List<Spending> list = new ArrayList<>();
-        for (String rawMessage : rawMessages) {
-            Spending msg;
-            try {
-                msg = parse(rawMessage);
-            } catch (ParseException e) {
-                // skip sms if failed to parse
-                continue;
-            }
-            list.add(msg);
-        }
-        return list;
     }
 }
