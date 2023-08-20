@@ -77,7 +77,7 @@ public class AssignExpenditureCallbackHandler extends AbstractHandler {
                 editMessage(update, getResponseMessage(transaction), getResponseKeyboard(transaction));
 
         } else {
-            var pendingTransactions = transactionRepository.getList(cm.getPendingTransactionIds());
+            var pendingTransactions = transactionRepository.getByIds(cm.getPendingTransactionIds());
 
             if (useAssociationFurther) {
                 // step 3

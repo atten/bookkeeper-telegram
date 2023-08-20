@@ -24,7 +24,7 @@ public class AccountTransactionRepository {
         return manager.find(AccountTransaction.class, transactionId);
     }
 
-    public List<AccountTransaction> getList(List<Long> transactionIds) {
+    public List<AccountTransaction> getByIds(List<Long> transactionIds) {
         var sql = "SELECT i FROM AccountTransaction i WHERE i.id IN :transactionIds";
         var query = manager.createQuery(sql, AccountTransaction.class).setParameter("transactionIds", transactionIds);
         return query.getResultList();
@@ -42,7 +42,7 @@ public class AccountTransactionRepository {
         }
     }
 
-    public BigDecimal getAggregatedAmount(Account account, Expenditure expenditure, int monthDelta) {
+    public BigDecimal getMonthlyAmount(Account account, Expenditure expenditure, int monthDelta) {
         var sql = "SELECT SUM(amount) from AccountTransaction " +
                 "WHERE account=:account " +
                 "AND expenditure=:expenditure " +

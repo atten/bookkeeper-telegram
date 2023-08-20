@@ -15,7 +15,7 @@ public enum Expenditure {
     TRAVEL("Путешествия"),
     TAXES("Налоги"),
     JOB("Работа"),
-    OTHER("Другое"),
+    RELATIVES("Семья"),
 
     // Values which are used to enlarge upper limit for corresponding integer column constraint.
     // Instead of adding a value, just pick and rename reserved one.
@@ -29,7 +29,8 @@ public enum Expenditure {
     RESERVED_7("Резерв_7"),
     RESERVED_8("Резерв_8"),
     RESERVED_9("Резерв_9"),
-    RESERVED_10("Резерв_10");
+    RESERVED_10("Резерв_10"),
+    OTHER("Другое");
 
     private final String verboseName;
 

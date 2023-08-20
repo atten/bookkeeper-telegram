@@ -38,7 +38,7 @@ public class ReviewResponseFactory {
             lines.add("```");
 
             for (var expenditure : Expenditure.enabledValues()) {
-                var amount = transactionRepository.getAggregatedAmount(account, expenditure, monthDelta);
+                var amount = transactionRepository.getMonthlyAmount(account, expenditure, monthDelta);
                 var sign = amount.compareTo(BigDecimal.ZERO);
 
                 allByCurrency.merge(currency, amount, BigDecimal::add);
