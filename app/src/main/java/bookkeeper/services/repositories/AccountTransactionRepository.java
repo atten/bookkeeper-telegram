@@ -30,16 +30,18 @@ public class AccountTransactionRepository {
         return query.getResultList();
     }
 
-    @Nullable
-    public AccountTransaction findUnapproved(TelegramUser user) {
-        var sql = "SELECT i FROM AccountTransaction i WHERE i.approvedAt=null AND i.account.telegramUser=:telegramUser ORDER BY i.timestamp DESC LIMIT 1";
-        var query = manager.createQuery(sql, AccountTransaction.class)
-                .setParameter("telegramUser", user);
-        try {
-            return query.getSingleResult();
-        } catch (NoResultException e) {
-            return null;
-        }
+    public List<Long> getIdsByExpenditure(TelegramUser user, Expenditure expenditure, int monthDelta) {
+        var sql = "SELECT id from AccountTransaction " +
+                "WHERE account.telegramUser=:user " +
+                "AND expenditure=:expenditure " +
+                "AND date_trunc('month', timestamp) = date_trunc('month', current_timestamp) - :monthDelta MONTH";
+
+        var query = manager.createQuery(sql, Long.class)
+                .setParameter("user", user)
+                .setParameter("expenditure", expenditure)
+                .setParameter("monthDelta", monthDelta);
+
+        return query.getResultList();
     }
 
     public BigDecimal getMonthlyAmount(Account account, Expenditure expenditure, int monthDelta) {

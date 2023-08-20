@@ -3,9 +3,11 @@ package bookkeeper.telegram.scenarios.review;
 import bookkeeper.services.repositories.AccountRepository;
 import bookkeeper.services.repositories.AccountTransactionRepository;
 import bookkeeper.services.repositories.TelegramUserRepository;
+import bookkeeper.telegram.scenarios.refine.RefineMonthlyTransactionsCallback;
 import bookkeeper.telegram.shared.AbstractHandler;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Update;
+import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 
 import java.util.Objects;
 
@@ -30,7 +32,10 @@ public class SlashShowMonthlyExpensesHandler extends AbstractHandler {
             return false;
 
         var user = getTelegramUser(update);
-        sendMessage(update, reviewResponseFactory.getMonthlyExpenses(user, 0));
+        var keyboard = new InlineKeyboardMarkup()
+            .addRow(new RefineMonthlyTransactionsCallback().asButton("Разобрать"));
+
+        sendMessage(update, reviewResponseFactory.getMonthlyExpenses(user, 0), keyboard);
 
         return true;
     }

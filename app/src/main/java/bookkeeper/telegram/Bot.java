@@ -41,6 +41,7 @@ public class Bot {
             new SlashStartHandler(bot, telegramUserRepository),
             new SlashClearAssociationsHandler(bot, telegramUserRepository, merchantExpenditureRepository),
             new SlashShowMonthlyExpensesHandler(bot, telegramUserRepository, accountRepository, transactionRepository),
+            new RefineMonthlyTransactionsCallbackHandler(bot, telegramUserRepository, transactionRepository),
             new TinkoffSmsHandler(bot, telegramUserRepository, accountRepository, transactionRepository, merchantBalanceCategoryMatcher),
             new SelectExpenditureCallbackHandler(bot, telegramUserRepository),
             new AssignExpenditureCallbackHandler(bot, telegramUserRepository, transactionRepository, merchantExpenditureRepository),

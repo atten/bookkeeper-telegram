@@ -13,6 +13,7 @@ public class CallbackMessageRegistry {
         new SelectExpenditureCallback(),
         new AssignExpenditureCallback(),
         new MerchantExpenditureRemoveCallback(),
+        new RefineMonthlyTransactionsCallback(),
         new TransactionApproveCallback(),
         new TransactionApproveBulkCallback(),
         new TransactionEditBulkCallback()
