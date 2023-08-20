@@ -5,6 +5,7 @@ import bookkeeper.services.repositories.TelegramUserRepository;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.User;
+import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.model.request.Keyboard;
 import com.pengrad.telegrambot.model.request.ParseMode;
@@ -17,6 +18,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public abstract class AbstractHandler {
     private final TelegramBot bot;
@@ -33,11 +36,16 @@ public abstract class AbstractHandler {
 
     protected void sendMessage(Update update, String text, @Nullable Keyboard keyboard, Boolean reply) {
         var telegramUser = getTelegramUser(update);
+        var keyboardVerbose = "";
 
         var message = new SendMessage(telegramUser.getTelegramId(), text).parseMode(ParseMode.Markdown);
 
-        if (keyboard != null)
+        if (keyboard != null) {
             message = message.replyMarkup(keyboard);
+
+            if (keyboard instanceof InlineKeyboardMarkup)
+                keyboardVerbose = getInlineKeyboardVerboseString((InlineKeyboardMarkup) keyboard);
+        }
 
         if (reply)
             message = message.replyToMessageId(getMessageId(update));
@@ -45,7 +53,7 @@ public abstract class AbstractHandler {
         var result = bot.execute(message);
         var resultVerbose = result.description() != null ? result.description() : "OK";
 
-        logger.info("{} -> {} ({})", text, telegramUser, resultVerbose);
+        logger.info("{}{} -> {} ({})", text, keyboardVerbose, telegramUser, resultVerbose);
     }
 
     protected void sendMessage(Update update, String text, Keyboard keyboard) {
@@ -126,5 +134,10 @@ public abstract class AbstractHandler {
         if (update.message() != null)
             return update.message().messageId();
         return update.callbackQuery().message().messageId();
+    }
+
+    private String getInlineKeyboardVerboseString(InlineKeyboardMarkup keyboard) {
+        var buttonsVerbose = Arrays.stream(keyboard.inlineKeyboard()).flatMap(Stream::of).map(InlineKeyboardButton::callbackData).collect(Collectors.joining(", "));
+        return String.format("[%s]", buttonsVerbose);
     }
 }

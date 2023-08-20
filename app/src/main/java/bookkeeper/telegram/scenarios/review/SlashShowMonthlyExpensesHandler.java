@@ -36,7 +36,6 @@ public class SlashShowMonthlyExpensesHandler extends AbstractHandler {
             .addRow(new RefineMonthlyTransactionsCallback().asButton("Разобрать"));
 
         sendMessage(update, reviewResponseFactory.getMonthlyExpenses(user, 0), keyboard);
-
         return true;
     }
 }

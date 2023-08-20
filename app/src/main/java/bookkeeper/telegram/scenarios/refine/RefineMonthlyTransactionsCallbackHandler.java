@@ -10,7 +10,7 @@ import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -48,7 +48,7 @@ public class RefineMonthlyTransactionsCallbackHandler extends AbstractHandler {
         var groupBy = 3;
         AtomicInteger index = new AtomicInteger(0);
 
-        Map<Expenditure, List<Long>> idsByExpenditure = new HashMap<>();
+        Map<Expenditure, List<Long>> idsByExpenditure = new LinkedHashMap<>();
 
         Expenditure.enabledValues()
             .forEach(expenditure -> {
