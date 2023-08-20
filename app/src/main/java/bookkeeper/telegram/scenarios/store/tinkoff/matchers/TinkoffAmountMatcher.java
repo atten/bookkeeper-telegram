@@ -37,6 +37,9 @@ public class TinkoffAmountMatcher implements AmountMatcher {
             var obj = ((TinkoffReplenishSimpleSms) spending);
             return obj.replenishSum.negate();
         }
+        if (spending instanceof TinkoffIgnoreSms) {
+            return BigDecimal.ZERO;
+        }
         return null;
     }
 }

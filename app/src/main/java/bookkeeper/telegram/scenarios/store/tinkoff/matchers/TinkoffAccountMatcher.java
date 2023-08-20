@@ -40,6 +40,10 @@ public class TinkoffAccountMatcher implements AccountMatcher {
             var obj = (TinkoffReplenishSimpleSms) spending;
             return getTinkoffAccount(obj.accountCurrency, user);
         }
+        if (spending instanceof TinkoffIgnoreSms) {
+            var defaultCurrency = Currency.getInstance("RUB");
+            return getTinkoffAccount(defaultCurrency, user);
+        }
         return null;
     }
 
