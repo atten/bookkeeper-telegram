@@ -35,13 +35,13 @@ public class TransactionResponseFactory {
 
         if (counterMap.size() == 1) {
             var expenditure = transactions.get(0).getExpenditure();
-            statsVerbose = String.format("в *%s*", expenditure.getName());
+            statsVerbose = String.format("в *%s*", expenditure.getVerboseName());
         } else {
             totalItemsVerbose = totalItemsVerbose + ": ";
             statsVerbose = counterMap
                     .entrySet()
                     .stream()
-                    .map(entry -> String.format("%s в *%s*", entry.getValue(), entry.getKey().getName()))
+                    .map(entry -> String.format("%s в *%s*", entry.getValue(), entry.getKey().getVerboseName()))
                     .reduce((s, s2) -> s + ", " + s2).orElse("");
         }
 
@@ -71,7 +71,7 @@ public class TransactionResponseFactory {
     }
 
     public static String getResponseMessage(String merchant, Expenditure expenditure) {
-        return String.format("Категория *%s* будет использоваться по умолчанию для последующих записей `%s`.", expenditure.getName(), merchant);
+        return String.format("Категория *%s* будет использоваться по умолчанию для последующих записей `%s`.", expenditure.getVerboseName(), merchant);
     }
 
     public static InlineKeyboardMarkup getResponseKeyboard(List<AccountTransaction> transactions) {

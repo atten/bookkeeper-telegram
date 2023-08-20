@@ -7,6 +7,7 @@ import jakarta.persistence.NoResultException;
 
 import java.time.Instant;
 import java.util.Currency;
+import java.util.List;
 
 public class AccountRepository {
     private final EntityManager manager;
@@ -27,6 +28,12 @@ public class AccountRepository {
         } catch (NoResultException e) {
             return manager.merge(newAccountFactory(name, currency, user));
         }
+    }
+
+    public List<Account> findForUser(TelegramUser user) {
+        var sql = "SELECT i FROM Account i WHERE i.telegramUser = :user";
+        var query = manager.createQuery(sql, Account.class).setParameter("user", user);
+        return query.getResultList();
     }
 
     private Account newAccountFactory(String name, Currency currency, TelegramUser user) {

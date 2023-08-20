@@ -2,10 +2,11 @@ package bookkeeper.telegram.scenarios.refine;
 
 import bookkeeper.services.repositories.AccountTransactionRepository;
 import bookkeeper.services.repositories.TelegramUserRepository;
-import bookkeeper.telegram.shared.TransactionResponseFactory;
 import bookkeeper.telegram.shared.AbstractHandler;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Update;
+
+import static bookkeeper.telegram.shared.TransactionResponseFactory.getResponseKeyboard;
 
 
 /**
@@ -33,7 +34,7 @@ public class TransactionApproveBulkCallbackHandler extends AbstractHandler {
 
         transactions.forEach(transactionRepository::approve);
 
-        editMessage(update, TransactionResponseFactory.getResponseKeyboard(transactions));
+        editMessage(update, getResponseKeyboard(transactions));
         return true;
     }
 }

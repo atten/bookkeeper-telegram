@@ -1,5 +1,6 @@
 package bookkeeper.services.repositories;
 
+import bookkeeper.entities.Account;
 import bookkeeper.entities.AccountTransaction;
 import bookkeeper.entities.TelegramUser;
 import bookkeeper.enums.Expenditure;
@@ -7,6 +8,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import org.jetbrains.annotations.Nullable;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
 
@@ -38,6 +40,25 @@ public class AccountTransactionRepository {
         } catch (NoResultException e) {
             return null;
         }
+    }
+
+    public BigDecimal getAggregatedAmount(Account account, Expenditure expenditure, int monthDelta) {
+        var sql = "SELECT SUM(amount) from AccountTransaction " +
+                "WHERE account=:account " +
+                "AND expenditure=:expenditure " +
+                "AND date_trunc('month', timestamp) = date_trunc('month', current_timestamp) - :monthDelta MONTH";
+
+        var query = manager.createQuery(sql)
+            .setParameter("account", account)
+            .setParameter("expenditure", expenditure)
+            .setParameter("monthDelta", monthDelta);
+
+        var result = query.getSingleResult();
+
+        if (result == null)
+            return BigDecimal.ZERO;
+
+        return (BigDecimal) result;
     }
 
     public void approve(AccountTransaction transaction) {

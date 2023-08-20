@@ -8,7 +8,6 @@ import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -42,12 +41,10 @@ public class SelectExpenditureCallbackHandler extends AbstractHandler {
         var groupBy = 3;
         AtomicInteger index = new AtomicInteger(0);
 
-        Arrays.stream(Expenditure.values())
-            // exclude reserved enum values
-            .filter(expenditure -> !expenditure.name().startsWith("RESERVED"))
+        Expenditure.enabledValues().stream()
             .map(expenditure ->
                 // prepare buttons with expenditures selector
-                new AssignExpenditureCallback(transactionId, expenditure).setPendingTransactionIds(pendingTransactionIds).asButton(expenditure.getName())
+                new AssignExpenditureCallback(transactionId, expenditure).setPendingTransactionIds(pendingTransactionIds).asButton(expenditure.getVerboseName())
             ).collect(
                 // split to N map items each contains a list of 3 buttons
                 Collectors.groupingBy(i -> index.getAndIncrement() / groupBy)

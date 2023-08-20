@@ -1,5 +1,9 @@
 package bookkeeper.enums;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public enum Expenditure {
     FOOD("Еда и хозтовары"),
     GOODS("Вещи"),
@@ -13,6 +17,9 @@ public enum Expenditure {
     JOB("Работа"),
     OTHER("Другое"),
 
+    // Values which are used to enlarge upper limit for corresponding integer column constraint.
+    // Instead of adding a value, just pick and rename reserved one.
+    // Column constraints and existing values won't be affected this way.
     RESERVED_1("Резерв_1"),
     RESERVED_2("Резерв_2"),
     RESERVED_3("Резерв_3"),
@@ -24,13 +31,21 @@ public enum Expenditure {
     RESERVED_9("Резерв_9"),
     RESERVED_10("Резерв_10");
 
-    private final String name;
+    private final String verboseName;
 
-    Expenditure(String name) {
-        this.name = name;
+    Expenditure(String verboseName) {
+        this.verboseName = verboseName;
     }
 
-    public String getName() {
-        return name;
+    public String getVerboseName() {
+        return verboseName;
+    }
+
+    public boolean isEnabled() { return !name().startsWith("RESERVED"); }
+
+    public static List<Expenditure> enabledValues() {
+        return Arrays.stream(values())
+            .filter(Expenditure::isEnabled)
+            .collect(Collectors.toList());
     }
 }
