@@ -12,6 +12,8 @@ public class TinkoffReplenishSmsParser implements SpendingParser<TinkoffReplenis
 
     @Override
     public TinkoffReplenishSms parse(String rawMessage) throws ParseException {
+        rawMessage = rawMessage.replace("Возврат. Счет", "Пополнение, счет");
+
         String[] parts = rawMessage.split(" ");
         if (!rawMessage.startsWith("Пополнение, счет") || parts.length != 8)
             throw new ParseException(rawMessage, 0);
