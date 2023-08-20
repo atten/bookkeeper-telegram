@@ -40,7 +40,11 @@ public abstract class CallbackMessage {
             if (result.size() == 0) {
                 result.add(item);
             } else if (result.size() == 1) {
-                result.add("-");
+                var firstItem = Long.parseLong(result.get(0));
+                if (firstItem + 1 == value)
+                    result.add("-");
+                else
+                    result.add(",");
                 result.add(item);
             } else {
                 var lastItem = result.get(result.size() - 1);
