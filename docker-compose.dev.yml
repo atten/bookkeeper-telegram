@@ -15,7 +15,8 @@ services:
       - '5434:5432'
 
 volumes:
-  postgres_dev: {}
+  postgres_dev:
+    name: bookkeeper-postgres-dev
 
 networks:
   default:
