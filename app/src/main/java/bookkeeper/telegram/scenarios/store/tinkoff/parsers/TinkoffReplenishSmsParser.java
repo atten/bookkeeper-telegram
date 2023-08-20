@@ -8,15 +8,15 @@ import java.text.ParseException;
 import java.util.Currency;
 
 @MarkSpendingParser(provider = "tinkoff")
-public class TinkoffReplenishSimpleSmsParser implements SpendingParser<TinkoffReplenishSimpleSms> {
+public class TinkoffReplenishSmsParser implements SpendingParser<TinkoffReplenishSms> {
 
     @Override
-    public TinkoffReplenishSimpleSms parse(String rawMessage) throws ParseException {
+    public TinkoffReplenishSms parse(String rawMessage) throws ParseException {
         String[] parts = rawMessage.split(" ");
         if (!rawMessage.startsWith("Пополнение, счет") || parts.length != 8)
             throw new ParseException(rawMessage, 0);
 
-        var sms = new TinkoffReplenishSimpleSms();
+        var sms = new TinkoffReplenishSms();
         Currency replenishCurrency;
 
         try {

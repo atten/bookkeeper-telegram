@@ -36,8 +36,8 @@ public class TinkoffAccountMatcher implements AccountMatcher {
             var obj = (TinkoffFpsPurchaseSms) spending;
             return getTinkoffAccount(obj.accountCurrency, user);
         }
-        if (spending instanceof TinkoffReplenishSimpleSms) {
-            var obj = (TinkoffReplenishSimpleSms) spending;
+        if (spending instanceof TinkoffReplenishSms) {
+            var obj = (TinkoffReplenishSms) spending;
             return getTinkoffAccount(obj.accountCurrency, user);
         }
         if (spending instanceof TinkoffIgnoreSms) {

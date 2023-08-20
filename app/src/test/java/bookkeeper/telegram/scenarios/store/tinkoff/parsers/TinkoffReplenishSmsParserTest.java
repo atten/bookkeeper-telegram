@@ -8,14 +8,14 @@ import java.util.Currency;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class TinkoffReplenishSimpleSmsParserTest {
-    private final TinkoffReplenishSimpleSmsParser parser = new TinkoffReplenishSimpleSmsParser();
+class TinkoffReplenishSmsParserTest {
+    private final TinkoffReplenishSmsParser parser = new TinkoffReplenishSmsParser();
 
     @Test
     void parseOk() throws ParseException {
         var sms = parser.parse("Пополнение, счет RUB. 236 RUB. Доступно 713.79 RUB");
 
-        var referenceSms = new TinkoffReplenishSimpleSms();
+        var referenceSms = new TinkoffReplenishSms();
 
         referenceSms.replenishSum = new BigDecimal("236");
         referenceSms.replenishCurrency = Currency.getInstance("RUB");

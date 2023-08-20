@@ -6,7 +6,7 @@ import java.util.Objects;
  * Example:
  * Пополнение, счет RUB. 236 RUB. Сергей С. Доступно 713.79 RUB
  */
-public class TinkoffReplenishWithSenderSms extends TinkoffReplenishSimpleSms {
+public class TinkoffReplenishWithSenderSms extends TinkoffReplenishSms {
     public String replenishSender;  // Сергей С
 
     @Override

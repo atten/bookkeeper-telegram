@@ -10,7 +10,7 @@ import java.util.Objects;
  * Example:
  * Пополнение, счет RUB. 236 RUB. Доступно 713.79 RUB
  */
-public class TinkoffReplenishSimpleSms implements Spending {
+public class TinkoffReplenishSms implements Spending {
     public BigDecimal replenishSum;  // 236
     public Currency replenishCurrency;  // RUB
     public BigDecimal accountBalance;  // 499.28
@@ -24,14 +24,14 @@ public class TinkoffReplenishSimpleSms implements Spending {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof TinkoffReplenishSimpleSms)) return false;
-        TinkoffReplenishSimpleSms that = (TinkoffReplenishSimpleSms) o;
+        if (!(o instanceof TinkoffReplenishSms)) return false;
+        TinkoffReplenishSms that = (TinkoffReplenishSms) o;
         return Objects.equals(replenishSum, that.replenishSum) && Objects.equals(replenishCurrency, that.replenishCurrency) && Objects.equals(accountBalance, that.accountBalance) && Objects.equals(accountCurrency, that.accountCurrency);
     }
 
     @Override
     public String toString() {
-        return "TinkoffReplenishSimpleSms{" +
+        return "TinkoffReplenishSms{" +
                 "replenishSum=" + replenishSum +
                 ", replenishCurrency=" + replenishCurrency +
                 ", accountBalance=" + accountBalance +

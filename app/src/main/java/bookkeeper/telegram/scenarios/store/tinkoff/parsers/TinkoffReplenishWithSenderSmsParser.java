@@ -7,7 +7,7 @@ import java.text.ParseException;
 import java.util.Arrays;
 
 @MarkSpendingParser(provider = "tinkoff")
-public class TinkoffReplenishWithSenderSmsParser implements SpendingParser<TinkoffReplenishSimpleSms> {
+public class TinkoffReplenishWithSenderSmsParser implements SpendingParser<TinkoffReplenishSms> {
 
     @Override
     public TinkoffReplenishWithSenderSms parse(String rawMessage) throws ParseException {
@@ -18,8 +18,8 @@ public class TinkoffReplenishWithSenderSmsParser implements SpendingParser<Tinko
         var senderPart = String.join(" ", Arrays.copyOfRange(parts, 5, parts.length - 3));
         var smsWithoutSenderText = rawMessage.replace(senderPart + " ", "");
 
-        // parse sender and reuse TinkoffReplenishSimpleSmsParser for the rest of fields
-        var smsWithoutSender = new TinkoffReplenishSimpleSmsParser().parse(smsWithoutSenderText);
+        // parse sender and reuse TinkoffReplenishSmsParser for the rest of fields
+        var smsWithoutSender = new TinkoffReplenishSmsParser().parse(smsWithoutSenderText);
         var sms = new TinkoffReplenishWithSenderSms();
 
         sms.replenishSender = senderPart.replace(".", "");

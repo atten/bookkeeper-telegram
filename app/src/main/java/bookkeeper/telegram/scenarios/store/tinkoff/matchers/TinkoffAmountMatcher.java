@@ -33,8 +33,8 @@ public class TinkoffAmountMatcher implements AmountMatcher {
             var obj = ((TinkoffRecurringChargeSms) spending);
             return obj.chargeSum;
         }
-        if (spending instanceof TinkoffReplenishSimpleSms) {
-            var obj = ((TinkoffReplenishSimpleSms) spending);
+        if (spending instanceof TinkoffReplenishSms) {
+            var obj = ((TinkoffReplenishSms) spending);
             return obj.replenishSum.negate();
         }
         if (spending instanceof TinkoffIgnoreSms) {
