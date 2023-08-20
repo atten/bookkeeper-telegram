@@ -29,7 +29,6 @@ public enum Expenditure {
     RESERVED_7("Резерв_7"),
     RESERVED_8("Резерв_8"),
     RESERVED_9("Резерв_9"),
-    RESERVED_10("Резерв_10"),
     OTHER("Другое");
 
     private final String verboseName;
