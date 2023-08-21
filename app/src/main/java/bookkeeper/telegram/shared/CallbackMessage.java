@@ -13,7 +13,8 @@ public abstract class CallbackMessage {
     public abstract CallbackMessage parse(String message) throws ParseException;
 
     public InlineKeyboardButton asButton(String text) {
-        return new InlineKeyboardButton(text).callbackData(toString());
+        var shortener = StringShortener.FOR_TELEGRAM_CALLBACK;
+        return new InlineKeyboardButton(text).callbackData(shortener.shrink(toString()));
     }
 
     protected List<Long> parseIds(String string) {

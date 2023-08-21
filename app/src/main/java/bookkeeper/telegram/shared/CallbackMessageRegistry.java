@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Objects;
 
 public class CallbackMessageRegistry {
+    StringShortener shortener = StringShortener.FOR_TELEGRAM_CALLBACK;
+
     List<CallbackMessage> callbackMessages = List.of(
         new SelectExpenditureCallback(),
         new AssignExpenditureCallback(),
@@ -23,10 +25,12 @@ public class CallbackMessageRegistry {
         if (update.callbackQuery() == null)
             return null;
 
+        var callbackData = shortener.unshrink(update.callbackQuery().data());
+
         return callbackMessages.stream()
                 .map(callbackMessage -> {
                     try {
-                        return callbackMessage.parse(update.callbackQuery().data());
+                        return callbackMessage.parse(callbackData);
                     } catch (ParseException e) {
                         return null;
                     }
