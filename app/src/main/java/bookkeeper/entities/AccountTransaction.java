@@ -4,7 +4,10 @@ import bookkeeper.enums.Expenditure;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 
 
 @Entity
@@ -87,5 +90,13 @@ public class AccountTransaction {
 
     public void setApprovedAt(Instant approvedAt) {
         this.approvedAt = approvedAt;
+    }
+
+    public Duration age() {
+        return Duration.between(getTimestamp(), Instant.now());
+    }
+
+    public LocalDate date() {
+        return LocalDate.ofInstant(getTimestamp(), ZoneId.systemDefault());
     }
 }

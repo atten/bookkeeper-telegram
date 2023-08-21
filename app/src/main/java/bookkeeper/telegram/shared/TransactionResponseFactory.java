@@ -9,6 +9,8 @@ import bookkeeper.telegram.scenarios.refine.TransactionEditBulkCallback;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 
 import java.math.BigDecimal;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,8 +36,12 @@ public class TransactionResponseFactory {
         String statsVerbose;
 
         if (counterMap.size() == 1) {
-            var expenditure = transactions.get(0).getExpenditure();
-            statsVerbose = String.format("в *%s*", expenditure.getVerboseName());
+            var transaction = transactions.get(0);
+            statsVerbose = String.format("в *%s*", transaction.getExpenditure().getVerboseName());
+            if (!isTransactionRecent(transaction)) {
+                // add date (e.g. 10.01.23) if transaction was added earlier than 12h ago
+                statsVerbose += " " + transaction.date().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT));
+            }
         } else {
             totalItemsVerbose = totalItemsVerbose + ": ";
             statsVerbose = counterMap
@@ -138,5 +144,9 @@ public class TransactionResponseFactory {
      */
     public static String pluralizeTemplate(Integer count, String single, String few, String many) {
         return String.format(pluralize(count, single, few, many), count);
+    }
+
+    public static boolean isTransactionRecent(AccountTransaction transaction) {
+        return transaction.age().toHours() < 12;
     }
 }
