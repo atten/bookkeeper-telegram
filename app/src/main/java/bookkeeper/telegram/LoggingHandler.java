@@ -22,6 +22,8 @@ public class LoggingHandler extends AbstractHandler {
     protected String updateToString(Update update) {
         if (update.message() != null)
             return update.message().text();
-        return String.format("(callback): %s", update.callbackQuery().data());
+        if (update.callbackQuery() != null)
+            return String.format("(callback): %s", update.callbackQuery().data());
+        return String.format("(edited): %s", update.editedMessage().text());
     }
 }

@@ -66,6 +66,7 @@ public abstract class AbstractHandler {
 
     protected void editMessage(Update update, @Nullable String text, @Nullable InlineKeyboardMarkup keyboard) {
         var telegramUser = getTelegramUser(update);
+        var keyboardVerbose = "";
 
         BaseResponse result;
         if (text == null && keyboard != null) {
@@ -75,8 +76,10 @@ public abstract class AbstractHandler {
         else if (text != null) {
             var message = new EditMessageText(getChatId(update), getMessageId(update), text).parseMode(ParseMode.Markdown);
 
-            if (keyboard != null)
+            if (keyboard != null) {
                 message = message.replyMarkup(keyboard);
+                keyboardVerbose = getInlineKeyboardVerboseString(keyboard);
+            }
 
             result = bot.execute(message);
         } else {
@@ -84,7 +87,7 @@ public abstract class AbstractHandler {
         }
 
         var resultVerbose = result.description() != null ? result.description() : "OK";
-        logger.info("{} -> {} ({})", text, telegramUser, resultVerbose);
+        logger.info("{}{} -> {} ({})", text, keyboardVerbose, telegramUser, resultVerbose);
     }
 
     protected void editMessage(Update update, String text) {
@@ -121,13 +124,17 @@ public abstract class AbstractHandler {
     private User getUser(Update update) {
         if (update.message() != null)
             return update.message().from();
-        return update.callbackQuery().from();
+        if (update.callbackQuery() != null)
+            return update.callbackQuery().from();
+        return update.editedMessage().from();
     }
 
     private long getChatId(Update update) {
         if (update.message() != null)
             return update.message().chat().id();
-        return update.callbackQuery().message().chat().id();
+        if (update.callbackQuery() != null)
+            return update.callbackQuery().message().chat().id();
+        return update.editedMessage().chat().id();
     }
 
     private int getMessageId(Update update) {

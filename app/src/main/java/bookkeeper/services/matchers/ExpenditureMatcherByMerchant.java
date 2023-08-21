@@ -4,7 +4,6 @@ import bookkeeper.entities.TelegramUser;
 import bookkeeper.enums.Expenditure;
 import bookkeeper.services.repositories.MerchantExpenditureRepository;
 import bookkeeper.services.parsers.Spending;
-import org.jetbrains.annotations.NotNull;
 
 public class ExpenditureMatcherByMerchant implements ExpenditureMatcher {
     private final MerchantExpenditureRepository merchantExpenditureRepository;
@@ -13,7 +12,6 @@ public class ExpenditureMatcherByMerchant implements ExpenditureMatcher {
         this.merchantExpenditureRepository = merchantExpenditureRepository;
     }
 
-    @NotNull
     @Override
     public Expenditure match(Spending spending, TelegramUser telegramUser) {
         var resultFromRepo = merchantExpenditureRepository.find(spending.getMerchant(), telegramUser);
