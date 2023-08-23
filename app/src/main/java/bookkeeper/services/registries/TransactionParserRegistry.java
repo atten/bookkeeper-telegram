@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class TransactionParserRegistry {
@@ -60,6 +61,21 @@ public class TransactionParserRegistry {
         transaction.setRaw(rawMessage);
 
         return transaction;
+    }
+
+    public List<AccountTransaction> parseMultiple(String[] rawMessages, TelegramUser user) throws ParseException {
+        List<AccountTransaction> results = new ArrayList<>();
+
+        for (var message : rawMessages ) {
+            var transaction = parse(message, user);
+
+            if (transaction.isEmpty())
+                continue;
+
+            results.add(transaction);
+        }
+
+        return results;
     }
 
     /**
