@@ -5,11 +5,11 @@ import bookkeeper.entities.AccountTransaction;
 import bookkeeper.entities.TelegramUser;
 import bookkeeper.enums.Expenditure;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.NoResultException;
 import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.Currency;
 import java.util.List;
 
 public class AccountTransactionRepository {
@@ -27,6 +27,15 @@ public class AccountTransactionRepository {
     public List<AccountTransaction> getByIds(List<Long> transactionIds) {
         var sql = "SELECT i FROM AccountTransaction i WHERE i.id IN :transactionIds";
         var query = manager.createQuery(sql, AccountTransaction.class).setParameter("transactionIds", transactionIds);
+        return query.getResultList();
+    }
+
+    public List<AccountTransaction> getRecentList(TelegramUser user, Currency currency, int count) {
+        var sql = "SELECT i FROM AccountTransaction i WHERE account.telegramUser=:user AND account.currency=:currency ORDER BY timestamp DESC LIMIT :count";
+        var query = manager.createQuery(sql, AccountTransaction.class)
+            .setParameter("user", user)
+            .setParameter("currency", currency.getCurrencyCode())
+            .setParameter("count", count);
         return query.getResultList();
     }
 

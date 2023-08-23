@@ -1,16 +1,16 @@
-package bookkeeper.telegram.scenarios.store.tinkoff;
+package bookkeeper.telegram.scenarios.store.freehand;
 
-import bookkeeper.entities.AccountTransaction;
 import bookkeeper.entities.TelegramUser;
-import bookkeeper.services.repositories.AccountRepository;
-import bookkeeper.services.repositories.MerchantExpenditureRepository;
-import bookkeeper.services.repositories.TelegramUserRepository;
 import bookkeeper.services.matchers.ExpenditureMatcherByMerchant;
 import bookkeeper.services.registries.TransactionParserRegistry;
+import bookkeeper.services.repositories.AccountRepository;
+import bookkeeper.services.repositories.AccountTransactionRepository;
+import bookkeeper.services.repositories.MerchantExpenditureRepository;
+import bookkeeper.services.repositories.TelegramUserRepository;
+import com.pengrad.telegrambot.model.User;
 import jakarta.persistence.Persistence;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import com.pengrad.telegrambot.model.User;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -21,7 +21,7 @@ import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class TransactionParserRegistryFactoryTinkoffTest {
+class TransactionParserRegistryFactoryFreehandTest {
     private static TransactionParserRegistry registry;
     private static TelegramUser user;
 
@@ -29,25 +29,14 @@ class TransactionParserRegistryFactoryTinkoffTest {
     static void prepare() {
         var entityManager = Persistence.createEntityManagerFactory("test").createEntityManager();
         var accountRepository = new AccountRepository(entityManager);
+        var transactionRepository = new AccountTransactionRepository(entityManager);
         var merchantExpenditureRepository = new MerchantExpenditureRepository(entityManager);
         var expenditureMatcherByMerchant = new ExpenditureMatcherByMerchant(merchantExpenditureRepository);
         var userRepository = new TelegramUserRepository(entityManager);
         var telegramUser = new User(123L);
 
         user = userRepository.getOrCreate(telegramUser);
-        registry = new TransactionParserRegistryFactoryTinkoff(accountRepository, expenditureMatcherByMerchant).create();
-    }
-
-    /**
-     * Just check valid messages are parsed into transactions
-     */
-    @Test
-    void parseOk() throws ParseException, URISyntaxException, IOException {
-        var path = Path.of(Objects.requireNonNull(this.getClass().getResource("/validMessagesTinkoff.txt")).toURI());
-        var lines = Files.readAllLines(path).toArray(new String[0]);
-        var transactions = registry.parseMultiple(lines, user);
-        assert transactions.size() == lines.length;
-        assert transactions.stream().noneMatch(AccountTransaction::isEmpty);
+        registry = new TransactionParserRegistryFactoryFreehand(accountRepository, transactionRepository, expenditureMatcherByMerchant).create();
     }
 
     /**
@@ -55,7 +44,7 @@ class TransactionParserRegistryFactoryTinkoffTest {
      */
     @Test
     void parseEmpty() throws ParseException, URISyntaxException, IOException {
-        var path = Path.of(Objects.requireNonNull(this.getClass().getResource("/emptyMessagesTinkoff.txt")).toURI());
+        var path = Path.of(Objects.requireNonNull(this.getClass().getResource("/emptyMessagesFreehand.txt")).toURI());
         var lines = Files.readAllLines(path).toArray(new String[0]);
         var transactions = registry.parseMultiple(lines, user);
         assert transactions.isEmpty();

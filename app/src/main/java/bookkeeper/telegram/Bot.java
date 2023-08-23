@@ -8,6 +8,7 @@ import bookkeeper.services.repositories.TelegramUserRepository;
 import bookkeeper.services.matchers.ExpenditureMatcherByMerchant;
 import bookkeeper.telegram.scenarios.refine.*;
 import bookkeeper.telegram.scenarios.review.SlashShowMonthlyExpensesHandler;
+import bookkeeper.telegram.scenarios.store.freehand.FreehandRecordHandler;
 import bookkeeper.telegram.scenarios.store.tinkoff.TinkoffSmsHandler;
 import bookkeeper.telegram.shared.AbstractHandler;
 import com.pengrad.telegrambot.TelegramBot;
@@ -34,7 +35,7 @@ public class Bot {
         var accountRepository = new AccountRepository(entityManager);
         var transactionRepository = new AccountTransactionRepository(entityManager);
 
-        var merchantBalanceCategoryMatcher = new ExpenditureMatcherByMerchant(merchantExpenditureRepository);
+        var expenditureMatcherByMerchant = new ExpenditureMatcherByMerchant(merchantExpenditureRepository);
 
         handlers = List.of(
             new LoggingHandler(bot, telegramUserRepository),
@@ -42,7 +43,8 @@ public class Bot {
             new SlashClearAssociationsHandler(bot, telegramUserRepository, merchantExpenditureRepository),
             new SlashShowMonthlyExpensesHandler(bot, telegramUserRepository, accountRepository, transactionRepository),
             new RefineMonthlyTransactionsCallbackHandler(bot, telegramUserRepository, transactionRepository),
-            new TinkoffSmsHandler(bot, telegramUserRepository, accountRepository, transactionRepository, merchantBalanceCategoryMatcher),
+            new TinkoffSmsHandler(bot, telegramUserRepository, accountRepository, transactionRepository, expenditureMatcherByMerchant),
+            new FreehandRecordHandler(bot, telegramUserRepository, accountRepository, transactionRepository, expenditureMatcherByMerchant),
             new SelectExpenditureCallbackHandler(bot, telegramUserRepository),
             new AssignExpenditureCallbackHandler(bot, telegramUserRepository, transactionRepository, merchantExpenditureRepository),
             new MerchantExpenditureRemoveCallbackHandler(bot, telegramUserRepository, merchantExpenditureRepository),
