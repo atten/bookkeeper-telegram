@@ -39,6 +39,7 @@ public class Bot {
 
         handlers = List.of(
             new LoggingHandler(bot, telegramUserRepository),
+            new LocaleHandler(bot, telegramUserRepository),
             new SlashStartHandler(bot, telegramUserRepository),
             new SlashClearAssociationsHandler(bot, telegramUserRepository, merchantExpenditureRepository),
             new SlashStatsHandler(bot, telegramUserRepository, accountRepository, transactionRepository),

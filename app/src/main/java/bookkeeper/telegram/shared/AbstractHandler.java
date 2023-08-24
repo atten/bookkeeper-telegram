@@ -104,6 +104,14 @@ public abstract class AbstractHandler {
         return telegramUser;
     }
 
+    protected User getUser(Update update) {
+        if (update.message() != null)
+            return update.message().from();
+        if (update.callbackQuery() != null)
+            return update.callbackQuery().from();
+        return update.editedMessage().from();
+    }
+
     protected CallbackMessage getCallbackMessage(Update update) {
         return callbackMessageRegistry.getCallbackMessage(update);
     }
@@ -119,14 +127,6 @@ public abstract class AbstractHandler {
      */
     private String cleanString(String input) {
         return input.replaceAll(Arrays.toString(Character.toChars(160)), " ");
-    }
-
-    private User getUser(Update update) {
-        if (update.message() != null)
-            return update.message().from();
-        if (update.callbackQuery() != null)
-            return update.callbackQuery().from();
-        return update.editedMessage().from();
     }
 
     private long getChatId(Update update) {
