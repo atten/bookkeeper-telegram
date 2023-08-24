@@ -8,7 +8,7 @@ import java.util.List;
 
 @MarkSpendingParser(provider = "tinkoff")
 public class TinkoffIgnoreSmsParser implements SpendingParser<TinkoffIgnoreSms> {
-    List<String> ignore = List.of(
+    private final List<String> ignore = List.of(
         "Никому не говорите код",
         "Завтра выполним регулярный платеж",
         "Оцените решение вопроса",

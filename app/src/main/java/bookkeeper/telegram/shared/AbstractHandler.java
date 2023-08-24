@@ -34,7 +34,7 @@ public abstract class AbstractHandler {
 
     public abstract Boolean handle(Update update);
 
-    protected void sendMessage(Update update, String text, @Nullable Keyboard keyboard, Boolean reply) {
+    void sendMessage(Update update, String text, @Nullable Keyboard keyboard, Boolean reply) {
         var telegramUser = getTelegramUser(update);
         var keyboardVerbose = "";
 
@@ -116,7 +116,7 @@ public abstract class AbstractHandler {
         return callbackMessageRegistry.getCallbackMessage(update);
     }
 
-    protected String getMessageText(Update update) {
+    String getMessageText(Update update) {
         if (update.message() == null)
             return "";
         return cleanString(update.message().text());

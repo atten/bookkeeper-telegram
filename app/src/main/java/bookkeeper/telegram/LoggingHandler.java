@@ -9,7 +9,7 @@ import com.pengrad.telegrambot.model.Update;
  * Print incoming request to console.
  */
 public class LoggingHandler extends AbstractHandler {
-    public LoggingHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository) {
+    LoggingHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository) {
         super(bot, telegramUserRepository);
     }
 
@@ -19,7 +19,7 @@ public class LoggingHandler extends AbstractHandler {
         return false;
     }
 
-    protected String updateToString(Update update) {
+    private String updateToString(Update update) {
         if (update.message() != null)
             return update.message().text();
         if (update.callbackQuery() != null)

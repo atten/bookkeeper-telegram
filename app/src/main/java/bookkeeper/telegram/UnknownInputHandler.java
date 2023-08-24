@@ -9,7 +9,7 @@ import com.pengrad.telegrambot.model.Update;
  * Inform user that input can't be processed.
  */
 public class UnknownInputHandler extends AbstractHandler {
-    public UnknownInputHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository) {
+    UnknownInputHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository) {
         super(bot, telegramUserRepository);
     }
 

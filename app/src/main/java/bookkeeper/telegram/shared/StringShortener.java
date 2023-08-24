@@ -11,19 +11,19 @@ import java.util.Map;
  * Knowing it, your both type string and data must be at total less than 55 characters.
  * API error ( error event) will return otherwise.
  */
-public class StringShortener {
-    final int CACHE_SIZE = 1000;
+class StringShortener {
+    private final int CACHE_SIZE = 1000;
 
-    final Map<String, String> cache = new LruCache<>(CACHE_SIZE);
-    final int maxStringLength;
+    private final Map<String, String> cache = new LruCache<>(CACHE_SIZE);
+    private final int maxStringLength;
 
     static final StringShortener FOR_TELEGRAM_CALLBACK = new StringShortener(55);
 
-    public StringShortener(int maxLength) {
+    private StringShortener(int maxLength) {
         this.maxStringLength = maxLength;
     }
 
-    public String shrink(String input) {
+    String shrink(String input) {
         if (input.length() <= maxStringLength)
             return input;
 
@@ -35,7 +35,7 @@ public class StringShortener {
         return shrinked;
     }
 
-    public String unshrink(String shrinked) {
+    String unshrink(String shrinked) {
         return cache.getOrDefault(shrinked, shrinked);
     }
 }

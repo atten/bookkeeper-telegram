@@ -13,7 +13,7 @@ public class MerchantExpenditureRemoveCallback extends CallbackMessage {
 
     public MerchantExpenditureRemoveCallback() {}
 
-    public MerchantExpenditureRemoveCallback(String merchant, Expenditure expenditure) {
+    MerchantExpenditureRemoveCallback(String merchant, Expenditure expenditure) {
         this.merchant = merchant;
         this.expenditure = expenditure;
     }
@@ -27,11 +27,11 @@ public class MerchantExpenditureRemoveCallback extends CallbackMessage {
         throw new ParseException("", 0);
     }
 
-    public String getMerchant() {
+    String getMerchant() {
         return merchant;
     }
 
-    public Expenditure getExpenditure() {
+    Expenditure getExpenditure() {
         return expenditure;
     }
 

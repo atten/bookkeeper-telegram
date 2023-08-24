@@ -9,16 +9,16 @@ import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class StatisticsResponseFactory {
+class StatisticsResponseFactory {
     private final AccountRepository accountRepository;
     private final AccountTransactionRepository transactionRepository;
 
-    public StatisticsResponseFactory(AccountRepository accountRepository, AccountTransactionRepository transactionRepository) {
+    StatisticsResponseFactory(AccountRepository accountRepository, AccountTransactionRepository transactionRepository) {
         this.accountRepository = accountRepository;
         this.transactionRepository = transactionRepository;
     }
 
-    public String getMonthlyExpenses(TelegramUser user, int monthDelta) {
+    String getMonthlyExpenses(TelegramUser user, int monthDelta) {
         var lines = new ArrayList<String>();
         var creditByCurrency = new HashMap<Currency, BigDecimal>();
         var debitByCurrency = new HashMap<Currency, BigDecimal>();

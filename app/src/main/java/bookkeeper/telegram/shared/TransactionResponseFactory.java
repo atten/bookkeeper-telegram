@@ -126,7 +126,7 @@ public class TransactionResponseFactory {
         return kb.addRow(button1, callback2.asButton("Подтвердить"));
     }
 
-    public static String pluralize(Integer count, String single, String few, String many) {
+    private static String pluralize(Integer count, String single, String few, String many) {
         var n = count % 100;
         if (count == 0)
             return many;
@@ -146,7 +146,7 @@ public class TransactionResponseFactory {
         return String.format(pluralize(count, single, few, many), count);
     }
 
-    public static boolean isTransactionRecent(AccountTransaction transaction) {
+    private static boolean isTransactionRecent(AccountTransaction transaction) {
         return transaction.age().toHours() < 12;
     }
 }

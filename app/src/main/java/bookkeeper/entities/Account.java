@@ -23,6 +23,10 @@ public class Account {
     @Column(nullable = false, name = "created_at")
     private Instant createdAt;
 
+    public long getId() {
+        return id;
+    }
+
     public String getName() {
         return name;
     }
@@ -43,7 +47,16 @@ public class Account {
         this.telegramUser = telegramUser;
     }
 
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public TelegramUser getTelegramUser() {
+        return telegramUser;
+    }
+
     public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
     }
+
 }

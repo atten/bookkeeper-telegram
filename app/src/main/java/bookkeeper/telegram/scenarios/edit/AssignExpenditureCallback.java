@@ -15,7 +15,7 @@ public class AssignExpenditureCallback extends CallbackMessage {
 
     public AssignExpenditureCallback() {}
 
-    public AssignExpenditureCallback(long transactionId, Expenditure expenditure) {
+    AssignExpenditureCallback(long transactionId, Expenditure expenditure) {
         this.transactionId = transactionId;
         this.expenditure = expenditure;
         this.pendingTransactionIds = List.of();
@@ -35,7 +35,7 @@ public class AssignExpenditureCallback extends CallbackMessage {
         throw new ParseException("", 0);
     }
 
-    public long getTransactionId() {
+    long getTransactionId() {
         return transactionId;
     }
 
@@ -43,11 +43,11 @@ public class AssignExpenditureCallback extends CallbackMessage {
         return expenditure;
     }
 
-    public List<Long> getPendingTransactionIds() {
+    List<Long> getPendingTransactionIds() {
         return pendingTransactionIds;
     }
 
-    public AssignExpenditureCallback setPendingTransactionIds(List<Long> pendingTransactionIds) {
+    AssignExpenditureCallback setPendingTransactionIds(List<Long> pendingTransactionIds) {
         this.pendingTransactionIds = pendingTransactionIds;
         return this;
     }

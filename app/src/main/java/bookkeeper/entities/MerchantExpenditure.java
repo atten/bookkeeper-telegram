@@ -25,12 +25,20 @@ public class MerchantExpenditure {
     @Column(nullable = false, name = "created_at")
     private Instant createdAt;
 
+    public Long getId() {
+        return id;
+    }
+
     public Expenditure getExpenditure() {
         return expenditure;
     }
 
     public void setExpenditure(Expenditure expenditure) {
         this.expenditure = expenditure;
+    }
+
+    public TelegramUser getTelegramUser() {
+        return telegramUser;
     }
 
     public void setTelegramUser(TelegramUser telegramUser) {
@@ -45,7 +53,12 @@ public class MerchantExpenditure {
         this.merchant = merchant;
     }
 
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
     public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
     }
+
 }

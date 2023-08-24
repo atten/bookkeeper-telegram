@@ -41,7 +41,7 @@ public enum Expenditure {
         return verboseName;
     }
 
-    public boolean isEnabled() { return !name().startsWith("RESERVED"); }
+    private boolean isEnabled() { return !name().startsWith("RESERVED"); }
 
     public static List<Expenditure> enabledValues() {
         return Arrays.stream(values())

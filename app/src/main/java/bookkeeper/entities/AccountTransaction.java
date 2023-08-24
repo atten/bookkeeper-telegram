@@ -36,10 +36,6 @@ public class AccountTransaction {
     @Column(nullable = false)
     private Instant timestamp;  // the moment when transaction happened
 
-    public boolean isEmpty() {
-        return amount.equals(BigDecimal.ZERO);
-    }
-
     public long getId() {
         return id;
     }
@@ -90,6 +86,10 @@ public class AccountTransaction {
 
     public void setApprovedAt(Instant approvedAt) {
         this.approvedAt = approvedAt;
+    }
+
+    public boolean isEmpty() {
+        return amount.equals(BigDecimal.ZERO);
     }
 
     public Duration age() {

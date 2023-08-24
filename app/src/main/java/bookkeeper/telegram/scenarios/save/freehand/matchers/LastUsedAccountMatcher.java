@@ -14,8 +14,8 @@ import java.util.Comparator;
 import java.util.Currency;
 
 public class LastUsedAccountMatcher implements AccountMatcher {
-    final AccountRepository repository;
-    final AccountTransactionRepository transactionRepository;
+    private final AccountRepository repository;
+    private final AccountTransactionRepository transactionRepository;
 
     public LastUsedAccountMatcher(AccountRepository repository, AccountTransactionRepository transactionRepository) {
         this.repository = repository;

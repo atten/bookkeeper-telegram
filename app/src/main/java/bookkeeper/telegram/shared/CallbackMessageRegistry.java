@@ -8,10 +8,10 @@ import java.text.ParseException;
 import java.util.List;
 import java.util.Objects;
 
-public class CallbackMessageRegistry {
-    StringShortener shortener = StringShortener.FOR_TELEGRAM_CALLBACK;
+class CallbackMessageRegistry {
+    private final StringShortener shortener = StringShortener.FOR_TELEGRAM_CALLBACK;
 
-    List<CallbackMessage> callbackMessages = List.of(
+    private final List<CallbackMessage> callbackMessages = List.of(
         new SelectExpenditureCallback(),
         new AssignExpenditureCallback(),
         new MerchantExpenditureRemoveCallback(),
@@ -21,7 +21,8 @@ public class CallbackMessageRegistry {
         new TransactionEditBulkCallback()
     );
 
-    @Nullable public CallbackMessage getCallbackMessage(Update update) {
+    @Nullable
+    CallbackMessage getCallbackMessage(Update update) {
         if (update.callbackQuery() == null)
             return null;
 

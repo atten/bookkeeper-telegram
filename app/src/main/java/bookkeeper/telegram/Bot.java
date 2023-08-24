@@ -20,13 +20,13 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-public class Bot {
+class Bot {
     private final TelegramBot bot;
     private final List<AbstractHandler> handlers;
     private final EntityManager entityManager;
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    public Bot(Config config) {
+    Bot(Config config) {
         bot = new TelegramBot(config.botToken());
         entityManager = config.entityManager();
 
@@ -59,7 +59,7 @@ public class Bot {
     /**
      * Run the telegram bot in a long-polling mode.
      */
-    public void listen() {
+    void listen() {
         bot.setUpdatesListener(updates -> {
             for (var update : updates) {
                 processUpdate(update);

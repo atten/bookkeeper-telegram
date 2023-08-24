@@ -25,7 +25,7 @@ public class TransactionEditBulkCallback extends CallbackMessage {
         throw new ParseException("", 0);
     }
 
-    public List<Long> getTransactionIds() {
+    List<Long> getTransactionIds() {
         return transactionIds;
     }
 

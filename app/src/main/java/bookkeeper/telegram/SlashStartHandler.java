@@ -11,7 +11,7 @@ import java.util.Objects;
  * Scenario: User starts bot usage.
  */
 public class SlashStartHandler extends AbstractHandler {
-    public SlashStartHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository) {
+    SlashStartHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository) {
         super(bot, telegramUserRepository);
     }
 

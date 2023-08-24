@@ -15,17 +15,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public class Config {
+class Config {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    public String botToken() {
+    String botToken() {
         return System.getenv("BOT_TOKEN");
     }
 
     /**
      There's only one instance of database writer (the bot itself), so we can use a single persistence context throughout runtime.
      */
-    public EntityManager entityManager() {
+    EntityManager entityManager() {
         var em = Persistence.createEntityManagerFactory("default", dataSourceConfig()).createEntityManager();
         migrate(em);
         return em;

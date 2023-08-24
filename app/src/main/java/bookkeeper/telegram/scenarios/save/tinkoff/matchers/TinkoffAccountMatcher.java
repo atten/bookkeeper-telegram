@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Currency;
 
 public class TinkoffAccountMatcher implements AccountMatcher {
-    final AccountRepository repository;
+    private final AccountRepository repository;
 
     public TinkoffAccountMatcher(AccountRepository repository) {
         this.repository = repository;

@@ -32,11 +32,11 @@ public class SelectExpenditureCallback extends CallbackMessage {
         throw new ParseException("", 0);
     }
 
-    public long getTransactionId() {
+    long getTransactionId() {
         return transactionId;
     }
 
-    public List<Long> getPendingTransactionIds() {
+    List<Long> getPendingTransactionIds() {
         return pendingTransactionIds;
     }
 
