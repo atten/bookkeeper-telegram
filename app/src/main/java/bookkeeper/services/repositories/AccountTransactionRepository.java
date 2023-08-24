@@ -73,6 +73,8 @@ public class AccountTransactionRepository {
     }
 
     public void approve(AccountTransaction transaction) {
+        if (transaction.isApproved())
+            return;
         transaction.setApprovedAt(Instant.now());
     }
 
