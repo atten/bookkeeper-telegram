@@ -2,10 +2,10 @@ package bookkeeper.telegram.shared;
 
 import bookkeeper.entities.AccountTransaction;
 import bookkeeper.enums.Expenditure;
-import bookkeeper.telegram.scenarios.refine.SelectExpenditureCallback;
-import bookkeeper.telegram.scenarios.refine.TransactionApproveBulkCallback;
-import bookkeeper.telegram.scenarios.refine.TransactionApproveCallback;
-import bookkeeper.telegram.scenarios.refine.TransactionEditBulkCallback;
+import bookkeeper.telegram.scenarios.edit.SelectExpenditureCallback;
+import bookkeeper.telegram.scenarios.edit.TransactionApproveBulkCallback;
+import bookkeeper.telegram.scenarios.edit.TransactionApproveCallback;
+import bookkeeper.telegram.scenarios.edit.TransactionEditBulkCallback;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 
 import java.math.BigDecimal;

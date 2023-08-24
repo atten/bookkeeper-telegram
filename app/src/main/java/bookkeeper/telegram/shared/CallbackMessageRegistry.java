@@ -1,6 +1,6 @@
 package bookkeeper.telegram.shared;
 
-import bookkeeper.telegram.scenarios.refine.*;
+import bookkeeper.telegram.scenarios.edit.*;
 import com.pengrad.telegrambot.model.Update;
 import org.jetbrains.annotations.Nullable;
 
