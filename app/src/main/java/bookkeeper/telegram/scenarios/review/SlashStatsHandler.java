@@ -15,10 +15,10 @@ import java.util.Objects;
 /**
  * Scenario: user requests monthly expense statistics.
  */
-public class SlashShowMonthlyExpensesHandler extends AbstractHandler {
+public class SlashStatsHandler extends AbstractHandler {
     private final ReviewResponseFactory reviewResponseFactory;
 
-    public SlashShowMonthlyExpensesHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository, AccountRepository accountRepository, AccountTransactionRepository transactionRepository) {
+    public SlashStatsHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository, AccountRepository accountRepository, AccountTransactionRepository transactionRepository) {
         super(bot, telegramUserRepository);
         this.reviewResponseFactory = new ReviewResponseFactory(accountRepository, transactionRepository);
     }
@@ -28,7 +28,7 @@ public class SlashShowMonthlyExpensesHandler extends AbstractHandler {
      */
     @Override
     public Boolean handle(Update update) {
-        if (update.message() == null || !Objects.equals(update.message().text(), "/show_monthly_expenses"))
+        if (update.message() == null || !Objects.equals(update.message().text(), "/stats"))
             return false;
 
         var user = getTelegramUser(update);
