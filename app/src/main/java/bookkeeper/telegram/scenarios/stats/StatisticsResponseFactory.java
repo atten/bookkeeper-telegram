@@ -6,8 +6,12 @@ import bookkeeper.services.repositories.AccountRepository;
 import bookkeeper.services.repositories.AccountTransactionRepository;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static java.time.temporal.ChronoUnit.MONTHS;
 
 class StatisticsResponseFactory {
     private final AccountRepository accountRepository;
@@ -26,6 +30,7 @@ class StatisticsResponseFactory {
         var accounts = accountRepository.findForUser(user);
         var maxExpenditureLength = Expenditure.enabledValues().stream().map(expenditure -> expenditure.getVerboseName().length()).max(Comparator.naturalOrder()).orElse(0);
         var formatString = "%-" + maxExpenditureLength + "s %s";  // example: "%-15s %s"
+        var periodVerbose = LocalDate.now().minus(monthDelta, MONTHS).format(DateTimeFormatter.ofPattern("MMM yy"));
 
         for (var account : accounts) {
             var currency = account.getCurrency();
@@ -57,7 +62,7 @@ class StatisticsResponseFactory {
             lines.add("```");
         }
 
-        lines.add("*Всего*");
+        lines.add(String.format("*Всего за %s*", periodVerbose));
         lines.add("```");
         lines.add(String.format("%-7s %s", "Расходы", amountByCurrencyString(creditByCurrency)));
         lines.add(String.format("%-7s %s", "Доходы", amountByCurrencyString(debitByCurrency)));
