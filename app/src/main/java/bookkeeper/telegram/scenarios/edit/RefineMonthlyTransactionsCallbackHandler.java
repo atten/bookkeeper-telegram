@@ -5,6 +5,7 @@ import bookkeeper.enums.Expenditure;
 import bookkeeper.services.repositories.AccountTransactionRepository;
 import bookkeeper.services.repositories.TelegramUserRepository;
 import bookkeeper.telegram.shared.AbstractHandler;
+import bookkeeper.telegram.shared.CallbackMessageRegistry;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
@@ -33,7 +34,7 @@ public class RefineMonthlyTransactionsCallbackHandler extends AbstractHandler {
      */
     @Override
     public Boolean handle(Update update) {
-        var callbackMessage = getCallbackMessage(update);
+        var callbackMessage = CallbackMessageRegistry.getCallbackMessage(update);
         if (!(callbackMessage instanceof RefineMonthlyTransactionsCallback))
             return false;
 

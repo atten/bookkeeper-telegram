@@ -1,45 +1,50 @@
 package bookkeeper.telegram.shared;
 
-import bookkeeper.telegram.scenarios.edit.*;
 import com.pengrad.telegrambot.model.Update;
+import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.*;
 import java.text.ParseException;
-import java.util.List;
-import java.util.Objects;
+import java.util.Base64;
 
-class CallbackMessageRegistry {
-    private final StringShortener shortener = StringShortener.FOR_TELEGRAM_CALLBACK;
+public class CallbackMessageRegistry {
+    private static final StringShortener shortener = new StringShortener(55);
 
-    private final List<CallbackMessage> callbackMessages = List.of(
-        new SelectExpenditureCallback(),
-        new AssignExpenditureCallback(),
-        new MerchantExpenditureRemoveCallback(),
-        new RefineMonthlyTransactionsCallback(),
-        new TransactionApproveCallback(),
-        new TransactionApproveBulkCallback(),
-        new TransactionEditBulkCallback()
-    );
+    static InlineKeyboardButton createButton(CallbackMessage message, String text) {
+        return new InlineKeyboardButton(text).callbackData(shortener.shrink(serialize(message)));
+    }
 
     @Nullable
-    CallbackMessage getCallbackMessage(Update update) {
+    public static CallbackMessage getCallbackMessage(Update update) {
         if (update.callbackQuery() == null)
             return null;
 
         var callbackData = shortener.unshrink(update.callbackQuery().data());
 
-        return callbackMessages.stream()
-                .map(callbackMessage -> {
-                    try {
-                        return callbackMessage.parse(callbackData);
-                    } catch (ParseException e) {
-                        return null;
-                    }
-                })
-                .filter(Objects::nonNull)
-                .reduce((callbackMessage, callbackMessage2) -> {
-                    throw new RuntimeException(String.format("Expected a single CallbackMessage match, got %s, %s", callbackMessage, callbackMessage2));
-                })
-                .orElse(null);
+        try {
+            return deserialize(callbackData);
+        } catch (ParseException e) {
+            return null;
+        }
+    }
+
+    private static String serialize(CallbackMessage message) {
+        var output = new ByteArrayOutputStream();
+        try {
+            new ObjectOutputStream(output).writeObject(message);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return Base64.getEncoder().encodeToString(output.toByteArray());
+    }
+
+    private static CallbackMessage deserialize(String callbackData) throws ParseException {
+        var input = new ByteArrayInputStream(Base64.getDecoder().decode(callbackData));
+        try {
+            return (CallbackMessage) new ObjectInputStream(input).readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            throw new ParseException(callbackData, 0);
+        }
     }
 }

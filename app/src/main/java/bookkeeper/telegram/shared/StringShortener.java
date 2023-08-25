@@ -17,9 +17,7 @@ class StringShortener {
     private final Map<String, String> cache = new LruCache<>(CACHE_SIZE);
     private final int maxStringLength;
 
-    static final StringShortener FOR_TELEGRAM_CALLBACK = new StringShortener(55);
-
-    private StringShortener(int maxLength) {
+    StringShortener(int maxLength) {
         this.maxStringLength = maxLength;
     }
 

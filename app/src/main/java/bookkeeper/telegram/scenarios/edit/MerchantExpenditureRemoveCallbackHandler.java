@@ -4,6 +4,7 @@ import bookkeeper.enums.Expenditure;
 import bookkeeper.services.repositories.MerchantExpenditureRepository;
 import bookkeeper.services.repositories.TelegramUserRepository;
 import bookkeeper.telegram.shared.AbstractHandler;
+import bookkeeper.telegram.shared.CallbackMessageRegistry;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Update;
 
@@ -20,7 +21,7 @@ public class MerchantExpenditureRemoveCallbackHandler extends AbstractHandler {
 
     @Override
     public Boolean handle(Update update) {
-        var callbackMessage = getCallbackMessage(update);
+        var callbackMessage = CallbackMessageRegistry.getCallbackMessage(update);
         if (!(callbackMessage instanceof MerchantExpenditureRemoveCallback))
             return false;
 

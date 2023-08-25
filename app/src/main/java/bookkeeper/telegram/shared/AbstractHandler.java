@@ -24,7 +24,6 @@ import java.util.stream.Stream;
 public abstract class AbstractHandler {
     private final TelegramBot bot;
     private final TelegramUserRepository telegramUserRepository;
-    private final CallbackMessageRegistry callbackMessageRegistry = new CallbackMessageRegistry();
     protected final Logger logger = LoggerFactory.getLogger(getClass());
 
     public AbstractHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository) {
@@ -110,10 +109,6 @@ public abstract class AbstractHandler {
         if (update.callbackQuery() != null)
             return update.callbackQuery().from();
         return update.editedMessage().from();
-    }
-
-    protected CallbackMessage getCallbackMessage(Update update) {
-        return callbackMessageRegistry.getCallbackMessage(update);
     }
 
     String getMessageText(Update update) {

@@ -8,6 +8,7 @@ import bookkeeper.services.repositories.TelegramUserRepository;
 import bookkeeper.services.parsers.Spending;
 import bookkeeper.services.parsers.SpendingParserRegistry;
 import bookkeeper.telegram.shared.AbstractHandler;
+import bookkeeper.telegram.shared.CallbackMessageRegistry;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
@@ -42,7 +43,7 @@ public class AssignExpenditureCallbackHandler extends AbstractHandler {
      */
     @Override
     public Boolean handle(Update update) {
-        var callbackMessage = getCallbackMessage(update);
+        var callbackMessage = CallbackMessageRegistry.getCallbackMessage(update);
         if (!(callbackMessage instanceof AssignExpenditureCallback))
             return false;
 
