@@ -56,7 +56,7 @@ public class TransactionResponseFactory {
         var accountVerbose = String.format("на счет %s", account.getName());
         var totalAccountVerbose = String.format(
             "стоимостью %s %s",
-            totalAmount.toString().replace("-", "+"),
+            totalAmount.negate().toString().replace("-", "+"),
             account.getCurrency().getSymbol()
         );
 

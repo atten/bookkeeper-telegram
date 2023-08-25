@@ -19,23 +19,23 @@ public class TinkoffAmountMatcher implements AmountMatcher {
             if (obj.purchaseSum.equals(BigDecimal.ONE) && obj.purchaseCurrency.equals(Currency.getInstance("RUB")))
                 return BigDecimal.ZERO;
 
-            return obj.purchaseSum;
+            return obj.purchaseSum.negate();
         }
         if (spending instanceof TinkoffFpsPurchaseSms) {
             var obj = ((TinkoffFpsPurchaseSms) spending);
-            return obj.purchaseSum;
+            return obj.purchaseSum.negate();
         }
         if (spending instanceof TinkoffTransferSms) {
             var obj = ((TinkoffTransferSms) spending);
-            return obj.transferSum;
+            return obj.transferSum.negate();
         }
         if (spending instanceof TinkoffRecurringChargeSms) {
             var obj = ((TinkoffRecurringChargeSms) spending);
-            return obj.chargeSum;
+            return obj.chargeSum.negate();
         }
         if (spending instanceof TinkoffReplenishSms) {
             var obj = ((TinkoffReplenishSms) spending);
-            return obj.replenishSum.negate();
+            return obj.replenishSum;
         }
         if (spending instanceof TinkoffIgnoreSms) {
             return BigDecimal.ZERO;

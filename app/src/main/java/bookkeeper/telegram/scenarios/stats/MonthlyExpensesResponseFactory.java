@@ -13,11 +13,11 @@ import java.util.stream.Collectors;
 
 import static java.time.temporal.ChronoUnit.MONTHS;
 
-class StatisticsResponseFactory {
+class MonthlyExpensesResponseFactory {
     private final AccountRepository accountRepository;
     private final AccountTransactionRepository transactionRepository;
 
-    StatisticsResponseFactory(AccountRepository accountRepository, AccountTransactionRepository transactionRepository) {
+    MonthlyExpensesResponseFactory(AccountRepository accountRepository, AccountTransactionRepository transactionRepository) {
         this.accountRepository = accountRepository;
         this.transactionRepository = transactionRepository;
     }
@@ -49,9 +49,9 @@ class StatisticsResponseFactory {
                 allByCurrency.merge(currency, amount, BigDecimal::add);
 
                 if (sign > 0) {
-                    creditByCurrency.merge(currency, amount, BigDecimal::add);
-                } else if (sign < 0) {
                     debitByCurrency.merge(currency, amount, BigDecimal::add);
+                } else if (sign < 0) {
+                    creditByCurrency.merge(currency, amount, BigDecimal::add);
                 } else {
                     continue;
                 }
@@ -80,6 +80,6 @@ class StatisticsResponseFactory {
     }
 
     private String roundedAmountString(BigDecimal value) {
-        return String.format("% ,.0f", value).replace("-", "+");
+        return String.format("% ,.0f", value.negate()).replace("-", "+");
     }
 }

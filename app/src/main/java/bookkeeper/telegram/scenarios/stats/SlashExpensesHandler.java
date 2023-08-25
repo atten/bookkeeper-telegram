@@ -16,11 +16,11 @@ import java.util.Objects;
  * Scenario: user requests monthly expense statistics.
  */
 public class SlashExpensesHandler extends AbstractHandler {
-    private final StatisticsResponseFactory statisticsResponseFactory;
+    private final MonthlyExpensesResponseFactory monthlyExpensesResponseFactory;
 
     public SlashExpensesHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository, AccountRepository accountRepository, AccountTransactionRepository transactionRepository) {
         super(bot, telegramUserRepository);
-        this.statisticsResponseFactory = new StatisticsResponseFactory(accountRepository, transactionRepository);
+        this.monthlyExpensesResponseFactory = new MonthlyExpensesResponseFactory(accountRepository, transactionRepository);
     }
 
     /**
@@ -35,7 +35,7 @@ public class SlashExpensesHandler extends AbstractHandler {
         var keyboard = new InlineKeyboardMarkup()
             .addRow(new RefineMonthlyTransactionsCallback().asButton("Разобрать"));
 
-        sendMessage(update, statisticsResponseFactory.getMonthlyExpenses(user, 0), keyboard);
+        sendMessage(update, monthlyExpensesResponseFactory.getMonthlyExpenses(user, 0), keyboard);
         return true;
     }
 }

@@ -1,0 +1,1 @@
+UPDATE account_transactions SET amount = -amount;

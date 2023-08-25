@@ -13,7 +13,7 @@ public class FreehandAmountMatcher implements AmountMatcher {
     public BigDecimal match(Spending spending) {
         if (spending instanceof FreehandRecord) {
             var obj = ((FreehandRecord) spending);
-            return obj.amount;
+            return obj.amount.negate();
         }
         return null;
     }
