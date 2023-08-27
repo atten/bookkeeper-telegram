@@ -43,15 +43,15 @@ class Bot {
             new SlashStartHandler(bot, telegramUserRepository),
             new SlashClearAssociationsHandler(bot, telegramUserRepository, merchantExpenditureRepository),
             new ShowMonthlyExpensesHandler(bot, telegramUserRepository, accountRepository, transactionRepository),
-            new RefineMonthlyTransactionsCallbackHandler(bot, telegramUserRepository, transactionRepository),
+            new EditMonthlyTransactionsCallbackHandler(bot, telegramUserRepository, transactionRepository),
             new TinkoffSmsHandler(bot, telegramUserRepository, accountRepository, transactionRepository, expenditureMatcherByMerchant),
             new FreehandRecordHandler(bot, telegramUserRepository, accountRepository, transactionRepository, expenditureMatcherByMerchant),
             new SelectExpenditureCallbackHandler(bot, telegramUserRepository),
             new AssignExpenditureCallbackHandler(bot, telegramUserRepository, transactionRepository, merchantExpenditureRepository),
-            new MerchantExpenditureRemoveCallbackHandler(bot, telegramUserRepository, merchantExpenditureRepository),
-            new TransactionApproveCallbackHandler(bot, telegramUserRepository, transactionRepository),
-            new TransactionApproveBulkCallbackHandler(bot, telegramUserRepository, transactionRepository),
-            new TransactionEditBulkCallbackHandler(bot, telegramUserRepository, transactionRepository),
+            new RemoveMerchantExpenditureCallbackHandler(bot, telegramUserRepository, merchantExpenditureRepository),
+            new ApproveTransactionCallbackHandler(bot, telegramUserRepository, transactionRepository),
+            new ApproveTransactionBulkCallbackHandler(bot, telegramUserRepository, transactionRepository),
+            new EditTransactionBulkCallbackHandler(bot, telegramUserRepository, transactionRepository),
             new UnknownInputHandler(bot, telegramUserRepository)
         );
     }

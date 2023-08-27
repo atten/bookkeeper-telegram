@@ -2,10 +2,10 @@ package bookkeeper.telegram.scenarios.edit;
 
 import bookkeeper.telegram.shared.CallbackMessage;
 
-public class RefineMonthlyTransactionsCallback extends CallbackMessage {
+public class EditMonthlyTransactionsCallback extends CallbackMessage {
     private final int monthOffset;
 
-    public RefineMonthlyTransactionsCallback(int monthOffset) {
+    public EditMonthlyTransactionsCallback(int monthOffset) {
         this.monthOffset = monthOffset;
     }
 

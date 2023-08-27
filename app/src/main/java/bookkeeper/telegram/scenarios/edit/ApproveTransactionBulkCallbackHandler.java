@@ -13,10 +13,10 @@ import static bookkeeper.telegram.shared.TransactionResponseFactory.getResponseK
 /**
  * Scenario: user approves transactions in bulk.
  */
-public class TransactionApproveBulkCallbackHandler extends AbstractHandler {
+public class ApproveTransactionBulkCallbackHandler extends AbstractHandler {
     private final AccountTransactionRepository transactionRepository;
 
-    public TransactionApproveBulkCallbackHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository, AccountTransactionRepository transactionRepository) {
+    public ApproveTransactionBulkCallbackHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository, AccountTransactionRepository transactionRepository) {
         super(bot, telegramUserRepository);
         this.transactionRepository = transactionRepository;
     }
@@ -27,10 +27,10 @@ public class TransactionApproveBulkCallbackHandler extends AbstractHandler {
     @Override
     public Boolean handle(Update update) {
         var callbackMessage = CallbackMessageRegistry.getCallbackMessage(update);
-        if (!(callbackMessage instanceof TransactionApproveBulkCallback))
+        if (!(callbackMessage instanceof ApproveTransactionBulkCallback))
             return false;
 
-        var cm = ((TransactionApproveBulkCallback) callbackMessage);
+        var cm = ((ApproveTransactionBulkCallback) callbackMessage);
         var transactions = transactionRepository.getByIds(cm.getTransactionIds());
 
         transactions.forEach(transactionRepository::approve);

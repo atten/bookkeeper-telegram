@@ -4,11 +4,11 @@ import bookkeeper.enums.Expenditure;
 import bookkeeper.telegram.shared.CallbackMessage;
 
 
-class MerchantExpenditureRemoveCallback extends CallbackMessage {
+class RemoveMerchantExpenditureCallback extends CallbackMessage {
     private final String merchant;
     private final Expenditure expenditure;
 
-    MerchantExpenditureRemoveCallback(String merchant, Expenditure expenditure) {
+    RemoveMerchantExpenditureCallback(String merchant, Expenditure expenditure) {
         this.merchant = merchant;
         this.expenditure = expenditure;
     }

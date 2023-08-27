@@ -63,7 +63,7 @@ public class AssignExpenditureCallbackHandler extends AbstractHandler {
         // step 1
         if (useAssociationFurther) {
             merchantExpenditureRepository.addMerchantAssociation(merchant, newExpenditure, getTelegramUser(update));
-            var keyboard = new InlineKeyboardMarkup().addRow(new MerchantExpenditureRemoveCallback(merchant, newExpenditure).asButton("Отмена"));
+            var keyboard = new InlineKeyboardMarkup().addRow(new RemoveMerchantExpenditureCallback(merchant, newExpenditure).asButton("Отмена"));
             editMessage(update, getResponseMessage(merchant, newExpenditure), keyboard);
         }
 

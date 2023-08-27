@@ -21,10 +21,10 @@ import java.util.stream.Collectors;
 /**
  * Scenario: user refines monthly expenses.
  */
-public class RefineMonthlyTransactionsCallbackHandler extends AbstractHandler {
+public class EditMonthlyTransactionsCallbackHandler extends AbstractHandler {
     private final AccountTransactionRepository transactionRepository;
 
-    public RefineMonthlyTransactionsCallbackHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository, AccountTransactionRepository transactionRepository) {
+    public EditMonthlyTransactionsCallbackHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository, AccountTransactionRepository transactionRepository) {
         super(bot, telegramUserRepository);
         this.transactionRepository = transactionRepository;
     }
@@ -35,10 +35,10 @@ public class RefineMonthlyTransactionsCallbackHandler extends AbstractHandler {
     @Override
     public Boolean handle(Update update) {
         var callbackMessage = CallbackMessageRegistry.getCallbackMessage(update);
-        if (!(callbackMessage instanceof RefineMonthlyTransactionsCallback))
+        if (!(callbackMessage instanceof EditMonthlyTransactionsCallback))
             return false;
 
-        var cm = (RefineMonthlyTransactionsCallback) callbackMessage;
+        var cm = (EditMonthlyTransactionsCallback) callbackMessage;
 
         var user = getTelegramUser(update);
         sendMessage(update, "Выберите категорию:", getResponseKeyboard(cm.getMonthOffset(), user));
@@ -63,7 +63,7 @@ public class RefineMonthlyTransactionsCallbackHandler extends AbstractHandler {
         idsByExpenditure.entrySet().stream()
             .map(entry ->
                 // prepare buttons with expenditures selector
-                new TransactionEditBulkCallback(entry.getValue()).asButton(entry.getKey().getVerboseName())
+                new EditTransactionBulkCallback(entry.getValue()).asButton(entry.getKey().getVerboseName())
             ).collect(
                 // split to N map items each contains a list of 3 buttons
                 Collectors.groupingBy(i -> index.getAndIncrement() / groupBy)

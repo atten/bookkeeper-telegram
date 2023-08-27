@@ -16,10 +16,10 @@ import static bookkeeper.telegram.shared.TransactionResponseFactory.getResponseM
 /**
  * Scenario: user approves transaction.
  */
-public class TransactionApproveCallbackHandler extends AbstractHandler {
+public class ApproveTransactionCallbackHandler extends AbstractHandler {
     private final AccountTransactionRepository transactionRepository;
 
-    public TransactionApproveCallbackHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository, AccountTransactionRepository transactionRepository) {
+    public ApproveTransactionCallbackHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository, AccountTransactionRepository transactionRepository) {
         super(bot, telegramUserRepository);
         this.transactionRepository = transactionRepository;
     }
@@ -30,10 +30,10 @@ public class TransactionApproveCallbackHandler extends AbstractHandler {
     @Override
     public Boolean handle(Update update) {
         var callbackMessage = CallbackMessageRegistry.getCallbackMessage(update);
-        if (!(callbackMessage instanceof TransactionApproveCallback))
+        if (!(callbackMessage instanceof ApproveTransactionCallback))
             return false;
 
-        var cm = ((TransactionApproveCallback) callbackMessage);
+        var cm = ((ApproveTransactionCallback) callbackMessage);
         var transaction = transactionRepository.get(cm.getTransactionId());
         var pendingTransactionsCount = cm.getPendingTransactionIds().size();
 

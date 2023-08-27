@@ -4,11 +4,11 @@ import bookkeeper.telegram.shared.CallbackMessage;
 
 import java.util.List;
 
-public class TransactionApproveCallback extends CallbackMessage {
+public class ApproveTransactionCallback extends CallbackMessage {
     private final long transactionId;
     private List<Long> pendingTransactionIds = List.of();
 
-    public TransactionApproveCallback(long transactionId) {
+    public ApproveTransactionCallback(long transactionId) {
         this.transactionId = transactionId;
     }
 
@@ -20,7 +20,7 @@ public class TransactionApproveCallback extends CallbackMessage {
         return pendingTransactionIds;
     }
 
-    public TransactionApproveCallback setPendingTransactionIds(List<Long> pendingTransactionIds) {
+    public ApproveTransactionCallback setPendingTransactionIds(List<Long> pendingTransactionIds) {
         this.pendingTransactionIds = pendingTransactionIds;
         return this;
     }

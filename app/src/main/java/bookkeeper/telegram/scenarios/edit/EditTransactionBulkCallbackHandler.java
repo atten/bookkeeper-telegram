@@ -16,10 +16,10 @@ import static bookkeeper.telegram.shared.TransactionResponseFactory.getResponseM
 /**
  * Scenario: user edits transactions in bulk.
  */
-public class TransactionEditBulkCallbackHandler extends AbstractHandler {
+public class EditTransactionBulkCallbackHandler extends AbstractHandler {
     private final AccountTransactionRepository transactionRepository;
 
-    public TransactionEditBulkCallbackHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository, AccountTransactionRepository transactionRepository) {
+    public EditTransactionBulkCallbackHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository, AccountTransactionRepository transactionRepository) {
         super(bot, telegramUserRepository);
         this.transactionRepository = transactionRepository;
     }
@@ -27,10 +27,10 @@ public class TransactionEditBulkCallbackHandler extends AbstractHandler {
     @Override
     public Boolean handle(Update update) {
         var callbackMessage = CallbackMessageRegistry.getCallbackMessage(update);
-        if (!(callbackMessage instanceof TransactionEditBulkCallback))
+        if (!(callbackMessage instanceof EditTransactionBulkCallback))
             return false;
 
-        var cm = ((TransactionEditBulkCallback) callbackMessage);
+        var cm = ((EditTransactionBulkCallback) callbackMessage);
         var transaction = transactionRepository.get(cm.getTransactionIds().get(0));
         var pendingTransactionIds = cm.getTransactionIds().stream().skip(1).collect(Collectors.toList());
 

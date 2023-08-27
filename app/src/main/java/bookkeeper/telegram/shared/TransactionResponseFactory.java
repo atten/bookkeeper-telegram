@@ -3,9 +3,9 @@ package bookkeeper.telegram.shared;
 import bookkeeper.entities.AccountTransaction;
 import bookkeeper.enums.Expenditure;
 import bookkeeper.telegram.scenarios.edit.SelectExpenditureCallback;
-import bookkeeper.telegram.scenarios.edit.TransactionApproveBulkCallback;
-import bookkeeper.telegram.scenarios.edit.TransactionApproveCallback;
-import bookkeeper.telegram.scenarios.edit.TransactionEditBulkCallback;
+import bookkeeper.telegram.scenarios.edit.ApproveTransactionBulkCallback;
+import bookkeeper.telegram.scenarios.edit.ApproveTransactionCallback;
+import bookkeeper.telegram.scenarios.edit.EditTransactionBulkCallback;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 
 import java.math.BigDecimal;
@@ -91,8 +91,8 @@ public class TransactionResponseFactory {
         var transactionIds = transactions.stream().map(AccountTransaction::getId).collect(Collectors.toList());
         var approvedCount = transactions.stream().map(AccountTransaction::isApproved).filter(aBoolean -> aBoolean).count();
 
-        var button1 = new TransactionEditBulkCallback(transactionIds).asButton("Разобрать");
-        var button2 = new TransactionApproveBulkCallback(transactionIds).asButton("Подтвердить все");
+        var button1 = new EditTransactionBulkCallback(transactionIds).asButton("Разобрать");
+        var button2 = new ApproveTransactionBulkCallback(transactionIds).asButton("Подтвердить все");
 
         if (approvedCount == transactionIds.size())
             return kb.addRow(button1);
@@ -103,7 +103,7 @@ public class TransactionResponseFactory {
     public static InlineKeyboardMarkup getResponseKeyboard(AccountTransaction transaction) {
         var kb = new InlineKeyboardMarkup();
         var button1 = new SelectExpenditureCallback(transaction.getId()).asButton("Уточнить категорию");
-        var button2 = new TransactionApproveCallback(transaction.getId()).asButton("Подтвердить");
+        var button2 = new ApproveTransactionCallback(transaction.getId()).asButton("Подтвердить");
 
         if (transaction.isApproved())
             return kb.addRow(button1);
@@ -114,7 +114,7 @@ public class TransactionResponseFactory {
     public static InlineKeyboardMarkup getResponseKeyboard(AccountTransaction transaction, List<Long> pendingTransactionIds) {
         var kb = new InlineKeyboardMarkup();
         var button1 = new SelectExpenditureCallback(transaction.getId()).setPendingTransactionIds(pendingTransactionIds).asButton("Уточнить категорию");
-        var callback2 = new TransactionApproveCallback(transaction.getId()).setPendingTransactionIds(pendingTransactionIds);
+        var callback2 = new ApproveTransactionCallback(transaction.getId()).setPendingTransactionIds(pendingTransactionIds);
 
         if (transaction.isApproved()) {
             var buttonText = "Далее";

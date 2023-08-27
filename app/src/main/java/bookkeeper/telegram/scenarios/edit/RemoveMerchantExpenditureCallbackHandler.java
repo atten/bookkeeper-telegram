@@ -11,10 +11,10 @@ import com.pengrad.telegrambot.model.Update;
 import static bookkeeper.telegram.shared.TransactionResponseFactory.getResponseMessage;
 
 
-public class MerchantExpenditureRemoveCallbackHandler extends AbstractHandler {
+public class RemoveMerchantExpenditureCallbackHandler extends AbstractHandler {
     private final MerchantExpenditureRepository merchantExpenditureRepository;
 
-    public MerchantExpenditureRemoveCallbackHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository, MerchantExpenditureRepository merchantExpenditureRepository) {
+    public RemoveMerchantExpenditureCallbackHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository, MerchantExpenditureRepository merchantExpenditureRepository) {
         super(bot, telegramUserRepository);
         this.merchantExpenditureRepository = merchantExpenditureRepository;
     }
@@ -22,10 +22,10 @@ public class MerchantExpenditureRemoveCallbackHandler extends AbstractHandler {
     @Override
     public Boolean handle(Update update) {
         var callbackMessage = CallbackMessageRegistry.getCallbackMessage(update);
-        if (!(callbackMessage instanceof MerchantExpenditureRemoveCallback))
+        if (!(callbackMessage instanceof RemoveMerchantExpenditureCallback))
             return false;
 
-        var cm = ((MerchantExpenditureRemoveCallback) callbackMessage);
+        var cm = ((RemoveMerchantExpenditureCallback) callbackMessage);
         merchantExpenditureRepository.removeMerchantAssociation(cm.getMerchant(), cm.getExpenditure(), getTelegramUser(update));
         editMessage(update, getResponseMessage(cm.getMerchant(), Expenditure.OTHER));
         return true;

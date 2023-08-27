@@ -4,10 +4,10 @@ import bookkeeper.telegram.shared.CallbackMessage;
 
 import java.util.List;
 
-public class TransactionEditBulkCallback extends CallbackMessage {
+public class EditTransactionBulkCallback extends CallbackMessage {
     private final List<Long> transactionIds;
 
-    public TransactionEditBulkCallback(List<Long> transactionIds) {
+    public EditTransactionBulkCallback(List<Long> transactionIds) {
         this.transactionIds = transactionIds;
     }
 
