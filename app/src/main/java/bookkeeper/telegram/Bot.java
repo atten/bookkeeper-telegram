@@ -52,6 +52,7 @@ class Bot {
             new ApproveTransactionCallbackHandler(bot, telegramUserRepository, transactionRepository),
             new ApproveTransactionBulkCallbackHandler(bot, telegramUserRepository, transactionRepository),
             new EditTransactionBulkCallbackHandler(bot, telegramUserRepository, transactionRepository),
+            new ShiftTransactionMonthCallbackHandler(bot, telegramUserRepository, transactionRepository),
             new UnknownInputHandler(bot, telegramUserRepository)
         );
     }

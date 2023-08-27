@@ -15,7 +15,6 @@ import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 
 import java.text.ParseException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static bookkeeper.telegram.shared.TransactionResponseFactory.getResponseKeyboard;
 import static bookkeeper.telegram.shared.TransactionResponseFactory.getResponseMessage;
@@ -68,7 +67,7 @@ public class AssignExpenditureCallbackHandler extends AbstractHandler {
         }
 
         // step 2
-        transactionRepository.associateExpenditure(transaction, newExpenditure);
+        transaction.setExpenditure(newExpenditure);
 
         if (pendingTransactionsCount == 0) {
             // if message was edited in the step 1, then send a new one, otherwise reuse existing
@@ -85,13 +84,10 @@ public class AssignExpenditureCallbackHandler extends AbstractHandler {
                 updateTransactionsExpenditure(pendingTransactions, merchant, newExpenditure);
             }
 
-            var nextPendingTransaction = pendingTransactions.get(0);
-            var remainingTransactionIds = cm.getPendingTransactionIds().stream().skip(1).collect(Collectors.toList());
-
             if (useAssociationFurther) {
-                sendMessage(update, getResponseMessage(nextPendingTransaction, remainingTransactionIds.size()), getResponseKeyboard(nextPendingTransaction, remainingTransactionIds));
+                sendMessage(update, getResponseMessage(transaction, pendingTransactionsCount), getResponseKeyboard(transaction, cm.getPendingTransactionIds()));
             } else {
-                editMessage(update, getResponseMessage(nextPendingTransaction, remainingTransactionIds.size()), getResponseKeyboard(nextPendingTransaction, remainingTransactionIds));
+                editMessage(update, getResponseMessage(transaction, pendingTransactionsCount), getResponseKeyboard(transaction, cm.getPendingTransactionIds()));
             }
         }
 
@@ -113,7 +109,7 @@ public class AssignExpenditureCallbackHandler extends AbstractHandler {
         for (var transaction : transactions) {
             var merchant = getSpendingFromTransaction(transaction).getMerchant();
             if (merchant.equals(merchantFilter)) {
-                transactionRepository.associateExpenditure(transaction, newExpenditure);
+                transaction.setExpenditure(newExpenditure);
             }
         }
     }

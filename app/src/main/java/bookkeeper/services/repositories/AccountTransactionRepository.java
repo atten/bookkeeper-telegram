@@ -78,11 +78,6 @@ public class AccountTransactionRepository {
         transaction.setApprovedAt(Instant.now());
     }
 
-    public void associateExpenditure(AccountTransaction transaction, Expenditure expenditure) {
-        transaction.setExpenditure(expenditure);
-        approve(transaction);
-    }
-
     public void save(AccountTransaction transaction) {
         manager.persist(transaction);
     }

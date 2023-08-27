@@ -2,10 +2,7 @@ package bookkeeper.telegram.shared;
 
 import bookkeeper.entities.AccountTransaction;
 import bookkeeper.enums.Expenditure;
-import bookkeeper.telegram.scenarios.edit.SelectExpenditureCallback;
-import bookkeeper.telegram.scenarios.edit.ApproveTransactionBulkCallback;
-import bookkeeper.telegram.scenarios.edit.ApproveTransactionCallback;
-import bookkeeper.telegram.scenarios.edit.EditTransactionBulkCallback;
+import bookkeeper.telegram.scenarios.edit.*;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 
 import java.math.BigDecimal;
@@ -101,29 +98,38 @@ public class TransactionResponseFactory {
     }
 
     public static InlineKeyboardMarkup getResponseKeyboard(AccountTransaction transaction) {
+        var transactionId = transaction.getId();
+
         var kb = new InlineKeyboardMarkup();
-        var button1 = new SelectExpenditureCallback(transaction.getId()).asButton("Уточнить категорию");
-        var button2 = new ApproveTransactionCallback(transaction.getId()).asButton("Подтвердить");
+        var selectExpenditureButton = new SelectExpenditureCallback(transactionId).asButton("Уточнить категорию");
+        var prevMonthButton = new ShiftTransactionMonthCallback(transactionId, -1).asButton(transaction.date());
+        var nextMonthButton = new ShiftTransactionMonthCallback(transactionId, +1).asButton(transaction.date());
+        var approveButton = new ApproveTransactionCallback(transactionId).asButton("Подтвердить");
 
         if (transaction.isApproved())
-            return kb.addRow(button1);
+            return kb.addRow(selectExpenditureButton);
 
-        return kb.addRow(button1, button2);
+        return kb.addRow(selectExpenditureButton, prevMonthButton, nextMonthButton, approveButton);
     }
 
     public static InlineKeyboardMarkup getResponseKeyboard(AccountTransaction transaction, List<Long> pendingTransactionIds) {
-        var kb = new InlineKeyboardMarkup();
-        var button1 = new SelectExpenditureCallback(transaction.getId()).setPendingTransactionIds(pendingTransactionIds).asButton("Уточнить категорию");
-        var callback2 = new ApproveTransactionCallback(transaction.getId()).setPendingTransactionIds(pendingTransactionIds);
+        var transactionId = transaction.getId();
+        var approveButtonText = "Подтвердить";
 
         if (transaction.isApproved()) {
-            var buttonText = "Далее";
+            approveButtonText = "Далее";
             if (pendingTransactionIds.isEmpty())
-                buttonText = "Готово";
-            return kb.addRow(button1, callback2.asButton(buttonText));
+                approveButtonText = "Готово";
         }
 
-        return kb.addRow(button1, callback2.asButton("Подтвердить"));
+        var selectExpenditureButton = new SelectExpenditureCallback(transactionId).setPendingTransactionIds(pendingTransactionIds).asButton("Уточнить категорию");
+        var prevMonthButton = new ShiftTransactionMonthCallback(transactionId, -1).setPendingTransactionIds(pendingTransactionIds).asButton(transaction.date());
+        var nextMonthButton = new ShiftTransactionMonthCallback(transactionId, +1).setPendingTransactionIds(pendingTransactionIds).asButton(transaction.date());
+        var approveButton = new ApproveTransactionCallback(transactionId).setPendingTransactionIds(pendingTransactionIds).asButton(approveButtonText);
+
+        return new InlineKeyboardMarkup()
+            .addRow(selectExpenditureButton, prevMonthButton, nextMonthButton)
+            .addRow(approveButton);
     }
 
     private static String pluralize(Integer count, String single, String few, String many) {
@@ -147,6 +153,6 @@ public class TransactionResponseFactory {
     }
 
     private static boolean isTransactionRecent(AccountTransaction transaction) {
-        return transaction.age().toHours() < 12;
+        return transaction.age().abs().toHours() < 12;
     }
 }
