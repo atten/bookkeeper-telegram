@@ -2,7 +2,7 @@ package bookkeeper.telegram.shared;
 
 import bookkeeper.entities.AccountTransaction;
 import bookkeeper.enums.Expenditure;
-import bookkeeper.telegram.scenarios.edit.*;
+import bookkeeper.telegram.scenarios.editTransactions.*;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 
 import java.math.BigDecimal;

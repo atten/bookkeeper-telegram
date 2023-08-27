@@ -6,10 +6,10 @@ import bookkeeper.services.repositories.AccountTransactionRepository;
 import bookkeeper.services.repositories.MerchantExpenditureRepository;
 import bookkeeper.services.repositories.TelegramUserRepository;
 import bookkeeper.services.matchers.ExpenditureMatcherByMerchant;
-import bookkeeper.telegram.scenarios.edit.*;
-import bookkeeper.telegram.scenarios.stats.ShowMonthlyExpensesHandler;
-import bookkeeper.telegram.scenarios.save.freehand.FreehandRecordHandler;
-import bookkeeper.telegram.scenarios.save.tinkoff.TinkoffSmsHandler;
+import bookkeeper.telegram.scenarios.editTransactions.*;
+import bookkeeper.telegram.scenarios.viewMonthlyExpenses.ViewMonthlyExpensesHandler;
+import bookkeeper.telegram.scenarios.addTransactions.freehand.FreehandRecordHandler;
+import bookkeeper.telegram.scenarios.addTransactions.tinkoff.TinkoffSmsHandler;
 import bookkeeper.telegram.shared.AbstractHandler;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
@@ -42,7 +42,7 @@ class Bot {
             new LocaleHandler(bot, telegramUserRepository),
             new SlashStartHandler(bot, telegramUserRepository),
             new SlashClearAssociationsHandler(bot, telegramUserRepository, merchantExpenditureRepository),
-            new ShowMonthlyExpensesHandler(bot, telegramUserRepository, accountRepository, transactionRepository),
+            new ViewMonthlyExpensesHandler(bot, telegramUserRepository, accountRepository, transactionRepository),
             new EditMonthlyTransactionsCallbackHandler(bot, telegramUserRepository, transactionRepository),
             new TinkoffSmsHandler(bot, telegramUserRepository, accountRepository, transactionRepository, expenditureMatcherByMerchant),
             new FreehandRecordHandler(bot, telegramUserRepository, accountRepository, transactionRepository, expenditureMatcherByMerchant),
