@@ -6,11 +6,10 @@ import java.util.List;
 
 public class SelectExpenditureCallback extends CallbackMessage {
     private final long transactionId;
-    private List<Long> pendingTransactionIds;
+    private List<Long> pendingTransactionIds = List.of();
 
     public SelectExpenditureCallback(long transactionId) {
         this.transactionId = transactionId;
-        this.pendingTransactionIds = List.of();
     }
 
     long getTransactionId() {

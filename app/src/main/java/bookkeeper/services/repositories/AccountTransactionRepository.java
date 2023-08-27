@@ -39,30 +39,30 @@ public class AccountTransactionRepository {
         return query.getResultList();
     }
 
-    public List<Long> getIdsByExpenditure(TelegramUser user, Expenditure expenditure, int monthDelta) {
+    public List<Long> getIdsByExpenditure(TelegramUser user, Expenditure expenditure, int monthOffset) {
         var sql = "SELECT id from AccountTransaction " +
                 "WHERE account.telegramUser=:user " +
                 "AND expenditure=:expenditure " +
-                "AND date_trunc('month', timestamp) = date_trunc('month', current_timestamp) - :monthDelta MONTH";
+                "AND date_trunc('month', timestamp) = date_trunc('month', current_timestamp) + :monthOffset MONTH";
 
         var query = manager.createQuery(sql, Long.class)
                 .setParameter("user", user)
                 .setParameter("expenditure", expenditure)
-                .setParameter("monthDelta", monthDelta);
+                .setParameter("monthOffset", monthOffset);
 
         return query.getResultList();
     }
 
-    public BigDecimal getMonthlyAmount(Account account, Expenditure expenditure, int monthDelta) {
+    public BigDecimal getMonthlyAmount(Account account, Expenditure expenditure, int monthOffset) {
         var sql = "SELECT SUM(amount) from AccountTransaction " +
                 "WHERE account=:account " +
                 "AND expenditure=:expenditure " +
-                "AND date_trunc('month', timestamp) = date_trunc('month', current_timestamp) - :monthDelta MONTH";
+                "AND date_trunc('month', timestamp) = date_trunc('month', current_timestamp) + :monthOffset MONTH";
 
         var query = manager.createQuery(sql)
             .setParameter("account", account)
             .setParameter("expenditure", expenditure)
-            .setParameter("monthDelta", monthDelta);
+            .setParameter("monthOffset", monthOffset);
 
         var result = query.getSingleResult();
 

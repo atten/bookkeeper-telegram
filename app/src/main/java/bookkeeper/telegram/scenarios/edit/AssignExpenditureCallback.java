@@ -8,12 +8,11 @@ import java.util.List;
 public class AssignExpenditureCallback extends CallbackMessage {
     private final long transactionId;
     private final Expenditure expenditure;
-    private List<Long> pendingTransactionIds;
+    private List<Long> pendingTransactionIds = List.of();
 
     AssignExpenditureCallback(long transactionId, Expenditure expenditure) {
         this.transactionId = transactionId;
         this.expenditure = expenditure;
-        this.pendingTransactionIds = List.of();
     }
 
     long getTransactionId() {

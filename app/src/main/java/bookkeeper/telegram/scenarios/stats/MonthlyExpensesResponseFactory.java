@@ -4,14 +4,14 @@ import bookkeeper.entities.TelegramUser;
 import bookkeeper.enums.Expenditure;
 import bookkeeper.services.repositories.AccountRepository;
 import bookkeeper.services.repositories.AccountTransactionRepository;
+import bookkeeper.telegram.scenarios.edit.RefineMonthlyTransactionsCallback;
+import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import static java.time.temporal.ChronoUnit.MONTHS;
 
 class MonthlyExpensesResponseFactory {
     private final AccountRepository accountRepository;
@@ -22,7 +22,7 @@ class MonthlyExpensesResponseFactory {
         this.transactionRepository = transactionRepository;
     }
 
-    String getMonthlyExpenses(TelegramUser user, int monthDelta) {
+    String getMonthlyExpenses(TelegramUser user, int monthOffset) {
         var lines = new ArrayList<String>();
         var creditByCurrency = new HashMap<Currency, BigDecimal>();
         var debitByCurrency = new HashMap<Currency, BigDecimal>();
@@ -30,7 +30,7 @@ class MonthlyExpensesResponseFactory {
         var accounts = accountRepository.findForUser(user);
         var maxExpenditureLength = Expenditure.enabledValues().stream().map(expenditure -> expenditure.getVerboseName().length()).max(Comparator.naturalOrder()).orElse(0);
         var formatString = "%-" + maxExpenditureLength + "s %s";  // example: "%-15s %s"
-        var periodVerbose = LocalDate.now().minus(monthDelta, MONTHS).format(DateTimeFormatter.ofPattern("MMM yy"));
+        var periodVerbose = LocalDate.now().plusMonths(monthOffset).format(DateTimeFormatter.ofPattern("MMM yy"));
 
         for (var account : accounts) {
             var currency = account.getCurrency();
@@ -43,7 +43,7 @@ class MonthlyExpensesResponseFactory {
             lines.add("```");
 
             for (var expenditure : Expenditure.enabledValues()) {
-                var amount = transactionRepository.getMonthlyAmount(account, expenditure, monthDelta);
+                var amount = transactionRepository.getMonthlyAmount(account, expenditure, monthOffset);
                 var sign = amount.compareTo(BigDecimal.ZERO);
 
                 allByCurrency.merge(currency, amount, BigDecimal::add);
@@ -70,6 +70,21 @@ class MonthlyExpensesResponseFactory {
         lines.add("```");
 
         return String.join("\n", lines);
+    }
+
+    static InlineKeyboardMarkup getMonthlyExpensesKeyboard(int monthOffset) {
+        var keyboard = new InlineKeyboardMarkup()
+                .addRow(new RefineMonthlyTransactionsCallback(monthOffset).asButton("Разобрать"));
+
+        var prevMonthButton = new ShowMonthlyExpensesWithOffsetCallback(monthOffset - 1).asButton(true);
+        var nextMonthButton = new ShowMonthlyExpensesWithOffsetCallback(monthOffset + 1).asButton(false);
+
+        if (monthOffset != 0)
+            keyboard.addRow(prevMonthButton, nextMonthButton);
+        else
+            keyboard.addRow(prevMonthButton);
+
+        return keyboard;
     }
 
     private String amountByCurrencyString(Map<Currency, BigDecimal> values) {

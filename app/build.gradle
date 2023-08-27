@@ -21,6 +21,7 @@ dependencies {
     // infrastructure
     implementation 'org.reflections:reflections:0.10.2'
     implementation 'org.junit.platform:junit-platform-commons:1.9.2'
+    implementation 'org.apache.commons:commons-lang3:3.13.0'
 
     // telegram
     implementation 'com.github.pengrad:java-telegram-bot-api:6.7.0'

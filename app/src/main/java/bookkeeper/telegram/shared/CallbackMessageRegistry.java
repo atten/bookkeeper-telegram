@@ -40,10 +40,10 @@ public class CallbackMessageRegistry {
     }
 
     private static CallbackMessage deserialize(String callbackData) throws ParseException {
-        var input = new ByteArrayInputStream(Base64.getDecoder().decode(callbackData));
         try {
+            var input = new ByteArrayInputStream(Base64.getDecoder().decode(callbackData));
             return (CallbackMessage) new ObjectInputStream(input).readObject();
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException | IllegalArgumentException e) {
             throw new ParseException(callbackData, 0);
         }
     }

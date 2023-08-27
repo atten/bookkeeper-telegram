@@ -38,13 +38,15 @@ public class RefineMonthlyTransactionsCallbackHandler extends AbstractHandler {
         if (!(callbackMessage instanceof RefineMonthlyTransactionsCallback))
             return false;
 
+        var cm = (RefineMonthlyTransactionsCallback) callbackMessage;
+
         var user = getTelegramUser(update);
-        sendMessage(update, "Выберите категорию:", getResponseKeyboard(user));
+        sendMessage(update, "Выберите категорию:", getResponseKeyboard(cm.getMonthOffset(), user));
 
         return true;
     }
 
-    private InlineKeyboardMarkup getResponseKeyboard(TelegramUser user) {
+    private InlineKeyboardMarkup getResponseKeyboard(int monthOffset, TelegramUser user) {
         var kb = new InlineKeyboardMarkup();
         var groupBy = 3;
         AtomicInteger index = new AtomicInteger(0);
@@ -53,7 +55,7 @@ public class RefineMonthlyTransactionsCallbackHandler extends AbstractHandler {
 
         Expenditure.enabledValues()
             .forEach(expenditure -> {
-                var ids = transactionRepository.getIdsByExpenditure(user, expenditure, 0);
+                var ids = transactionRepository.getIdsByExpenditure(user, expenditure, monthOffset);
                 if (!ids.isEmpty())
                     idsByExpenditure.put(expenditure, ids);
             });
