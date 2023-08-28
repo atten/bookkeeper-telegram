@@ -8,7 +8,7 @@ import com.pengrad.telegrambot.model.Update;
 /**
  * Print incoming request to console.
  */
-public class LoggingHandler extends AbstractHandler {
+class LoggingHandler extends AbstractHandler {
     LoggingHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository) {
         super(bot, telegramUserRepository);
     }

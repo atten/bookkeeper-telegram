@@ -13,7 +13,7 @@ import static bookkeeper.telegram.shared.TransactionResponseFactory.pluralizeTem
 /**
  * Scenario: User clears merchant-expenditure associations.
  */
-public class SlashClearAssociationsHandler extends AbstractHandler {
+class SlashClearAssociationsHandler extends AbstractHandler {
     private final MerchantExpenditureRepository merchantExpenditureRepository;
 
     SlashClearAssociationsHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository, MerchantExpenditureRepository merchantExpenditureRepository) {

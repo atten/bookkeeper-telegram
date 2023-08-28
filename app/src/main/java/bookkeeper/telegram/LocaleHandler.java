@@ -10,7 +10,7 @@ import java.util.Locale;
 /**
  * Set regional settings (e.g. language) for current request.
  */
-public class LocaleHandler extends AbstractHandler {
+class LocaleHandler extends AbstractHandler {
     LocaleHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository) {
         super(bot, telegramUserRepository);
     }
