@@ -7,7 +7,7 @@ import bookkeeper.services.repositories.MerchantExpenditureRepository;
 import bookkeeper.services.repositories.TelegramUserRepository;
 import bookkeeper.services.matchers.ExpenditureMatcherByMerchant;
 import bookkeeper.telegram.scenarios.editTransactions.*;
-import bookkeeper.telegram.scenarios.viewAssets.ViewAssetsHandler;
+//import bookkeeper.telegram.scenarios.viewAssets.ViewAssetsHandler;
 import bookkeeper.telegram.scenarios.viewMonthlyExpenses.ViewMonthlyExpensesHandler;
 import bookkeeper.telegram.scenarios.addTransactions.freehand.FreehandRecordHandler;
 import bookkeeper.telegram.scenarios.addTransactions.tinkoff.TinkoffSmsHandler;
