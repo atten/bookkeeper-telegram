@@ -72,6 +72,20 @@ public class AccountTransactionRepository {
         return (BigDecimal) result;
     }
 
+    public BigDecimal getTotalAmount(Account account) {
+        var sql = "SELECT SUM(amount) from AccountTransaction WHERE account=:account ";
+
+        var query = manager.createQuery(sql)
+                .setParameter("account", account);
+
+        var result = query.getSingleResult();
+
+        if (result == null)
+            return BigDecimal.ZERO;
+
+        return (BigDecimal) result;
+    }
+
     public void approve(AccountTransaction transaction) {
         if (transaction.isApproved())
             return;

@@ -78,13 +78,7 @@ class MonthlyExpensesResponseFactory {
 
         var prevMonthButton = new ViewMonthlyExpensesWithOffsetCallback(monthOffset - 1).asButton(true);
         var nextMonthButton = new ViewMonthlyExpensesWithOffsetCallback(monthOffset + 1).asButton(false);
-
-        if (monthOffset != 0)
-            keyboard.addRow(prevMonthButton, nextMonthButton);
-        else
-            keyboard.addRow(prevMonthButton);
-
-        return keyboard;
+        return keyboard.addRow(prevMonthButton, nextMonthButton);
     }
 
     private String amountByCurrencyString(Map<Currency, BigDecimal> values) {
