@@ -7,6 +7,7 @@ import bookkeeper.services.repositories.MerchantExpenditureRepository;
 import bookkeeper.services.repositories.TelegramUserRepository;
 import bookkeeper.services.matchers.ExpenditureMatcherByMerchant;
 import bookkeeper.telegram.scenarios.editTransactions.*;
+import bookkeeper.telegram.scenarios.viewAssets.ViewAssetsHandler;
 import bookkeeper.telegram.scenarios.viewMonthlyExpenses.ViewMonthlyExpensesHandler;
 import bookkeeper.telegram.scenarios.addTransactions.freehand.FreehandRecordHandler;
 import bookkeeper.telegram.scenarios.addTransactions.tinkoff.TinkoffSmsHandler;
@@ -14,6 +15,8 @@ import bookkeeper.telegram.shared.AbstractHandler;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.Update;
+import com.pengrad.telegrambot.model.request.ParseMode;
+import com.pengrad.telegrambot.request.SendMessage;
 import jakarta.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,15 +24,12 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 class Bot {
-    private final TelegramBot bot;
+    private static final TelegramBot bot = new TelegramBot(Config.botToken());
+    private static final EntityManager entityManager = Config.entityManager();
+    private static final Logger logger = LoggerFactory.getLogger(Bot.class);
     private final List<AbstractHandler> handlers;
-    private final EntityManager entityManager;
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    Bot(Config config) {
-        bot = new TelegramBot(config.botToken());
-        entityManager = config.entityManager();
-
+    Bot() {
         var telegramUserRepository = new TelegramUserRepository(entityManager);
         var merchantExpenditureRepository = new MerchantExpenditureRepository(entityManager);
         var accountRepository = new AccountRepository(entityManager);
@@ -55,6 +55,15 @@ class Bot {
             new ShiftTransactionMonthCallbackHandler(bot, telegramUserRepository, transactionRepository),
             new UnknownInputHandler(bot, telegramUserRepository)
         );
+    }
+
+    void notifyStartup(int telegramUserId) {
+        var text = "New version deployed!";
+        var message = new SendMessage(telegramUserId, text).parseMode(ParseMode.Markdown);
+        var result = bot.execute(message);
+        var resultVerbose = result.description() != null ? result.description() : "OK";
+
+        logger.info("{} -> {} ({})", text, telegramUserId, resultVerbose);
     }
 
     /**

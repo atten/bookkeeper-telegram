@@ -3,6 +3,7 @@ package bookkeeper.telegram;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Persistence;
 import org.hibernate.HibernateException;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,25 +17,33 @@ import java.util.Map;
 import java.util.Objects;
 
 class Config {
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private static final Logger logger = LoggerFactory.getLogger(Config.class);
 
-    String botToken() {
+    static String botToken() {
         return System.getenv("BOT_TOKEN");
     }
 
     /**
      There's only one instance of database writer (the bot itself), so we can use a single persistence context throughout runtime.
      */
-    EntityManager entityManager() {
+    static EntityManager entityManager() {
         var em = Persistence.createEntityManagerFactory("default", dataSourceConfig()).createEntityManager();
         migrate(em);
         return em;
     }
 
-    private void migrate(EntityManager entityManager) {
+    @Nullable
+    static Integer notifyTelegramUserId() {
+        var userId = System.getenv("NOTIFY_TELEGRAM_USER_ID");
+        if (userId == null)
+            return null;
+        return Integer.parseInt(userId);
+    }
+
+    private static void migrate(EntityManager entityManager) {
         String sql;
         try {
-            var path = Path.of(Objects.requireNonNull(this.getClass().getResource("/init_database.sql")).toURI());
+            var path = Path.of(Objects.requireNonNull(Config.class.getResource("/init_database.sql")).toURI());
             sql = Files.readString(path);
         } catch (URISyntaxException | IOException e) {
             throw new RuntimeException(e);
@@ -51,7 +60,7 @@ class Config {
         }
     }
 
-    private Map<String, String> dataSourceConfig() {
+    private static Map<String, String> dataSourceConfig() {
         Map<String, String> result = new HashMap<>();
 
         List.of(
