@@ -34,7 +34,7 @@ public class ApproveTransactionCallbackHandler extends AbstractHandler {
             return false;
 
         var cm = ((ApproveTransactionCallback) callbackMessage);
-        var transaction = transactionRepository.get(cm.getTransactionId());
+        var transaction = transactionRepository.find(cm.getTransactionId());
         var pendingTransactionsCount = cm.getPendingTransactionIds().size();
 
         if (transaction == null) {
@@ -49,7 +49,7 @@ public class ApproveTransactionCallbackHandler extends AbstractHandler {
         }
         else {
             var nextPendingTransactionId = cm.getPendingTransactionIds().get(0);
-            var nextPendingTransaction = transactionRepository.get(nextPendingTransactionId);
+            var nextPendingTransaction = transactionRepository.find(nextPendingTransactionId);
 
             if (nextPendingTransaction == null) {
                 logger.warn(String.format("transaction id=%s not found!", nextPendingTransactionId));

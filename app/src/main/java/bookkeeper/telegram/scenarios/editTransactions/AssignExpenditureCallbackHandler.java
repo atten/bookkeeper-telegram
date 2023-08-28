@@ -47,7 +47,7 @@ public class AssignExpenditureCallbackHandler extends AbstractHandler {
             return false;
 
         var cm = ((AssignExpenditureCallback) callbackMessage);
-        var transaction = transactionRepository.get(cm.getTransactionId());
+        var transaction = transactionRepository.find(cm.getTransactionId());
         if (transaction == null) {
             logger.warn(String.format("AccountTransaction with id=%s not found", cm.getTransactionId()));
             return false;
@@ -77,7 +77,7 @@ public class AssignExpenditureCallbackHandler extends AbstractHandler {
                 editMessage(update, getResponseMessage(transaction), getResponseKeyboard(transaction));
 
         } else {
-            var pendingTransactions = transactionRepository.getByIds(cm.getPendingTransactionIds());
+            var pendingTransactions = transactionRepository.findByIds(cm.getPendingTransactionIds());
 
             if (useAssociationFurther) {
                 // step 3

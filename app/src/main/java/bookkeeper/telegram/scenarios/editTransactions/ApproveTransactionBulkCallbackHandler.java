@@ -31,7 +31,7 @@ public class ApproveTransactionBulkCallbackHandler extends AbstractHandler {
             return false;
 
         var cm = ((ApproveTransactionBulkCallback) callbackMessage);
-        var transactions = transactionRepository.getByIds(cm.getTransactionIds());
+        var transactions = transactionRepository.findByIds(cm.getTransactionIds());
 
         transactions.forEach(transactionRepository::approve);
 

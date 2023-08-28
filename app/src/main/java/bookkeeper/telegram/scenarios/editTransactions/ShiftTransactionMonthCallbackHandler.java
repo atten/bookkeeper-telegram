@@ -34,7 +34,7 @@ public class ShiftTransactionMonthCallbackHandler extends AbstractHandler {
             return false;
 
         var cm = ((ShiftTransactionMonthCallback) callbackMessage);
-        var transaction = transactionRepository.get(cm.getTransactionId());
+        var transaction = transactionRepository.find(cm.getTransactionId());
         var pendingTransactionsCount = cm.getPendingTransactionIds().size();
 
         if (transaction == null) {

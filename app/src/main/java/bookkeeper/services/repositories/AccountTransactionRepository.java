@@ -20,17 +20,17 @@ public class AccountTransactionRepository {
     }
 
     @Nullable
-    public AccountTransaction get(long transactionId) {
+    public AccountTransaction find(long transactionId) {
         return manager.find(AccountTransaction.class, transactionId);
     }
 
-    public List<AccountTransaction> getByIds(List<Long> transactionIds) {
+    public List<AccountTransaction> findByIds(List<Long> transactionIds) {
         var sql = "SELECT i FROM AccountTransaction i WHERE i.id IN :transactionIds";
         var query = manager.createQuery(sql, AccountTransaction.class).setParameter("transactionIds", transactionIds);
         return query.getResultList();
     }
 
-    public List<AccountTransaction> getRecentList(TelegramUser user, Currency currency, int count) {
+    public List<AccountTransaction> findRecent(TelegramUser user, Currency currency, int count) {
         var sql = "SELECT i FROM AccountTransaction i WHERE account.telegramUser=:user AND account.currency=:currency ORDER BY timestamp DESC LIMIT :count";
         var query = manager.createQuery(sql, AccountTransaction.class)
             .setParameter("user", user)

@@ -31,7 +31,7 @@ public class EditTransactionBulkCallbackHandler extends AbstractHandler {
             return false;
 
         var cm = ((EditTransactionBulkCallback) callbackMessage);
-        var transaction = transactionRepository.get(cm.getTransactionIds().get(0));
+        var transaction = transactionRepository.find(cm.getTransactionIds().get(0));
         var pendingTransactionIds = cm.getTransactionIds().stream().skip(1).collect(Collectors.toList());
 
         if (transaction == null) {
