@@ -55,7 +55,7 @@ public class EditMonthlyTransactionsCallbackHandler extends AbstractHandler {
 
         Expenditure.enabledValues()
             .forEach(expenditure -> {
-                var ids = transactionRepository.getIdsByExpenditure(user, expenditure, monthOffset);
+                var ids = transactionRepository.findIds(expenditure, monthOffset, user);
                 if (!ids.isEmpty())
                     idsByExpenditure.put(expenditure, ids);
             });

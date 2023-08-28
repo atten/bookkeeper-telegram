@@ -27,7 +27,7 @@ class MonthlyExpensesResponseFactory {
         var creditByCurrency = new HashMap<Currency, BigDecimal>();
         var debitByCurrency = new HashMap<Currency, BigDecimal>();
         var allByCurrency = new HashMap<Currency, BigDecimal>();
-        var accounts = accountRepository.findForUser(user);
+        var accounts = accountRepository.find(user);
         var maxExpenditureLength = Expenditure.enabledValues().stream().map(expenditure -> expenditure.getVerboseName().length()).max(Comparator.naturalOrder()).orElse(0);
         var formatString = "%-" + maxExpenditureLength + "s %s";  // example: "%-15s %s"
         var periodVerbose = LocalDate.now().plusMonths(monthOffset).format(DateTimeFormatter.ofPattern("MMM yy"));

@@ -39,7 +39,7 @@ public class AccountTransactionRepository {
         return query.getResultList();
     }
 
-    public List<Long> getIdsByExpenditure(TelegramUser user, Expenditure expenditure, int monthOffset) {
+    public List<Long> findIds(Expenditure expenditure, int monthOffset, TelegramUser user) {
         var sql = "SELECT id from AccountTransaction " +
                 "WHERE account.telegramUser=:user " +
                 "AND expenditure=:expenditure " +

@@ -38,7 +38,7 @@ public class LastUsedAccountMatcher implements AccountMatcher {
      * Find account of most recent user transaction. Create RUB account as a fallback.
      */
     private Account getLastUsedAccount(TelegramUser user) {
-        var accounts = repository.findForUser(user);
+        var accounts = repository.find(user);
 
         return accounts.stream()
             .map(account -> transactionRepository.findRecent(user, account.getCurrency(), 1))
@@ -61,7 +61,7 @@ public class LastUsedAccountMatcher implements AccountMatcher {
         if (!recentTransactions.isEmpty())
             return recentTransactions.get(0).getAccount();
 
-        var accounts = repository.findForUser(user);
+        var accounts = repository.find(user);
         return accounts.stream()
             .filter(account -> account.getCurrency() == currency)
             .findFirst()

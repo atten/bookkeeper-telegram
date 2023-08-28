@@ -30,7 +30,7 @@ public class AccountRepository {
         }
     }
 
-    public List<Account> findForUser(TelegramUser user) {
+    public List<Account> find(TelegramUser user) {
         var sql = "SELECT i FROM Account i WHERE i.telegramUser = :user";
         var query = manager.createQuery(sql, Account.class).setParameter("user", user);
         return query.getResultList();
