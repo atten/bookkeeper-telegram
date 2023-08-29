@@ -1,9 +1,10 @@
-package bookkeeper.telegram.scenarios.editTransactions;
+package bookkeeper.telegram.scenarios.viewMonthlyExpenses;
 
 import bookkeeper.entities.TelegramUser;
 import bookkeeper.enums.Expenditure;
 import bookkeeper.services.repositories.AccountTransactionRepository;
 import bookkeeper.services.repositories.TelegramUserRepository;
+import bookkeeper.telegram.scenarios.editTransactions.EditTransactionBulkCallback;
 import bookkeeper.telegram.shared.AbstractHandler;
 import bookkeeper.telegram.shared.CallbackMessageRegistry;
 import com.pengrad.telegrambot.TelegramBot;
@@ -19,26 +20,26 @@ import java.util.stream.Collectors;
 
 
 /**
- * Scenario: user refines monthly expenses.
+ * Scenario: user browses monthly expenses.
  */
-public class EditMonthlyTransactionsCallbackHandler extends AbstractHandler {
+public class SelectMonthlyExpendituresCallbackHandler extends AbstractHandler {
     private final AccountTransactionRepository transactionRepository;
 
-    public EditMonthlyTransactionsCallbackHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository, AccountTransactionRepository transactionRepository) {
+    public SelectMonthlyExpendituresCallbackHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository, AccountTransactionRepository transactionRepository) {
         super(bot, telegramUserRepository);
         this.transactionRepository = transactionRepository;
     }
 
     /**
-     * Display expenditures selector to refine monthly transactions
+     * Display expenditures selector to browse monthly transactions
      */
     @Override
     public Boolean handle(Update update) {
         var callbackMessage = CallbackMessageRegistry.getCallbackMessage(update);
-        if (!(callbackMessage instanceof EditMonthlyTransactionsCallback))
+        if (!(callbackMessage instanceof SelectMonthlyExpendituresCallback))
             return false;
 
-        var cm = (EditMonthlyTransactionsCallback) callbackMessage;
+        var cm = (SelectMonthlyExpendituresCallback) callbackMessage;
 
         var user = getTelegramUser(update);
         sendMessage(update, "Выберите категорию:", getResponseKeyboard(cm.getMonthOffset(), user));

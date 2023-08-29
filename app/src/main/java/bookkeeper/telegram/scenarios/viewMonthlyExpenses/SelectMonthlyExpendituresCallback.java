@@ -1,11 +1,11 @@
-package bookkeeper.telegram.scenarios.editTransactions;
+package bookkeeper.telegram.scenarios.viewMonthlyExpenses;
 
 import bookkeeper.telegram.shared.CallbackMessage;
 
-public class EditMonthlyTransactionsCallback extends CallbackMessage {
+class SelectMonthlyExpendituresCallback extends CallbackMessage {
     private final int monthOffset;
 
-    public EditMonthlyTransactionsCallback(int monthOffset) {
+    SelectMonthlyExpendituresCallback(int monthOffset) {
         this.monthOffset = monthOffset;
     }
 

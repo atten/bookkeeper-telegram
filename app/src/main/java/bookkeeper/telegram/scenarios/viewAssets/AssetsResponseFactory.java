@@ -4,7 +4,6 @@ import bookkeeper.entities.TelegramUser;
 import bookkeeper.services.repositories.AccountRepository;
 import bookkeeper.services.repositories.AccountTransactionRepository;
 
-import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -18,22 +17,10 @@ class AssetsResponseFactory {
     }
 
     String getTotalAssets(TelegramUser user) {
-        var accounts = accountRepository.find(user);
-        var contendWithSortingKey = new HashMap<String, BigDecimal>();
-
-        for (var account : accounts) {
-            var name = account.getName();
-            var balance = transactionRepository.getTotalAmount(account);
-            var currency = account.getCurrency().getSymbol();
-
-            var line = String.format("%-15s: % ,.2f %s", name, balance, currency);
-            var sortingKey = balance.negate();
-            contendWithSortingKey.put(line, sortingKey);
-        }
-
-        var content = contendWithSortingKey.entrySet().stream()
-                .sorted(Map.Entry.comparingByValue())
-                .map(Map.Entry::getKey)
+        var content = accountRepository.find(user).stream()
+                .map(i -> new Asset(i, transactionRepository.getTotalAmount(i)))
+                .sorted(Comparator.comparing(i -> i.getBalance().negate()))
+                .map(i -> String.format("%-15s: % ,.2f %s", i.getAccount().getName(), i.getBalance(), i.getAccount().getCurrency().getSymbol()))
                 .collect(Collectors.joining("\n"));
         return "Сводка по всем счетам:```\n" + content + "```";
     }

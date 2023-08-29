@@ -4,7 +4,6 @@ import bookkeeper.entities.TelegramUser;
 import bookkeeper.enums.Expenditure;
 import bookkeeper.services.repositories.AccountRepository;
 import bookkeeper.services.repositories.AccountTransactionRepository;
-import bookkeeper.telegram.scenarios.editTransactions.EditMonthlyTransactionsCallback;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 
 import java.math.BigDecimal;
@@ -74,7 +73,7 @@ class MonthlyExpensesResponseFactory {
 
     static InlineKeyboardMarkup getMonthlyExpensesKeyboard(int monthOffset) {
         var keyboard = new InlineKeyboardMarkup()
-                .addRow(new EditMonthlyTransactionsCallback(monthOffset).asButton("Разобрать"));
+                .addRow(new SelectMonthlyExpendituresCallback(monthOffset).asButton("Разобрать"));
 
         var prevMonthButton = new ViewMonthlyExpensesWithOffsetCallback(monthOffset - 1).asButton(true);
         var nextMonthButton = new ViewMonthlyExpensesWithOffsetCallback(monthOffset + 1).asButton(false);
