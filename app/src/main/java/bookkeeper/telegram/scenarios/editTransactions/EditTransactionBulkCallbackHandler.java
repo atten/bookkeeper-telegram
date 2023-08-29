@@ -39,7 +39,7 @@ public class EditTransactionBulkCallbackHandler extends AbstractHandler {
             return false;
         }
 
-        sendMessage(update, getResponseMessage(transaction, pendingTransactionIds.size()), getResponseKeyboard(transaction, pendingTransactionIds));
+        editMessage(update, getResponseMessage(transaction, pendingTransactionIds.size()), getResponseKeyboard(transaction, pendingTransactionIds));
         return true;
     }
 }

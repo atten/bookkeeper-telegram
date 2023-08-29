@@ -42,7 +42,7 @@ public class SelectMonthlyExpendituresCallbackHandler extends AbstractHandler {
         var cm = (SelectMonthlyExpendituresCallback) callbackMessage;
 
         var user = getTelegramUser(update);
-        sendMessage(update, "Выберите категорию:", getResponseKeyboard(cm.getMonthOffset(), user));
+        editMessage(update, getResponseKeyboard(cm.getMonthOffset(), user));
 
         return true;
     }
@@ -72,6 +72,9 @@ public class SelectMonthlyExpendituresCallbackHandler extends AbstractHandler {
                 // append keyboard rows
                 kb.addRow(inlineKeyboardButtons.toArray(InlineKeyboardButton[]::new))
             );
+
+        // button which returns to monthly expenses menu
+        kb.addRow(new ViewMonthlyExpensesWithOffsetCallback(monthOffset).asButton("Назад"));
         return kb;
     }
 }

@@ -3,6 +3,7 @@ package bookkeeper.telegram.shared;
 import bookkeeper.entities.AccountTransaction;
 import bookkeeper.enums.Expenditure;
 import bookkeeper.telegram.scenarios.editTransactions.*;
+import bookkeeper.telegram.scenarios.viewMonthlyExpenses.ViewMonthlyExpensesWithOffsetCallback;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 
 import java.math.BigDecimal;
@@ -114,22 +115,25 @@ public class TransactionResponseFactory {
 
     public static InlineKeyboardMarkup getResponseKeyboard(AccountTransaction transaction, List<Long> pendingTransactionIds) {
         var transactionId = transaction.getId();
-        var approveButtonText = "Подтвердить";
-
-        if (transaction.isApproved()) {
-            approveButtonText = "Далее";
-            if (pendingTransactionIds.isEmpty())
-                approveButtonText = "Готово";
-        }
 
         var selectExpenditureButton = new SelectExpenditureCallback(transactionId).setPendingTransactionIds(pendingTransactionIds).asButton("Уточнить категорию");
         var prevMonthButton = new ShiftTransactionMonthCallback(transactionId, -1).setPendingTransactionIds(pendingTransactionIds).asButton(transaction.date());
         var nextMonthButton = new ShiftTransactionMonthCallback(transactionId, +1).setPendingTransactionIds(pendingTransactionIds).asButton(transaction.date());
-        var approveButton = new ApproveTransactionCallback(transactionId).setPendingTransactionIds(pendingTransactionIds).asButton(approveButtonText);
 
-        return new InlineKeyboardMarkup()
-            .addRow(selectExpenditureButton, prevMonthButton, nextMonthButton)
-            .addRow(approveButton);
+        var kb = new InlineKeyboardMarkup()
+            .addRow(selectExpenditureButton, prevMonthButton, nextMonthButton);
+
+        if (transaction.isApproved() && pendingTransactionIds.isEmpty()) {
+            var monthOffset = transaction.age().negated().toDays() / 30;
+            var showExpensesButton = new ViewMonthlyExpensesWithOffsetCallback((int) monthOffset).asButton("Готово");
+            kb.addRow(showExpensesButton);
+        } else {
+            var approveButtonText = transaction.isApproved() ? "Далее" : "Подтвердить";
+            var approveButton = new ApproveTransactionCallback(transactionId).setPendingTransactionIds(pendingTransactionIds).asButton(approveButtonText);
+            kb.addRow(approveButton);
+        }
+
+        return kb;
     }
 
     private static String pluralize(Integer count, String single, String few, String many) {

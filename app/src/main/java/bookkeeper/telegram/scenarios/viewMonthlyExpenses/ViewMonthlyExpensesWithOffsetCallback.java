@@ -8,10 +8,10 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 
-class ViewMonthlyExpensesWithOffsetCallback extends CallbackMessage {
+public class ViewMonthlyExpensesWithOffsetCallback extends CallbackMessage {
     private final int monthOffset;
 
-    ViewMonthlyExpensesWithOffsetCallback(int monthOffset) {
+    public ViewMonthlyExpensesWithOffsetCallback(int monthOffset) {
         this.monthOffset = monthOffset;
     }
 
