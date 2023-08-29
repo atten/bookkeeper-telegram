@@ -6,7 +6,7 @@ import bookkeeper.services.matchers.ExpenditureMatcher;
 import bookkeeper.services.parsers.Spending;
 import bookkeeper.telegram.scenarios.addTransactions.freehand.parsers.FreehandRecord;
 
-public class ExpenditureMatcherByDescription implements ExpenditureMatcher {
+public class FreehandExpenditureMatcher implements ExpenditureMatcher {
 
     @Override
     public Expenditure match(Spending spending, TelegramUser telegramUser) {

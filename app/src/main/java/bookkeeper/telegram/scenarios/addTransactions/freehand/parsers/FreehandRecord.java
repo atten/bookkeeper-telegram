@@ -1,10 +1,8 @@
 package bookkeeper.telegram.scenarios.addTransactions.freehand.parsers;
 
 import bookkeeper.services.parsers.Spending;
-import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
-import java.util.Currency;
 import java.util.Objects;
 
 /**
@@ -14,8 +12,6 @@ import java.util.Objects;
 public class FreehandRecord implements Spending {
     public String description;  // Еда
     public BigDecimal amount;  // 220
-    @Nullable
-    public Currency currency;  // null
 
     @Override
     public String getMerchant() {
@@ -27,7 +23,7 @@ public class FreehandRecord implements Spending {
         if (this == o) return true;
         if (!(o instanceof FreehandRecord)) return false;
         FreehandRecord that = (FreehandRecord) o;
-        return Objects.equals(description, that.description) && Objects.equals(amount, that.amount) && Objects.equals(currency, that.currency);
+        return Objects.equals(description, that.description) && Objects.equals(amount, that.amount);
     }
 
     @Override
@@ -35,7 +31,6 @@ public class FreehandRecord implements Spending {
         return "FreehandRecord{" +
                 "description='" + description + '\'' +
                 ", amount=" + amount +
-                ", currency=" + currency +
                 '}';
     }
 }

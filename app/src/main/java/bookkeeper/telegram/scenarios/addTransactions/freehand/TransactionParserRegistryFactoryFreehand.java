@@ -5,9 +5,9 @@ import bookkeeper.services.parsers.SpendingParserRegistry;
 import bookkeeper.services.registries.TransactionParserRegistry;
 import bookkeeper.services.repositories.AccountRepository;
 import bookkeeper.services.repositories.AccountTransactionRepository;
-import bookkeeper.telegram.scenarios.addTransactions.freehand.matchers.ExpenditureMatcherByDescription;
+import bookkeeper.telegram.scenarios.addTransactions.freehand.matchers.FreehandExpenditureMatcher;
 import bookkeeper.telegram.scenarios.addTransactions.freehand.matchers.FreehandAmountMatcher;
-import bookkeeper.telegram.scenarios.addTransactions.freehand.matchers.LastUsedAccountMatcher;
+import bookkeeper.telegram.scenarios.addTransactions.freehand.matchers.FreehandAccountMatcher;
 
 import java.time.Instant;
 
@@ -24,11 +24,11 @@ public class TransactionParserRegistryFactoryFreehand {
 
     public TransactionParserRegistry create() {
         return new TransactionParserRegistry()
-            .addAccountMatcher(new LastUsedAccountMatcher(accountRepository, transactionRepository))
+            .addAccountMatcher(new FreehandAccountMatcher(accountRepository, transactionRepository))
             .addAmountMatcher(new FreehandAmountMatcher())
             .addTimestampMatcher(spending -> Instant.now())
             .setSpendingParserRegistry(SpendingParserRegistry.ofProvider("freehand"))
             .addExpenditureMatcher(expenditureMatcherByMerchant)
-            .addExpenditureMatcher(new ExpenditureMatcherByDescription());
+            .addExpenditureMatcher(new FreehandExpenditureMatcher());
     }
 }
