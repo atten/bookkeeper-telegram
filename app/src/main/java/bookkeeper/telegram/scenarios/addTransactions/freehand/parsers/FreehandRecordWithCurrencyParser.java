@@ -12,7 +12,8 @@ public class FreehandRecordWithCurrencyParser implements SpendingParser<Freehand
     @Override
     public FreehandRecordWithCurrency parse(String rawMessage) throws ParseException {
         String[] parts = rawMessage.split(" ");
-        if (parts.length < 3)
+        // don't accept too long messages (not to clash with other parsers)
+        if (parts.length < 3 || parts.length > 6)
             throw new ParseException(rawMessage, 0);
 
         var rawMessageWithoutCurrency = rawMessage.substring(0, rawMessage.lastIndexOf(' '));

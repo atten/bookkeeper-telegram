@@ -54,7 +54,7 @@ public class SpendingParserRegistry {
         if (candidates.size() == 0)
             throw new ParseException("No suitable SmsParser found.", 0);
 
-        throw new ParseException("Multiple SmsParser found suitable.", 0);
+        throw new ParseException(String.format("Multiple SmsParser found suitable: %s", candidates), 0);
     }
 
     private void add(Class<?> spendingParserClass) {
