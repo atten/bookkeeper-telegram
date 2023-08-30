@@ -30,10 +30,10 @@ public class ApproveTransactionCallbackHandler extends AbstractHandler {
     @Override
     public Boolean handle(Update update) {
         var callbackMessage = CallbackMessageRegistry.getCallbackMessage(update);
-        if (!(callbackMessage instanceof ApproveTransactionCallback))
+        if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof ApproveTransactionCallback))
             return false;
 
-        var cm = ((ApproveTransactionCallback) callbackMessage);
+        var cm = (ApproveTransactionCallback) callbackMessage.get();
         var transaction = transactionRepository.find(cm.getTransactionId());
         var pendingTransactionsCount = cm.getPendingTransactionIds().size();
 

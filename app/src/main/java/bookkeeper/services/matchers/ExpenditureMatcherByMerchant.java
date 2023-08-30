@@ -1,5 +1,6 @@
 package bookkeeper.services.matchers;
 
+import bookkeeper.entities.MerchantExpenditure;
 import bookkeeper.entities.TelegramUser;
 import bookkeeper.enums.Expenditure;
 import bookkeeper.services.repositories.MerchantExpenditureRepository;
@@ -14,10 +15,8 @@ public class ExpenditureMatcherByMerchant implements ExpenditureMatcher {
 
     @Override
     public Expenditure match(Spending spending, TelegramUser telegramUser) {
-        var resultFromRepo = merchantExpenditureRepository.find(spending.getMerchant(), telegramUser);
-        if (resultFromRepo != null)
-            return resultFromRepo.getExpenditure();
-
-        return Expenditure.OTHER;
+        return merchantExpenditureRepository.find(spending.getMerchant(), telegramUser)
+                .map(MerchantExpenditure::getExpenditure)
+                .orElse(Expenditure.OTHER);
     }
 }

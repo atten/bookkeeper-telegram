@@ -22,10 +22,10 @@ public class RemoveMerchantExpenditureCallbackHandler extends AbstractHandler {
     @Override
     public Boolean handle(Update update) {
         var callbackMessage = CallbackMessageRegistry.getCallbackMessage(update);
-        if (!(callbackMessage instanceof RemoveMerchantExpenditureCallback))
+        if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof RemoveMerchantExpenditureCallback))
             return false;
 
-        var cm = ((RemoveMerchantExpenditureCallback) callbackMessage);
+        var cm = (RemoveMerchantExpenditureCallback) callbackMessage.get();
         merchantExpenditureRepository.removeMerchantAssociation(cm.getMerchant(), cm.getExpenditure(), getTelegramUser(update));
         editMessage(update, getResponseMessage(cm.getMerchant(), Expenditure.OTHER));
         return true;

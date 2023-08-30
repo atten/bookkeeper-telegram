@@ -36,10 +36,10 @@ public class SelectMonthlyExpendituresCallbackHandler extends AbstractHandler {
     @Override
     public Boolean handle(Update update) {
         var callbackMessage = CallbackMessageRegistry.getCallbackMessage(update);
-        if (!(callbackMessage instanceof SelectMonthlyExpendituresCallback))
+        if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof SelectMonthlyExpendituresCallback))
             return false;
 
-        var cm = (SelectMonthlyExpendituresCallback) callbackMessage;
+        var cm = (SelectMonthlyExpendituresCallback) callbackMessage.get();
 
         var user = getTelegramUser(update);
         editMessage(update, getResponseKeyboard(cm.getMonthOffset(), user));

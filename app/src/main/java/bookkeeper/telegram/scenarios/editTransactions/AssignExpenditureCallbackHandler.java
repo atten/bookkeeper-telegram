@@ -43,10 +43,10 @@ public class AssignExpenditureCallbackHandler extends AbstractHandler {
     @Override
     public Boolean handle(Update update) {
         var callbackMessage = CallbackMessageRegistry.getCallbackMessage(update);
-        if (!(callbackMessage instanceof AssignExpenditureCallback))
+        if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof AssignExpenditureCallback))
             return false;
 
-        var cm = ((AssignExpenditureCallback) callbackMessage);
+        var cm = (AssignExpenditureCallback) callbackMessage.get();
         var transaction = transactionRepository.find(cm.getTransactionId());
         if (transaction == null) {
             logger.warn(String.format("AccountTransaction with id=%s not found", cm.getTransactionId()));
@@ -55,7 +55,7 @@ public class AssignExpenditureCallbackHandler extends AbstractHandler {
 
         var merchant = getSpendingFromTransaction(transaction).getMerchant();
         var newExpenditure = cm.getExpenditure();
-        var hasAssociation = merchantExpenditureRepository.find(merchant, getTelegramUser(update)) != null;
+        var hasAssociation = merchantExpenditureRepository.find(merchant, getTelegramUser(update)).isPresent();
         var useAssociationFurther = newExpenditure != Expenditure.OTHER && !hasAssociation;
         var pendingTransactionsCount = cm.getPendingTransactionIds().size();
 

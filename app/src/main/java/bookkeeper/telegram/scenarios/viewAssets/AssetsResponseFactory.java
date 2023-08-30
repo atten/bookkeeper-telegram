@@ -22,7 +22,7 @@ class AssetsResponseFactory {
                 .sorted(Comparator.comparing(i -> i.getBalance().negate()))
                 .map(i -> String.format("%-15s: % ,.2f %s", i.getAccount().getName(), i.getBalance(), i.getAccount().getCurrency().getSymbol()))
                 .collect(Collectors.joining("\n"));
-        return "Сводка по всем счетам:```\n" + content + "```";
+        return "Сводка по всем счетам:\n```" + content + "```";
     }
 
 }

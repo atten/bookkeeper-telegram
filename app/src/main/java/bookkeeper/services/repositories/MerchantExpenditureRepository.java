@@ -5,9 +5,9 @@ import bookkeeper.entities.TelegramUser;
 import bookkeeper.enums.Expenditure;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
-import org.jetbrains.annotations.Nullable;
 
 import java.time.Instant;
+import java.util.Optional;
 
 public class MerchantExpenditureRepository {
     private final EntityManager manager;
@@ -16,17 +16,16 @@ public class MerchantExpenditureRepository {
         this.manager = manager;
     }
 
-    @Nullable
-    public MerchantExpenditure find(String merchant, TelegramUser user) {
+    public Optional<MerchantExpenditure> find(String merchant, TelegramUser user) {
         var sql = "SELECT i FROM MerchantExpenditure i WHERE i.merchant=:merchant AND i.telegramUser=:telegramUser ORDER BY i.createdAt DESC LIMIT 1";
         var query = manager.createQuery(sql, MerchantExpenditure.class)
             .setParameter("merchant", merchant)
             .setParameter("telegramUser", user);
 
         try {
-            return query.getSingleResult();
+            return Optional.of(query.getSingleResult());
         } catch (NoResultException e) {
-            return null;
+            return Optional.empty();
         }
     }
 
@@ -36,10 +35,10 @@ public class MerchantExpenditureRepository {
     }
 
     public void removeMerchantAssociation(String merchant, Expenditure expenditure, TelegramUser user) {
-        var obj = find(merchant, user);
-        if (obj == null || obj.getExpenditure() != expenditure)
-            return;
-        manager.remove(obj);
+        find(merchant, user).ifPresent(obj -> {
+            if (obj.getExpenditure() != expenditure)
+                manager.remove(obj);
+        });
     }
 
     public int removeMerchantAssociations(TelegramUser user) {

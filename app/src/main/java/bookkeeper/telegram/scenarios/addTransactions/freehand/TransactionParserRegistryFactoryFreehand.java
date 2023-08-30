@@ -10,6 +10,7 @@ import bookkeeper.telegram.scenarios.addTransactions.freehand.matchers.FreehandA
 import bookkeeper.telegram.scenarios.addTransactions.freehand.matchers.FreehandAccountMatcher;
 
 import java.time.Instant;
+import java.util.Optional;
 
 public class TransactionParserRegistryFactoryFreehand {
     private final AccountRepository accountRepository;
@@ -26,7 +27,7 @@ public class TransactionParserRegistryFactoryFreehand {
         return new TransactionParserRegistry()
             .addAccountMatcher(new FreehandAccountMatcher(accountRepository, transactionRepository))
             .addAmountMatcher(new FreehandAmountMatcher())
-            .addTimestampMatcher(spending -> Instant.now())
+            .addTimestampMatcher(spending -> Optional.of(Instant.now()))
             .setSpendingParserRegistry(SpendingParserRegistry.ofProvider("freehand"))
             .addExpenditureMatcher(expenditureMatcherByMerchant)
             .addExpenditureMatcher(new FreehandExpenditureMatcher());

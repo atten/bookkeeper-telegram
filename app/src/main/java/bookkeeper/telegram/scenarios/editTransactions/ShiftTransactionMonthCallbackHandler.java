@@ -30,10 +30,10 @@ public class ShiftTransactionMonthCallbackHandler extends AbstractHandler {
     @Override
     public Boolean handle(Update update) {
         var callbackMessage = CallbackMessageRegistry.getCallbackMessage(update);
-        if (!(callbackMessage instanceof ShiftTransactionMonthCallback))
+        if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof ShiftTransactionMonthCallback))
             return false;
 
-        var cm = ((ShiftTransactionMonthCallback) callbackMessage);
+        var cm = (ShiftTransactionMonthCallback) callbackMessage.get();
         var transaction = transactionRepository.find(cm.getTransactionId());
         var pendingTransactionsCount = cm.getPendingTransactionIds().size();
 

@@ -2,11 +2,11 @@ package bookkeeper.telegram.shared;
 
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
 import java.text.ParseException;
 import java.util.Base64;
+import java.util.Optional;
 
 public class CallbackMessageRegistry {
     private static final StringShortener shortener = new StringShortener(55);
@@ -15,17 +15,16 @@ public class CallbackMessageRegistry {
         return new InlineKeyboardButton(text).callbackData(shortener.shrink(serialize(message)));
     }
 
-    @Nullable
-    public static CallbackMessage getCallbackMessage(Update update) {
+    public static Optional<CallbackMessage> getCallbackMessage(Update update) {
         if (update.callbackQuery() == null)
-            return null;
+            return Optional.empty();
 
         var callbackData = shortener.unshrink(update.callbackQuery().data());
 
         try {
-            return deserialize(callbackData);
+            return Optional.of(deserialize(callbackData));
         } catch (ParseException e) {
-            return null;
+            return Optional.empty();
         }
     }
 

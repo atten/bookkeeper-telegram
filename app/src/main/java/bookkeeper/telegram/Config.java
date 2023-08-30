@@ -3,7 +3,6 @@ package bookkeeper.telegram;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Persistence;
 import org.hibernate.HibernateException;
-import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,10 +10,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 class Config {
     private static final Logger logger = LoggerFactory.getLogger(Config.class);
@@ -32,12 +28,11 @@ class Config {
         return em;
     }
 
-    @Nullable
-    static Integer notifyTelegramUserId() {
+    static Optional<Integer> telegramUserIdToNotify() {
         var userId = System.getenv("NOTIFY_TELEGRAM_USER_ID");
         if (userId == null)
-            return null;
-        return Integer.parseInt(userId);
+            return Optional.empty();
+        return Optional.of(Integer.parseInt(userId));
     }
 
     private static void migrate(EntityManager entityManager) {

@@ -9,10 +9,10 @@ import bookkeeper.services.repositories.AccountRepository;
 import bookkeeper.services.repositories.AccountTransactionRepository;
 import bookkeeper.telegram.scenarios.addTransactions.freehand.parsers.FreehandRecord;
 import bookkeeper.telegram.scenarios.addTransactions.freehand.parsers.FreehandRecordWithCurrency;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Comparator;
 import java.util.Currency;
+import java.util.Optional;
 
 public class FreehandAccountMatcher implements AccountMatcher {
     private final AccountRepository repository;
@@ -23,17 +23,16 @@ public class FreehandAccountMatcher implements AccountMatcher {
         this.transactionRepository = transactionRepository;
     }
 
-    @Nullable
     @Override
-    public Account match(Spending spending, TelegramUser user) {
+    public Optional<Account> match(Spending spending, TelegramUser user) {
         if (spending instanceof FreehandRecordWithCurrency) {
             var obj = (FreehandRecordWithCurrency) spending;
-            return getLastUsedAccount(user, obj.currency);
+            return Optional.of(getLastUsedAccount(user, obj.currency));
         }
         if (spending instanceof FreehandRecord) {
-            return getLastUsedAccount(user);
+            return Optional.of(getLastUsedAccount(user));
         }
-        return null;
+        return Optional.empty();
     }
 
     /**

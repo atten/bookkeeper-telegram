@@ -47,7 +47,7 @@ public class AbstractTransactionRecordHandler extends AbstractHandler {
         }
 
         transactions.forEach(transactionRepository::save);
-        sendMessage(update, getResponseMessage(transactions), getResponseKeyboard(transactions), true);
+        replyMessage(update, getResponseMessage(transactions), getResponseKeyboard(transactions));
         return true;
 
     }

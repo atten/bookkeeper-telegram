@@ -27,10 +27,10 @@ public class EditTransactionBulkCallbackHandler extends AbstractHandler {
     @Override
     public Boolean handle(Update update) {
         var callbackMessage = CallbackMessageRegistry.getCallbackMessage(update);
-        if (!(callbackMessage instanceof EditTransactionBulkCallback))
+        if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof EditTransactionBulkCallback))
             return false;
 
-        var cm = ((EditTransactionBulkCallback) callbackMessage);
+        var cm = (EditTransactionBulkCallback) callbackMessage.get();
         var transaction = transactionRepository.find(cm.getTransactionIds().get(0));
         var pendingTransactionIds = cm.getTransactionIds().stream().skip(1).collect(Collectors.toList());
 

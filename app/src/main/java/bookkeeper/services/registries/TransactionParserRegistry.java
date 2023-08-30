@@ -16,7 +16,7 @@ import java.text.ParseException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
 
 public class TransactionParserRegistry {
     private SpendingParserRegistry spendingParserRegistry = new SpendingParserRegistry();
@@ -85,7 +85,8 @@ public class TransactionParserRegistry {
         return accountMatchers
                 .stream()
                 .map(matcher -> matcher.match(spending, user))
-                .filter(Objects::nonNull)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .findFirst()
                 .orElseThrow();
     }
@@ -97,7 +98,8 @@ public class TransactionParserRegistry {
         return amountMatchers
                 .stream()
                 .map(matcher -> matcher.match(spending))
-                .filter(Objects::nonNull)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .findFirst()
                 .orElseThrow();
     }
@@ -121,7 +123,8 @@ public class TransactionParserRegistry {
         return timestampMatchers
                 .stream()
                 .map(matcher -> matcher.match(spending))
-                .filter(Objects::nonNull)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .findFirst()
                 .orElse(Instant.now());
     }

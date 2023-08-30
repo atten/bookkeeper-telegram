@@ -1,12 +1,11 @@
 package bookkeeper.services.matchers;
 
 import bookkeeper.services.parsers.Spending;
-import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 public interface AmountMatcher {
 
-    @Nullable
-    BigDecimal match(Spending spending);
+    Optional<BigDecimal> match(Spending spending);
 }

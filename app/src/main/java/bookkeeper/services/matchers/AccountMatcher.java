@@ -3,9 +3,10 @@ package bookkeeper.services.matchers;
 import bookkeeper.entities.Account;
 import bookkeeper.entities.TelegramUser;
 import bookkeeper.services.parsers.Spending;
-import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
 
 public interface AccountMatcher {
 
-    @Nullable Account match(Spending spending, TelegramUser user);
+    Optional<Account> match(Spending spending, TelegramUser user);
 }

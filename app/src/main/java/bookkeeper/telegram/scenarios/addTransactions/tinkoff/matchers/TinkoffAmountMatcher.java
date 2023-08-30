@@ -3,43 +3,42 @@ package bookkeeper.telegram.scenarios.addTransactions.tinkoff.matchers;
 import bookkeeper.services.matchers.AmountMatcher;
 import bookkeeper.services.parsers.Spending;
 import bookkeeper.telegram.scenarios.addTransactions.tinkoff.parsers.*;
-import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
 import java.util.Currency;
+import java.util.Optional;
 
 public class TinkoffAmountMatcher implements AmountMatcher {
-    @Nullable
     @Override
-    public BigDecimal match(Spending spending) {
+    public Optional<BigDecimal> match(Spending spending) {
         if (spending instanceof TinkoffPurchaseSms) {
             var obj = ((TinkoffPurchaseSms) spending);
 
             // "1 RUB" expenses are ephemeral and should be ignored (e.g. Mos.Transport uses it to check card validity)
             if (obj.purchaseSum.equals(BigDecimal.ONE) && obj.purchaseCurrency.equals(Currency.getInstance("RUB")))
-                return BigDecimal.ZERO;
+                return Optional.of(BigDecimal.ZERO);
 
-            return obj.purchaseSum.negate();
+            return Optional.of(obj.purchaseSum.negate());
         }
         if (spending instanceof TinkoffFpsPurchaseSms) {
             var obj = ((TinkoffFpsPurchaseSms) spending);
-            return obj.purchaseSum.negate();
+            return Optional.of(obj.purchaseSum.negate());
         }
         if (spending instanceof TinkoffTransferSms) {
             var obj = ((TinkoffTransferSms) spending);
-            return obj.transferSum.negate();
+            return Optional.of(obj.transferSum.negate());
         }
         if (spending instanceof TinkoffRecurringChargeSms) {
             var obj = ((TinkoffRecurringChargeSms) spending);
-            return obj.chargeSum.negate();
+            return Optional.of(obj.chargeSum.negate());
         }
         if (spending instanceof TinkoffReplenishSms) {
             var obj = ((TinkoffReplenishSms) spending);
-            return obj.replenishSum;
+            return Optional.of(obj.replenishSum);
         }
         if (spending instanceof TinkoffIgnoreSms) {
-            return BigDecimal.ZERO;
+            return Optional.of(BigDecimal.ZERO);
         }
-        return null;
+        return Optional.empty();
     }
 }

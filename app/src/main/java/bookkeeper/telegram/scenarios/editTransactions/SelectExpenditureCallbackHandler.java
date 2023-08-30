@@ -29,10 +29,10 @@ public class SelectExpenditureCallbackHandler extends AbstractHandler {
     @Override
     public Boolean handle(Update update) {
         var callbackMessage = CallbackMessageRegistry.getCallbackMessage(update);
-        if (!(callbackMessage instanceof SelectExpenditureCallback))
+        if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof SelectExpenditureCallback))
             return false;
 
-        var cm = ((SelectExpenditureCallback) callbackMessage);
+        var cm = (SelectExpenditureCallback) callbackMessage.get();
         editMessage(update, getResponseKeyboard(cm.getTransactionId(), cm.getPendingTransactionIds()));
         return true;
     }

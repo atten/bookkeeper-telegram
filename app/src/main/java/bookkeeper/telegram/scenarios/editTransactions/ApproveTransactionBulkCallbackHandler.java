@@ -27,10 +27,10 @@ public class ApproveTransactionBulkCallbackHandler extends AbstractHandler {
     @Override
     public Boolean handle(Update update) {
         var callbackMessage = CallbackMessageRegistry.getCallbackMessage(update);
-        if (!(callbackMessage instanceof ApproveTransactionBulkCallback))
+        if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof ApproveTransactionBulkCallback))
             return false;
 
-        var cm = ((ApproveTransactionBulkCallback) callbackMessage);
+        var cm = ((ApproveTransactionBulkCallback) callbackMessage.get());
         var transactions = transactionRepository.findByIds(cm.getTransactionIds());
 
         transactions.forEach(transactionRepository::approve);
