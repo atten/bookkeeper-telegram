@@ -59,6 +59,7 @@ public class TransactionParserRegistry {
         transaction.setExpenditure(matchExpenditure(spending, user));
         transaction.setTimestamp(matchTimestamp(spending));
         transaction.setRaw(rawMessage);
+        transaction.setCreatedAt(Instant.now());
 
         return transaction;
     }

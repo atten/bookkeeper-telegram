@@ -30,6 +30,9 @@ public class AccountTransaction {
     @Column
     private String raw;
 
+    @Column(name = "created_at")
+    private Instant createdAt;  // the moment when record added
+
     @Column(name = "approved_at")
     private Instant approvedAt;  // the moment when transaction parameters have been approved manually (default is null)
 
@@ -70,6 +73,14 @@ public class AccountTransaction {
 
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
     }
 
     public Instant getTimestamp() {
