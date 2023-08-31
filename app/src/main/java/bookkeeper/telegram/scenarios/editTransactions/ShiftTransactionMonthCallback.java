@@ -37,6 +37,8 @@ public class ShiftTransactionMonthCallback extends CallbackMessage {
 
     public InlineKeyboardButton asButton(LocalDate currentDate) {
         var monthName = currentDate.plusMonths(monthOffset).getMonth().getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault());
-        return asButton(String.format("В %s", monthName));
+        if (monthOffset < 0)
+            return asButton(String.format("◀️ В %s", monthName));
+        return asButton(String.format("В %s ▶️", monthName));
     }
 }

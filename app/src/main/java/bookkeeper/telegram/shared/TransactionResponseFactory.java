@@ -102,21 +102,21 @@ public class TransactionResponseFactory {
         var transactionId = transaction.getId();
 
         var kb = new InlineKeyboardMarkup();
-        var selectExpenditureButton = new SelectExpenditureCallback(transactionId).asButton("Уточнить категорию");
+        var selectExpenditureButton = new SelectExpenditureCallback(transactionId).asButton("\uD83D\uDCDD Категория");
         var prevMonthButton = new ShiftTransactionMonthCallback(transactionId, -1).asButton(transaction.date());
         var nextMonthButton = new ShiftTransactionMonthCallback(transactionId, +1).asButton(transaction.date());
-        var approveButton = new ApproveTransactionCallback(transactionId).asButton("Подтвердить");
+        var approveButton = new ApproveTransactionCallback(transactionId).asButton("✅ Подтвердить");
 
         if (transaction.isApproved())
             return kb.addRow(selectExpenditureButton);
 
-        return kb.addRow(selectExpenditureButton, prevMonthButton, nextMonthButton, approveButton);
+        return kb.addRow(selectExpenditureButton, prevMonthButton, nextMonthButton).addRow(approveButton);
     }
 
     public static InlineKeyboardMarkup getResponseKeyboard(AccountTransaction transaction, List<Long> pendingTransactionIds) {
         var transactionId = transaction.getId();
 
-        var selectExpenditureButton = new SelectExpenditureCallback(transactionId).setPendingTransactionIds(pendingTransactionIds).asButton("Уточнить категорию");
+        var selectExpenditureButton = new SelectExpenditureCallback(transactionId).setPendingTransactionIds(pendingTransactionIds).asButton("\uD83D\uDCDD Категория");
         var prevMonthButton = new ShiftTransactionMonthCallback(transactionId, -1).setPendingTransactionIds(pendingTransactionIds).asButton(transaction.date());
         var nextMonthButton = new ShiftTransactionMonthCallback(transactionId, +1).setPendingTransactionIds(pendingTransactionIds).asButton(transaction.date());
 
@@ -128,7 +128,7 @@ public class TransactionResponseFactory {
             var showExpensesButton = new ViewMonthlyExpensesWithOffsetCallback((int) monthOffset).asButton("Готово");
             kb.addRow(showExpensesButton);
         } else {
-            var approveButtonText = transaction.isApproved() ? "Далее" : "Подтвердить";
+            var approveButtonText = transaction.isApproved() ? "Далее" : "✅ Подтвердить";
             var approveButton = new ApproveTransactionCallback(transactionId).setPendingTransactionIds(pendingTransactionIds).asButton(approveButtonText);
             kb.addRow(approveButton);
         }
