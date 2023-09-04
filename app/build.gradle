@@ -2,6 +2,7 @@ plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
     id 'application'
     id 'com.google.cloud.tools.jib' version "3.3.2"
+    id 'jacoco'
 }
 
 repositories {
@@ -39,4 +40,20 @@ application {
 tasks.named('test') {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
+}
+
+jacocoTestReport {
+    dependsOn test // tests are required to run before generating the report
+
+    reports {
+        csv.required = true
+        html.required = false
+    }
+}
+
+jib {
+    container {
+        // 128M should be enough
+        jvmFlags = ["-Xmx128M"]
+    }
 }
