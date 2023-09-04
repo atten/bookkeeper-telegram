@@ -21,4 +21,16 @@ class FreehandRecordParserTest {
 
         assertEquals(referenceRecord, record);
     }
+
+    @Test
+    void parseOk_2() throws ParseException {
+        var record = parser.parse("пополнение +220");
+
+        var referenceRecord = new FreehandRecord();
+
+        referenceRecord.description = "пополнение";
+        referenceRecord.amount = new BigDecimal("-220");  // negated expense = profit
+
+        assertEquals(referenceRecord, record);
+    }
 }
