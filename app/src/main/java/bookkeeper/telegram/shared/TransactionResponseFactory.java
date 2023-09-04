@@ -105,12 +105,14 @@ public class TransactionResponseFactory {
         var selectExpenditureButton = new SelectExpenditureCallback(transactionId).asButton("\uD83D\uDCDD Категория");
         var prevMonthButton = new ShiftTransactionMonthCallback(transactionId, -1).asButton(transaction.date());
         var nextMonthButton = new ShiftTransactionMonthCallback(transactionId, +1).asButton(transaction.date());
+        var removeButton = new RemoveTransactionCallback(transactionId).asButton("\uD83D\uDDD1 Отмена");
         var approveButton = new ApproveTransactionCallback(transactionId).asButton("✅ Подтвердить");
 
         if (transaction.isApproved())
             return kb.addRow(selectExpenditureButton);
 
-        return kb.addRow(selectExpenditureButton, prevMonthButton, nextMonthButton).addRow(approveButton);
+        return kb.addRow(selectExpenditureButton, prevMonthButton, nextMonthButton)
+                .addRow(removeButton, approveButton);
     }
 
     public static InlineKeyboardMarkup getResponseKeyboard(AccountTransaction transaction, List<Long> pendingTransactionIds) {

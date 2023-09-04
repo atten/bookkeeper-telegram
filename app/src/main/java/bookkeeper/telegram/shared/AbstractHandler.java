@@ -81,7 +81,7 @@ public abstract class AbstractHandler {
         var telegramUser = getTelegramUser(update);
         var keyboardVerbose = "";
 
-        var message = new SendMessage(telegramUser.getTelegramId(), text).parseMode(ParseMode.Markdown);
+        var message = new SendMessage(telegramUser.getTelegramId(), text).parseMode(detectParseMode(text));
 
         if (keyboard.isPresent()) {
             message = message.replyMarkup(keyboard.get());
@@ -109,7 +109,7 @@ public abstract class AbstractHandler {
             result = bot.execute(message);
         }
         else if (text.isPresent()) {
-            var message = new EditMessageText(getChatId(update), getMessageId(update), text.get()).parseMode(ParseMode.Markdown);
+            var message = new EditMessageText(getChatId(update), getMessageId(update), text.get()).parseMode(detectParseMode(text.get()));
 
             if (keyboard.isPresent()) {
                 message = message.replyMarkup(keyboard.get());
@@ -122,7 +122,13 @@ public abstract class AbstractHandler {
         }
 
         var resultVerbose = result.description() != null ? result.description() : "OK";
-        logger.info("{}{} -> {} ({})", text, keyboardVerbose, telegramUser, resultVerbose);
+        logger.info("{}{} -> {} ({})", text.orElse("(empty)"), keyboardVerbose, telegramUser, resultVerbose);
+    }
+
+    private ParseMode detectParseMode(String message) {
+        if (message.contains("<") && message.contains(">"))
+            return ParseMode.HTML;
+        return ParseMode.Markdown;
     }
 
     /**

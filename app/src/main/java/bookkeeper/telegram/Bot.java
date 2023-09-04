@@ -50,6 +50,7 @@ class Bot {
             new FreehandRecordHandler(bot, telegramUserRepository, accountRepository, transactionRepository, expenditureMatcherByMerchant),
             new SelectExpenditureCallbackHandler(bot, telegramUserRepository),
             new AssignExpenditureCallbackHandler(bot, telegramUserRepository, transactionRepository, merchantExpenditureRepository),
+            new RemoveTransactionCallbackHandler(bot, telegramUserRepository, transactionRepository),
             new RemoveMerchantExpenditureCallbackHandler(bot, telegramUserRepository, merchantExpenditureRepository),
             new ApproveTransactionCallbackHandler(bot, telegramUserRepository, transactionRepository),
             new ApproveTransactionBulkCallbackHandler(bot, telegramUserRepository, transactionRepository),

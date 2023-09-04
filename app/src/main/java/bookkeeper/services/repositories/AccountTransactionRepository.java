@@ -95,4 +95,8 @@ public class AccountTransactionRepository {
     public void save(AccountTransaction transaction) {
         manager.persist(transaction);
     }
+
+    public void remove(AccountTransaction transaction) {
+        manager.remove(transaction);
+    }
 }
