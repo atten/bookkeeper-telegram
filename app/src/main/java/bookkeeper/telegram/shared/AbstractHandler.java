@@ -79,9 +79,13 @@ public abstract class AbstractHandler {
 
     private void sendMessage(Update update, String text, Optional<Keyboard> keyboard, Boolean reply) {
         var telegramUser = getTelegramUser(update);
+        var parseMode = detectParseMode(text);
         var keyboardVerbose = "";
 
-        var message = new SendMessage(telegramUser.getTelegramId(), text).parseMode(detectParseMode(text));
+        var message = new SendMessage(telegramUser.getTelegramId(), text);
+
+        if (parseMode.isPresent())
+            message = message.parseMode(parseMode.get());
 
         if (keyboard.isPresent()) {
             message = message.replyMarkup(keyboard.get());
@@ -109,7 +113,11 @@ public abstract class AbstractHandler {
             result = bot.execute(message);
         }
         else if (text.isPresent()) {
-            var message = new EditMessageText(getChatId(update), getMessageId(update), text.get()).parseMode(detectParseMode(text.get()));
+            var message = new EditMessageText(getChatId(update), getMessageId(update), text.get());
+            var parseMode = detectParseMode(text.get());
+
+            if (parseMode.isPresent())
+                message = message.parseMode(parseMode.get());
 
             if (keyboard.isPresent()) {
                 message = message.replyMarkup(keyboard.get());
@@ -125,10 +133,12 @@ public abstract class AbstractHandler {
         logger.info("{}{} -> {} ({})", text.orElse("(empty)"), keyboardVerbose, telegramUser, resultVerbose);
     }
 
-    private ParseMode detectParseMode(String message) {
+    private Optional<ParseMode> detectParseMode(String message) {
         if (message.contains("<") && message.contains(">"))
-            return ParseMode.HTML;
-        return ParseMode.Markdown;
+            return Optional.of(ParseMode.HTML);
+        if (message.contains("`") || message.contains("*"))
+            return Optional.of(ParseMode.Markdown);
+        return Optional.empty();
     }
 
     /**
