@@ -44,7 +44,7 @@ public class ViewMonthlyExpensesHandler extends AbstractHandler {
     }
 
     private Boolean handleSlashExpenses(Update update) {
-        if (update.message() == null || !Objects.equals(update.message().text(), "/expenses"))
+        if (!Objects.equals(getMessageText(update), "/expenses"))
             return false;
 
         var user = getTelegramUser(update);

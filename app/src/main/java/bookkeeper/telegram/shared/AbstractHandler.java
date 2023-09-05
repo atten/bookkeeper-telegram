@@ -71,7 +71,7 @@ public abstract class AbstractHandler {
         return update.editedMessage().from();
     }
 
-    String getMessageText(Update update) {
+    protected String getMessageText(Update update) {
         if (update.message() == null)
             return "";
         return cleanString(update.message().text());

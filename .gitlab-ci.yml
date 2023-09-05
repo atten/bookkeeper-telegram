@@ -12,7 +12,7 @@ before_script:
 
 build:
   stage: build
-  image: openjdk:11
+  image: openjdk:17
   only:
     - main
   cache:
@@ -30,7 +30,7 @@ build:
 
 run-tests:
   stage: test
-  image: openjdk:11
+  image: openjdk:17
   only:
     variables:
       # run for protected branches only

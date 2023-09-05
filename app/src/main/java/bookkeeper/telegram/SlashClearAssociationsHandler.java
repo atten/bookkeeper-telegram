@@ -23,7 +23,7 @@ class SlashClearAssociationsHandler extends AbstractHandler {
 
     @Override
     public Boolean handle(Update update) {
-        if (update.message() == null || !Objects.equals(update.message().text(), "/clear_associations"))
+        if (!Objects.equals(getMessageText(update), "/clear_associations"))
             return false;
 
         var count = merchantExpenditureRepository.removeMerchantAssociations(getTelegramUser(update));

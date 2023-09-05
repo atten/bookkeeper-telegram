@@ -26,7 +26,7 @@ public class ViewAssetsHandler extends AbstractHandler {
      */
     @Override
     public Boolean handle(Update update) {
-        if (update.message() == null || !Objects.equals(update.message().text(), "/assets"))
+        if (!Objects.equals(getMessageText(update), "/assets"))
             return false;
 
         var user = getTelegramUser(update);
