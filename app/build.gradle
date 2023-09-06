@@ -1,8 +1,12 @@
 plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
     id 'application'
+    // docker image builder
     id 'com.google.cloud.tools.jib' version "3.3.2"
+    // coverage
     id 'jacoco'
+    // code generation
+    id "io.freefair.lombok" version "8.3"
 }
 
 repositories {
@@ -10,16 +14,12 @@ repositories {
 }
 
 dependencies {
-    // Use JUnit Jupiter for testing.
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'
-
     // database
     implementation 'jakarta.persistence:jakarta.persistence-api:3.1.0'
     implementation 'org.hibernate.orm:hibernate-core:6.2.7.Final'
     implementation 'org.postgresql:postgresql:42.5.4'
-    testImplementation 'com.h2database:h2:2.2.220'
 
-    // infrastructure
+    // utils
     implementation 'org.reflections:reflections:0.10.2'
     implementation 'org.junit.platform:junit-platform-commons:1.9.2'
     implementation 'org.apache.commons:commons-lang3:3.13.0'
@@ -30,6 +30,10 @@ dependencies {
     // logging
     implementation 'org.slf4j:slf4j-api:2.0.5'
     implementation 'ch.qos.logback:logback-classic:1.4.7'
+
+    // tests
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'
+    testImplementation 'com.h2database:h2:2.2.220'
 }
 
 application {

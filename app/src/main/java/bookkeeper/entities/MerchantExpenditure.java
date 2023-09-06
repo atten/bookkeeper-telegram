@@ -2,6 +2,8 @@ package bookkeeper.entities;
 
 import bookkeeper.enums.Expenditure;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.Instant;
 
@@ -10,55 +12,27 @@ import java.time.Instant;
 public class MerchantExpenditure {
     @Id
     @GeneratedValue
+    @Getter
     private Long id;
 
     @Column(nullable = false)
+    @Getter
+    @Setter
     private String merchant;
 
     @Column(nullable = false)
+    @Getter
+    @Setter
     private Expenditure expenditure;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, name = "telegram_user")
+    @Getter
+    @Setter
     private TelegramUser telegramUser;
 
     @Column(nullable = false, name = "created_at")
+    @Getter
+    @Setter
     private Instant createdAt;
-
-    public Long getId() {
-        return id;
-    }
-
-    public Expenditure getExpenditure() {
-        return expenditure;
-    }
-
-    public void setExpenditure(Expenditure expenditure) {
-        this.expenditure = expenditure;
-    }
-
-    public TelegramUser getTelegramUser() {
-        return telegramUser;
-    }
-
-    public void setTelegramUser(TelegramUser telegramUser) {
-        this.telegramUser = telegramUser;
-    }
-
-    public String getMerchant() {
-        return merchant;
-    }
-
-    public void setMerchant(String merchant) {
-        this.merchant = merchant;
-    }
-
-    public Instant getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Instant createdAt) {
-        this.createdAt = createdAt;
-    }
-
 }

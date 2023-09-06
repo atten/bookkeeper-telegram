@@ -4,6 +4,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.time.Instant;
@@ -12,50 +14,25 @@ import java.time.Instant;
 @Table(name = "telegram_users")
 public class TelegramUser implements Serializable {
     @Id
+    @Getter
+    @Setter
     private long telegramId;
 
     @Column
+    @Setter
     private String username;
 
     @Column(nullable = false)
+    @Getter
+    @Setter
     private Instant firstAccess;
 
     @Column(nullable = false)
+    @Getter
+    @Setter
     private Instant lastAccess;
 
     public String toString() {
         return String.format("%s (id=%d)", username, telegramId);
-    }
-
-    public long getTelegramId() {
-        return telegramId;
-    }
-
-    public void setTelegramId(long telegramId) {
-        this.telegramId = telegramId;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public Instant getFirstAccess() {
-        return firstAccess;
-    }
-
-    public void setFirstAccess(Instant firstAccess) {
-        this.firstAccess = firstAccess;
-    }
-
-    public Instant getLastAccess() {
-        return lastAccess;
-    }
-
-    public void setLastAccess(Instant lastAccess) {
-        this.lastAccess = lastAccess;
     }
 }

@@ -2,6 +2,8 @@ package bookkeeper.entities;
 
 import bookkeeper.enums.Expenditure;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.Duration;
@@ -15,88 +17,46 @@ import java.time.ZoneId;
 public class AccountTransaction {
     @Id
     @GeneratedValue
+    @Getter
     private long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
+    @Getter
+    @Setter
     private Account account;
 
     @Column(nullable = false)
+    @Getter
+    @Setter
     private BigDecimal amount;
 
     @Column(nullable = false)
+    @Getter
+    @Setter
     private Expenditure expenditure;
 
     @Column
+    @Getter
+    @Setter
     private String raw;
 
     @Column(name = "created_at")
+    @Getter
+    @Setter
     private Instant createdAt;  // the moment when record added
 
     @Column(name = "approved_at")
+    @Setter
     private Instant approvedAt;  // the moment when transaction parameters have been approved manually (default is null)
 
     @Column(nullable = false)
+    @Getter
+    @Setter
     private Instant timestamp;  // the moment when transaction happened
-
-    public long getId() {
-        return id;
-    }
-
-    public Account getAccount() {
-        return account;
-    }
-
-    public void setAccount(Account account) {
-        this.account = account;
-    }
-
-    public Expenditure getExpenditure() {
-        return expenditure;
-    }
-
-    public void setExpenditure(Expenditure expenditure) {
-        this.expenditure = expenditure;
-    }
-
-    public String getRaw() {
-        return raw;
-    }
-
-    public void setRaw(String raw) {
-        this.raw = raw;
-    }
-
-    public BigDecimal getAmount() {
-        return amount;
-    }
-
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
-    }
-
-    public Instant getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Instant createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Instant getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(Instant timestamp) {
-        this.timestamp = timestamp;
-    }
 
     public boolean isApproved() {
         return approvedAt != null;
-    }
-
-    public void setApprovedAt(Instant approvedAt) {
-        this.approvedAt = approvedAt;
     }
 
     public boolean isEmpty() {

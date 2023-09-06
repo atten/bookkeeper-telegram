@@ -1,6 +1,8 @@
 package bookkeeper.entities;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.Instant;
 import java.util.Currency;
@@ -10,30 +12,25 @@ import java.util.Currency;
 public class Account {
     @Id
     @GeneratedValue
+    @Getter
     private long id;
 
+    @Getter
+    @Setter
     private String name;
 
     private String currency;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, name = "telegram_user")
+    @Getter
+    @Setter
     private TelegramUser telegramUser;
 
     @Column(nullable = false, name = "created_at")
+    @Getter
+    @Setter
     private Instant createdAt;
-
-    public long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public Currency getCurrency() {
         return Currency.getInstance(currency);
@@ -42,21 +39,4 @@ public class Account {
     public void setCurrency(Currency currency) {
         this.currency = currency.getCurrencyCode();
     }
-
-    public void setTelegramUser(TelegramUser telegramUser) {
-        this.telegramUser = telegramUser;
-    }
-
-    public Instant getCreatedAt() {
-        return createdAt;
-    }
-
-    public TelegramUser getTelegramUser() {
-        return telegramUser;
-    }
-
-    public void setCreatedAt(Instant createdAt) {
-        this.createdAt = createdAt;
-    }
-
 }
