@@ -14,10 +14,10 @@ import java.util.stream.Collectors;
 /**
  * Scenario: User adds new account.
  */
-public class SlashNewAccountHandler extends AbstractHandler {
+public class AddAccountHandler extends AbstractHandler {
     private final AccountRepository accountRepository;
 
-    public SlashNewAccountHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository, AccountRepository accountRepository) {
+    public AddAccountHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository, AccountRepository accountRepository) {
         super(bot, telegramUserRepository);
         this.accountRepository = accountRepository;
     }

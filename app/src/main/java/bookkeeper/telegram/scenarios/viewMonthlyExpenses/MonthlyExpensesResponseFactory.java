@@ -26,13 +26,17 @@ class MonthlyExpensesResponseFactory {
         var creditByCurrency = new HashMap<Currency, BigDecimal>();
         var debitByCurrency = new HashMap<Currency, BigDecimal>();
         var allByCurrency = new HashMap<Currency, BigDecimal>();
-        var accounts = accountRepository.find(user);
         var maxExpenditureLength = Expenditure.enabledValues().stream().map(expenditure -> expenditure.getVerboseName().length()).max(Comparator.naturalOrder()).orElse(0);
         var formatString = "%-" + maxExpenditureLength + "s %s";  // example: "%-15s %s"
         var periodVerbose = LocalDate.now().plusMonths(monthOffset).format(DateTimeFormatter.ofPattern("MMM yy"));
+        var accounts = accountRepository.find(user);
 
         for (var account : accounts) {
             var currency = account.getCurrency();
+            var amountByExpenditure = transactionRepository.getMonthlyAmount(account, monthOffset);
+
+            if (amountByExpenditure.isEmpty())
+                continue;
 
             creditByCurrency.putIfAbsent(currency, BigDecimal.ZERO);
             debitByCurrency.putIfAbsent(currency, BigDecimal.ZERO);
@@ -41,8 +45,8 @@ class MonthlyExpensesResponseFactory {
             lines.add(String.format("*%s*", account.getName()));
             lines.add("```");
 
-            for (var expenditure : Expenditure.enabledValues()) {
-                var amount = transactionRepository.getMonthlyAmount(account, expenditure, monthOffset);
+            for (var expenditure : amountByExpenditure.keySet()) {
+                var amount = amountByExpenditure.get(expenditure);
                 var sign = amount.compareTo(BigDecimal.ZERO);
 
                 allByCurrency.merge(currency, amount, BigDecimal::add);

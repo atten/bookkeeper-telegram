@@ -6,7 +6,7 @@ import bookkeeper.services.repositories.AccountTransactionRepository;
 import bookkeeper.services.repositories.MerchantExpenditureRepository;
 import bookkeeper.services.repositories.TelegramUserRepository;
 import bookkeeper.services.matchers.ExpenditureMatcherByMerchant;
-import bookkeeper.telegram.scenarios.addAccount.SlashNewAccountHandler;
+import bookkeeper.telegram.scenarios.addAccount.AddAccountHandler;
 import bookkeeper.telegram.scenarios.editTransactions.*;
 import bookkeeper.telegram.scenarios.viewAssets.ViewAssetsHandler;
 import bookkeeper.telegram.scenarios.viewMonthlyExpenses.SelectMonthlyExpendituresCallbackHandler;
@@ -57,7 +57,7 @@ class Bot {
             new ApproveTransactionBulkCallbackHandler(bot, telegramUserRepository, transactionRepository),
             new EditTransactionBulkCallbackHandler(bot, telegramUserRepository, transactionRepository),
             new ShiftTransactionMonthCallbackHandler(bot, telegramUserRepository, transactionRepository),
-            new SlashNewAccountHandler(bot, telegramUserRepository, accountRepository),
+            new AddAccountHandler(bot, telegramUserRepository, accountRepository),
             new UnknownInputHandler(bot, telegramUserRepository)
         );
     }

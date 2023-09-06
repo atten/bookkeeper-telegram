@@ -9,8 +9,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.util.Currency;
-import java.util.List;
+import java.util.*;
 
 public class AccountTransactionRepository {
     private final EntityManager manager;
@@ -53,26 +52,27 @@ public class AccountTransactionRepository {
         return query.getResultList();
     }
 
-    public BigDecimal getMonthlyAmount(Account account, Expenditure expenditure, int monthOffset) {
-        var sql = "SELECT SUM(amount) from AccountTransaction " +
+    public Map<Expenditure, BigDecimal> getMonthlyAmount(Account account, int monthOffset) {
+        var sql = "SELECT expenditure, SUM(amount) from AccountTransaction " +
                 "WHERE account=:account " +
-                "AND expenditure=:expenditure " +
-                "AND date_trunc('month', timestamp) = date_trunc('month', current_timestamp) + :monthOffset MONTH";
+                "AND date_trunc('month', timestamp) = date_trunc('month', current_timestamp) + :monthOffset MONTH " +
+                "GROUP BY expenditure";
 
         var query = manager.createQuery(sql)
             .setParameter("account", account)
-            .setParameter("expenditure", expenditure)
             .setParameter("monthOffset", monthOffset);
 
-        var result = query.getSingleResult();
+        Map<Expenditure, BigDecimal> result = new LinkedHashMap<>();
 
-        if (result == null)
-            return BigDecimal.ZERO;
+        for (var entry : query.getResultList()) {
+            var arrayEntry = (Object[]) entry;
+            result.put((Expenditure) arrayEntry[0], (BigDecimal) arrayEntry[1]);
+        }
 
-        return (BigDecimal) result;
+        return result;
     }
 
-    public BigDecimal getTotalAmount(Account account) {
+    public BigDecimal getTotalBalance(Account account) {
         var sql = "SELECT SUM(amount) from AccountTransaction WHERE account=:account ";
 
         var query = manager.createQuery(sql)
