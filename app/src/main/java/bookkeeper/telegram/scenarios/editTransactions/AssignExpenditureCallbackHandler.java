@@ -43,10 +43,9 @@ public class AssignExpenditureCallbackHandler extends AbstractHandler {
     @Override
     public Boolean handle(Update update) {
         var callbackMessage = CallbackMessageRegistry.getCallbackMessage(update);
-        if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof AssignExpenditureCallback))
+        if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof AssignExpenditureCallback cm))
             return false;
 
-        var cm = (AssignExpenditureCallback) callbackMessage.get();
         var transaction = transactionRepository.find(cm.getTransactionId());
         if (transaction == null) {
             logger.warn(String.format("AccountTransaction with id=%s not found", cm.getTransactionId()));

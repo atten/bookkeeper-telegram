@@ -41,7 +41,7 @@ public abstract class AbstractHandler {
         sendMessage(update, text, Optional.empty(), false);
     }
 
-    void replyMessage(Update update, String text, Keyboard keyboard) {
+    protected void replyMessage(Update update, String text, Keyboard keyboard) {
         sendMessage(update, text, Optional.of(keyboard), true);
     }
 

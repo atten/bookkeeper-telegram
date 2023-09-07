@@ -25,8 +25,7 @@ public class FreehandAccountMatcher implements AccountMatcher {
 
     @Override
     public Optional<Account> match(Spending spending, TelegramUser user) {
-        if (spending instanceof FreehandRecordWithCurrency) {
-            var obj = (FreehandRecordWithCurrency) spending;
+        if (spending instanceof FreehandRecordWithCurrency obj) {
             return Optional.of(getLastUsedAccount(user, obj.currency));
         }
         if (spending instanceof FreehandRecord) {
@@ -39,7 +38,7 @@ public class FreehandAccountMatcher implements AccountMatcher {
      * Find account of most recent user transaction. Create RUB account as a fallback.
      */
     private Account getLastUsedAccount(TelegramUser user) {
-        var accounts = repository.find(user);
+        var accounts = repository.filter(user);
 
         return accounts.stream()
             .map(account -> transactionRepository.findRecent(user, account.getCurrency(), 1))
@@ -62,7 +61,7 @@ public class FreehandAccountMatcher implements AccountMatcher {
         if (!recentTransactions.isEmpty())
             return recentTransactions.get(0).getAccount();
 
-        var accounts = repository.find(user);
+        var accounts = repository.filter(user);
         return accounts.stream()
             .filter(account -> account.getCurrency() == currency)
             .findFirst()

@@ -1,12 +1,10 @@
 package bookkeeper.telegram;
 
 
-import bookkeeper.services.repositories.AccountRepository;
-import bookkeeper.services.repositories.AccountTransactionRepository;
-import bookkeeper.services.repositories.MerchantExpenditureRepository;
-import bookkeeper.services.repositories.TelegramUserRepository;
+import bookkeeper.services.repositories.*;
 import bookkeeper.services.matchers.ExpenditureMatcherByMerchant;
 import bookkeeper.telegram.scenarios.addAccount.AddAccountHandler;
+import bookkeeper.telegram.scenarios.addTransfer.AddTransferHandler;
 import bookkeeper.telegram.scenarios.editTransactions.*;
 import bookkeeper.telegram.scenarios.viewAssets.ViewAssetsHandler;
 import bookkeeper.telegram.scenarios.viewMonthlyExpenses.SelectMonthlyExpendituresCallbackHandler;
@@ -36,16 +34,26 @@ class Bot {
         var merchantExpenditureRepository = new MerchantExpenditureRepository(entityManager);
         var accountRepository = new AccountRepository(entityManager);
         var transactionRepository = new AccountTransactionRepository(entityManager);
+        var transferRepository = new AccountTransferRepository(entityManager);
 
         var expenditureMatcherByMerchant = new ExpenditureMatcherByMerchant(merchantExpenditureRepository);
 
         handlers = List.of(
+            // 0. logging
             new LoggingHandler(bot, telegramUserRepository),
+
+            // 1. configuration
             new LocaleHandler(bot, telegramUserRepository),
+
+            // 2. commands
+            new AddAccountHandler(bot, telegramUserRepository, accountRepository),
+            new AddTransferHandler(bot, telegramUserRepository, accountRepository, transferRepository),
             new SlashStartHandler(bot, telegramUserRepository),
             new SlashClearAssociationsHandler(bot, telegramUserRepository, merchantExpenditureRepository),
             new ViewMonthlyExpensesHandler(bot, telegramUserRepository, accountRepository, transactionRepository),
             new ViewAssetsHandler(bot, telegramUserRepository, accountRepository, transactionRepository),
+
+            // 3. text input and callbacks
             new SelectMonthlyExpendituresCallbackHandler(bot, telegramUserRepository, transactionRepository),
             new TinkoffSmsHandler(bot, telegramUserRepository, accountRepository, transactionRepository, expenditureMatcherByMerchant),
             new FreehandRecordHandler(bot, telegramUserRepository, accountRepository, transactionRepository, expenditureMatcherByMerchant),
@@ -57,7 +65,8 @@ class Bot {
             new ApproveTransactionBulkCallbackHandler(bot, telegramUserRepository, transactionRepository),
             new EditTransactionBulkCallbackHandler(bot, telegramUserRepository, transactionRepository),
             new ShiftTransactionMonthCallbackHandler(bot, telegramUserRepository, transactionRepository),
-            new AddAccountHandler(bot, telegramUserRepository, accountRepository),
+
+            // 999. closing condition
             new UnknownInputHandler(bot, telegramUserRepository)
         );
     }

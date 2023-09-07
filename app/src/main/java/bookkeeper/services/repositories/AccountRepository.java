@@ -8,6 +8,7 @@ import jakarta.persistence.NoResultException;
 import java.time.Instant;
 import java.util.Currency;
 import java.util.List;
+import java.util.Optional;
 
 public class AccountRepository {
     private final EntityManager manager;
@@ -30,9 +31,21 @@ public class AccountRepository {
         }
     }
 
-    public List<Account> find(TelegramUser user) {
+    public Optional<Account> get(long id) {
+        return Optional.ofNullable(manager.find(Account.class, id));
+    }
+
+    public List<Account> filter(TelegramUser user) {
         var sql = "SELECT i FROM Account i WHERE i.telegramUser = :user";
         var query = manager.createQuery(sql, Account.class).setParameter("user", user);
+        return query.getResultList();
+    }
+
+    public List<Account> filter(TelegramUser user, Currency currency) {
+        var sql = "SELECT i FROM Account i WHERE i.telegramUser = :user AND i.currency = :currency";
+        var query = manager.createQuery(sql, Account.class)
+                .setParameter("user", user)
+                .setParameter("currency", currency.getCurrencyCode());
         return query.getResultList();
     }
 

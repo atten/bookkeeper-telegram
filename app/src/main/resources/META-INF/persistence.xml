@@ -8,6 +8,7 @@
         <class>bookkeeper.entities.TelegramUser</class>
         <class>bookkeeper.entities.Account</class>
         <class>bookkeeper.entities.AccountTransaction</class>
+        <class>bookkeeper.entities.AccountTransfer</class>
         <class>bookkeeper.entities.MerchantExpenditure</class>
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>

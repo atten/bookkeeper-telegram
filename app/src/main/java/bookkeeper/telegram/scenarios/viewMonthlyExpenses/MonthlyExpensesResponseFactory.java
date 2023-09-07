@@ -29,7 +29,7 @@ class MonthlyExpensesResponseFactory {
         var maxExpenditureLength = Expenditure.enabledValues().stream().map(expenditure -> expenditure.getVerboseName().length()).max(Comparator.naturalOrder()).orElse(0);
         var formatString = "%-" + maxExpenditureLength + "s %s";  // example: "%-15s %s"
         var periodVerbose = LocalDate.now().plusMonths(monthOffset).format(DateTimeFormatter.ofPattern("MMM yy"));
-        var accounts = accountRepository.find(user);
+        var accounts = accountRepository.filter(user);
 
         for (var account : accounts) {
             var currency = account.getCurrency();

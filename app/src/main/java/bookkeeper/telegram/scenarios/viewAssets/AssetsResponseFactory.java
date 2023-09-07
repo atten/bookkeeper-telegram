@@ -17,7 +17,7 @@ class AssetsResponseFactory {
     }
 
     String getTotalAssets(TelegramUser user) {
-        var content = accountRepository.find(user).stream()
+        var content = accountRepository.filter(user).stream()
                 .map(i -> new Asset(i, transactionRepository.getTotalBalance(i)))
                 .sorted(Comparator.comparing(i -> i.getBalance().negate()))
                 .map(i -> String.format("%-15s: % ,.2f %s", i.getAccount().getName(), i.getBalance(), i.getAccount().getCurrency().getSymbol()))
