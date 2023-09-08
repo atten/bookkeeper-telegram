@@ -32,10 +32,9 @@ public class ViewMonthlyExpensesHandler extends AbstractHandler {
 
     private Boolean handleCallbackMessage(Update update) {
         var callbackMessage = CallbackMessageRegistry.getCallbackMessage(update);
-        if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof ViewMonthlyExpensesWithOffsetCallback))
+        if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof ViewMonthlyExpensesWithOffsetCallback cm))
             return false;
 
-        var cm = (ViewMonthlyExpensesWithOffsetCallback) callbackMessage.get();
         var user = getTelegramUser(update);
         var message = monthlyExpensesResponseFactory.getMonthlyExpenses(user, cm.getMonthOffset());
         var keyboard = MonthlyExpensesResponseFactory.getMonthlyExpensesKeyboard(cm.getMonthOffset());

@@ -70,18 +70,17 @@ public class AccountTransactionRepository {
         return result;
     }
 
-    public BigDecimal getTransactionBalance(Account account) {
-        var sql = "SELECT SUM(amount) from AccountTransaction WHERE account=:account ";
+    public BigDecimal getTransactionBalance(Account account, int monthOffset) {
+        var sql = "SELECT SUM(amount) from AccountTransaction " +
+                "WHERE account=:account " +
+                "AND date_trunc('month', timestamp) <= date_trunc('month', current_timestamp) + :monthOffset MONTH";
 
         var query = manager.createQuery(sql)
-                .setParameter("account", account);
+                .setParameter("account", account)
+                .setParameter("monthOffset", monthOffset);
 
         var result = query.getSingleResult();
-
-        if (result == null)
-            return BigDecimal.ZERO;
-
-        return (BigDecimal) result;
+        return result == null ? BigDecimal.ZERO : (BigDecimal) result;
     }
 
     public void approve(AccountTransaction transaction) {

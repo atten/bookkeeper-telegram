@@ -5,6 +5,9 @@ import bookkeeper.services.repositories.AccountRepository;
 import bookkeeper.services.repositories.AccountTransactionRepository;
 import bookkeeper.services.repositories.AccountTransferRepository;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -19,13 +22,18 @@ class AssetsResponseFactory {
         this.transferRepository = transferRepository;
     }
 
-    String getTotalAssets(TelegramUser user) {
+    String getTotalAssets(TelegramUser user, int monthOffset) {
+        var dateVerbose = LocalDate.now().plusMonths(monthOffset).format(DateTimeFormatter.ofPattern("MMMM yyyy"));
         var content = accountRepository.filter(user).stream()
-                .map(i -> new Asset(i, transactionRepository.getTransactionBalance(i).add(transferRepository.getTransferBalance(i))))
+                .map(i -> new Asset(
+                    i,
+                    BigDecimal.ZERO
+                        .add(transactionRepository.getTransactionBalance(i, monthOffset))
+                        .add(transferRepository.getTransferBalance(i, monthOffset)))
+                )
                 .sorted(Comparator.comparing(i -> i.getBalance().negate()))
                 .map(i -> String.format("%-15s: % ,.2f %s", i.getAccount().getName(), i.getBalance(), i.getAccount().getCurrency().getSymbol()))
                 .collect(Collectors.joining("\n"));
-        return "Сводка по всем счетам:\n```\n" + content + "\n```";
+        return String.format("Сводка по всем счетам на конец *%s*:\n```\n%s\n```", dateVerbose, content);
     }
-
 }

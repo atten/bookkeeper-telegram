@@ -22,17 +22,19 @@ public class AccountTransferRepository {
         return transaction;
     }
 
-    public BigDecimal getTransferBalance(Account account) {
+    public BigDecimal getTransferBalance(Account account, int monthOffset) {
+        var monthClause = "date_trunc('month', timestamp) <= date_trunc('month', current_timestamp) + :monthOffset MONTH";
         var sql =
                 "SELECT SUM(amount) FROM " +
                 "(" +
-                "    SELECT SUM(depositAmount) AS amount FROM AccountTransfer WHERE depositAccount = :account " +
+                "    SELECT SUM(depositAmount) AS amount FROM AccountTransfer WHERE depositAccount = :account AND " + monthClause +
                 "    UNION " +
-                "    SELECT SUM(withdrawAmount) AS amount FROM AccountTransfer WHERE withdrawAccount = :account" +
+                "    SELECT SUM(withdrawAmount) AS amount FROM AccountTransfer WHERE withdrawAccount = :account AND " + monthClause +
                 ") amounts";
 
         var query = manager.createQuery(sql)
-                .setParameter("account", account);
+                .setParameter("account", account)
+                .setParameter("monthOffset", monthOffset);
 
         var result = query.getSingleResult();
         return result == null ? BigDecimal.ZERO : (BigDecimal) result;
