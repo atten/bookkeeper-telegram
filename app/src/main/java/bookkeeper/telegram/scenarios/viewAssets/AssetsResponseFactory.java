@@ -32,7 +32,7 @@ class AssetsResponseFactory {
                         .add(transferRepository.getTransferBalance(i, monthOffset)))
                 )
                 .sorted(Comparator.comparing(i -> i.getBalance().negate()))
-                .map(i -> String.format("%-15s: % ,.2f %s", i.getAccount().getName(), i.getBalance(), i.getAccount().getCurrency().getSymbol()))
+                .map(i -> String.format("%-15.15s: % ,.2f %s", i.getAccount().getName(), i.getBalance(), i.getAccount().getCurrency().getSymbol()))
                 .collect(Collectors.joining("\n"));
         return String.format("Сводка по всем счетам на конец *%s*:\n```\n%s\n```", dateVerbose, content);
     }

@@ -8,8 +8,6 @@ import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import java.time.format.TextStyle;
-import java.util.Locale;
 
 class AddTransferResponseFactory {
     private final AccountRepository accountRepository;
@@ -27,9 +25,8 @@ class AddTransferResponseFactory {
     }
 
     String getDescriptionForMonth(AddTransferCallback memory) {
-        var date = LocalDate.now().plusMonths(memory.getMonthOffset());
-        var month = date.getMonth().getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault());
-        return String.format("Выберите месяц перевода (выбран %s):", month);
+        var dateVerbose = LocalDate.now().plusMonths(memory.getMonthOffset()).format(DateTimeFormatter.ofPattern("MMM yyyy"));
+        return String.format("Выберите месяц перевода (выбран %s):", dateVerbose);
     }
 
     String getDescriptionForTransferCreated(AccountTransfer transfer) {
