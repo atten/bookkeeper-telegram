@@ -5,6 +5,12 @@ import bookkeeper.entities.TelegramUser;
 import bookkeeper.services.repositories.AccountRepository;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+import java.time.format.TextStyle;
+import java.util.Locale;
+
 class AddTransferResponseFactory {
     private final AccountRepository accountRepository;
 
@@ -20,8 +26,15 @@ class AddTransferResponseFactory {
         return "Выберите счёт-назначение:";
     }
 
+    String getDescriptionForMonth(AddTransferCallback memory) {
+        var date = LocalDate.now().plusMonths(memory.getMonthOffset());
+        var month = date.getMonth().getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault());
+        return String.format("Выберите месяц перевода (выбран %s):", month);
+    }
+
     String getDescriptionForTransferCreated(AccountTransfer transfer) {
-        return "Перевод создан!";
+        var month = transfer.date().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT));
+        return String.format("Перевод %s создан!", month);
     }
 
     InlineKeyboardMarkup getKeyboardForWithdrawAccount(TelegramUser user, AddTransferCallback memory) {
@@ -42,5 +55,15 @@ class AddTransferResponseFactory {
                 .map(account -> memory.setDepositAccountId(account.getId()).asButton(account.getName()))
                 .forEach(kb::addRow);
         return kb;
+    }
+
+    InlineKeyboardMarkup getKeyboardForMonth(AddTransferCallback memory) {
+        var date = LocalDate.now();
+        var offset = memory.getMonthOffset();
+        return new InlineKeyboardMarkup().addRow(
+            memory.setMonthOffset(offset - 1).asPrevMonthButton(date, offset - 1),
+            memory.setMonthOffset(offset + 1).asNextMonthButton(date, offset + 1),
+            memory.setMonthOffset(offset).markReady().asButton("✅ Готово")
+        );
     }
 }

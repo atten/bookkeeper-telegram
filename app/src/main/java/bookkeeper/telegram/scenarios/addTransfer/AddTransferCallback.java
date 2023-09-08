@@ -19,6 +19,10 @@ class AddTransferCallback extends CallbackMessage {
     private long withdrawAccountId = 0;
     @Getter
     private long depositAccountId = 0;
+    @Getter
+    private int monthOffset = 0;
+    @Getter
+    private boolean ready = false;
 
     AddTransferCallback(BigDecimal withdrawAmount, Currency withdrawCurrency, BigDecimal depositAmount, Currency depositCurrency) {
         this.withdrawAmount = withdrawAmount;
@@ -36,4 +40,15 @@ class AddTransferCallback extends CallbackMessage {
         this.depositAccountId = depositAccountId;
         return this;
     }
+
+    AddTransferCallback setMonthOffset(int monthOffset) {
+        this.monthOffset = monthOffset;
+        return this;
+    }
+
+    AddTransferCallback markReady() {
+        this.ready = true;
+        return this;
+    }
+
 }

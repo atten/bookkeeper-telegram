@@ -1,10 +1,13 @@
 package bookkeeper.entities;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 
 @Entity
 @Table(name = "account_transfers")
@@ -36,6 +39,11 @@ public class AccountTransfer {
     private Instant createdAt;  // the moment when record added
 
     @Column(nullable = false)
+    @Getter
     @Setter
     private Instant timestamp;  // the moment when transfer happened
+
+    public LocalDate date() {
+        return LocalDate.ofInstant(getTimestamp(), ZoneId.systemDefault());
+    }
 }

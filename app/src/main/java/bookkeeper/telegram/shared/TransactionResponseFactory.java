@@ -103,8 +103,8 @@ public class TransactionResponseFactory {
 
         var kb = new InlineKeyboardMarkup();
         var selectExpenditureButton = new SelectExpenditureCallback(transactionId).asButton("\uD83D\uDCDD Категория");
-        var prevMonthButton = new ShiftTransactionMonthCallback(transactionId, -1).asButton(transaction.date());
-        var nextMonthButton = new ShiftTransactionMonthCallback(transactionId, +1).asButton(transaction.date());
+        var prevMonthButton = new ShiftTransactionMonthCallback(transactionId, -1).asPrevMonthButton(transaction.date(), -1);
+        var nextMonthButton = new ShiftTransactionMonthCallback(transactionId, +1).asNextMonthButton(transaction.date(), +1);
         var removeButton = new RemoveTransactionCallback(transactionId).asButton("\uD83D\uDDD1 Отмена");
         var approveButton = new ApproveTransactionCallback(transactionId).asButton("✅ Подтвердить");
 
@@ -119,8 +119,8 @@ public class TransactionResponseFactory {
         var transactionId = transaction.getId();
 
         var selectExpenditureButton = new SelectExpenditureCallback(transactionId).setPendingTransactionIds(pendingTransactionIds).asButton("\uD83D\uDCDD Категория");
-        var prevMonthButton = new ShiftTransactionMonthCallback(transactionId, -1).setPendingTransactionIds(pendingTransactionIds).asButton(transaction.date());
-        var nextMonthButton = new ShiftTransactionMonthCallback(transactionId, +1).setPendingTransactionIds(pendingTransactionIds).asButton(transaction.date());
+        var prevMonthButton = new ShiftTransactionMonthCallback(transactionId, -1).setPendingTransactionIds(pendingTransactionIds).asPrevMonthButton(transaction.date(), -1);
+        var nextMonthButton = new ShiftTransactionMonthCallback(transactionId, +1).setPendingTransactionIds(pendingTransactionIds).asNextMonthButton(transaction.date(), +1);
 
         var kb = new InlineKeyboardMarkup()
             .addRow(selectExpenditureButton, prevMonthButton, nextMonthButton);

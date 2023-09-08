@@ -35,15 +35,20 @@ public class AddTransferHandler extends AbstractHandler {
      * Stage 0: display help text.
      * Stage 1: initial params, withdraw account selection.
      * Stage 2: deposit account selection.
-     * Stage 3: transfer creation.
+     * Stage 3: month selection.
+     * Stage 4: transfer creation.
      */
     @Override
     public Boolean handle(Update update) throws SkipHandlerException {
-        // reverse order is intentional because latter stages contains more strict conditions.
-        return handleStage3(update) || handleStage2(update) || handleStage1(update) || handleStage0(update);
+        // arrange sub-handlers in reverse order because latter stages contains more strict conditions.
+        return createTransfer(update) ||
+                displayMonthOffsetSelector(update) ||
+                displayDepositAccountSelector(update) ||
+                displayWithdrawAccountSelector(update) ||
+                displayHelpMessage(update);
     }
 
-    private Boolean handleStage0(Update update) {
+    private Boolean displayHelpMessage(Update update) {
         var msg = getMessageText(update);
         if (!Objects.equals(msg, COMMAND))
             return false;
@@ -58,7 +63,7 @@ public class AddTransferHandler extends AbstractHandler {
         return true;
     }
 
-    private Boolean handleStage1(Update update) {
+    private Boolean displayWithdrawAccountSelector(Update update) {
         var msg = getMessageText(update);
         if (!msg.startsWith(COMMAND))
             return false;
@@ -94,7 +99,7 @@ public class AddTransferHandler extends AbstractHandler {
         return true;
     }
 
-    private Boolean handleStage2(Update update) {
+    private Boolean displayDepositAccountSelector(Update update) {
         var callbackMessage = CallbackMessageRegistry.getCallbackMessage(update);
         if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof AddTransferCallback memory))
             return false;
@@ -104,14 +109,30 @@ public class AddTransferHandler extends AbstractHandler {
         return true;
     }
 
-    private Boolean handleStage3(Update update) throws SkipHandlerException {
+    private Boolean displayMonthOffsetSelector(Update update) {
         var callbackMessage = CallbackMessageRegistry.getCallbackMessage(update);
         if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof AddTransferCallback memory))
             return false;
 
+        // skip unless both accounts are selected
+        if (memory.getWithdrawAccountId() == 0 || memory.getDepositAccountId() == 0)
+            return false;
+
+        editMessage(update, responseFactory.getDescriptionForMonth(memory), responseFactory.getKeyboardForMonth(memory));
+        return true;
+    }
+
+    private Boolean createTransfer(Update update) throws AccountNotFound {
+        var callbackMessage = CallbackMessageRegistry.getCallbackMessage(update);
+        if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof AddTransferCallback memory))
+            return false;
+
+        if (!memory.isReady())
+            return false;
+
         var withdrawAccount = accountRepository.get(memory.getWithdrawAccountId()).orElseThrow(() -> new AccountNotFound(memory.getWithdrawAccountId()));
         var depositAccount = accountRepository.get(memory.getDepositAccountId()).orElseThrow(() -> new AccountNotFound(memory.getDepositAccountId()));
-        var transfer = transferRepository.create(memory.getWithdrawAmount(), withdrawAccount, memory.getDepositAmount(), depositAccount);
+        var transfer = transferRepository.create(memory.getWithdrawAmount(), withdrawAccount, memory.getDepositAmount(), depositAccount, memory.getMonthOffset());
         editMessage(update, responseFactory.getDescriptionForTransferCreated(transfer));
         return true;
     }

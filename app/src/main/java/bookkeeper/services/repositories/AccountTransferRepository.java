@@ -6,6 +6,7 @@ import jakarta.persistence.EntityManager;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 public class AccountTransferRepository {
     private final EntityManager manager;
@@ -14,8 +15,9 @@ public class AccountTransferRepository {
         this.manager = manager;
     }
 
-    public AccountTransfer create(BigDecimal withdrawAmount, Account withdrawAccount, BigDecimal depositAmount, Account depositAccount) {
+    public AccountTransfer create(BigDecimal withdrawAmount, Account withdrawAccount, BigDecimal depositAmount, Account depositAccount, int monthOffset) {
         var transaction = transferFactory(withdrawAmount, withdrawAccount, depositAmount, depositAccount);
+        transaction.setTimestamp(transaction.getTimestamp().plus(monthOffset * 30L, ChronoUnit.DAYS));
         manager.persist(transaction);
         return transaction;
     }

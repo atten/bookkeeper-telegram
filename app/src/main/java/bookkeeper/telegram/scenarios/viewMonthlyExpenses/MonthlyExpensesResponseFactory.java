@@ -79,8 +79,9 @@ class MonthlyExpensesResponseFactory {
         var keyboard = new InlineKeyboardMarkup()
                 .addRow(new SelectMonthlyExpendituresCallback(monthOffset).asButton("Разобрать"));
 
-        var prevMonthButton = new ViewMonthlyExpensesWithOffsetCallback(monthOffset - 1).asButton(true);
-        var nextMonthButton = new ViewMonthlyExpensesWithOffsetCallback(monthOffset + 1).asButton(false);
+        var date = LocalDate.now();
+        var prevMonthButton = new ViewMonthlyExpensesWithOffsetCallback(monthOffset - 1).asPrevMonthButton(date, monthOffset - 1);
+        var nextMonthButton = new ViewMonthlyExpensesWithOffsetCallback(monthOffset + 1).asNextMonthButton(date, monthOffset + 1);
         return keyboard.addRow(prevMonthButton, nextMonthButton);
     }
 
