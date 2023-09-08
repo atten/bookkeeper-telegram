@@ -17,6 +17,7 @@ import com.pengrad.telegrambot.response.BaseResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -35,27 +36,27 @@ public abstract class AbstractHandler {
     public abstract Boolean handle(Update update) throws SkipHandlerException;
 
     public void sendMessage(Update update, String text, Keyboard keyboard) {
-        sendMessage(update, text, Optional.of(keyboard), false);
+        sendMessage(update, text, keyboard, false);
     }
 
     public void sendMessage(Update update, String text) {
-        sendMessage(update, text, Optional.empty(), false);
+        sendMessage(update, text, null, false);
     }
 
     protected void replyMessage(Update update, String text, Keyboard keyboard) {
-        sendMessage(update, text, Optional.of(keyboard), true);
+        sendMessage(update, text, keyboard, true);
     }
 
     public void editMessage(Update update, String text, InlineKeyboardMarkup keyboard) {
-        editMessage(update, Optional.of(text), Optional.of(keyboard));
+        editMessagePrivate(update, text, keyboard);
     }
 
     public void editMessage(Update update, String text) {
-        editMessage(update, Optional.of(text), Optional.empty());
+        editMessage(update, text, null);
     }
 
     public void editMessage(Update update, InlineKeyboardMarkup keyboard) {
-        editMessage(update, Optional.empty(), Optional.of(keyboard));
+        editMessagePrivate(update, null, keyboard);
     }
 
     protected TelegramUser getTelegramUser(Update update) {
@@ -78,7 +79,7 @@ public abstract class AbstractHandler {
         return cleanString(update.message().text());
     }
 
-    private void sendMessage(Update update, String text, Optional<Keyboard> keyboard, Boolean reply) {
+    private void sendMessage(Update update, String text, @Nullable Keyboard keyboard, Boolean reply) {
         var telegramUser = getTelegramUser(update);
         var parseMode = detectParseMode(text);
         var keyboardVerbose = "";
@@ -88,11 +89,11 @@ public abstract class AbstractHandler {
         if (parseMode.isPresent())
             message = message.parseMode(parseMode.get());
 
-        if (keyboard.isPresent()) {
-            message = message.replyMarkup(keyboard.get());
+        if (keyboard != null) {
+            message = message.replyMarkup(keyboard);
 
-            if (keyboard.get() instanceof InlineKeyboardMarkup)
-                keyboardVerbose = getInlineKeyboardVerboseString((InlineKeyboardMarkup) keyboard.get());
+            if (keyboard instanceof InlineKeyboardMarkup kb)
+                keyboardVerbose = getInlineKeyboardVerboseString(kb);
         }
 
         if (reply)
@@ -104,25 +105,25 @@ public abstract class AbstractHandler {
         logger.info("{}{} -> {} ({})", text, keyboardVerbose, telegramUser, resultVerbose);
     }
 
-    private void editMessage(Update update, Optional<String> text, Optional<InlineKeyboardMarkup> keyboard) {
+    private void editMessagePrivate(Update update, @Nullable String text, @Nullable InlineKeyboardMarkup keyboard) {
         var telegramUser = getTelegramUser(update);
         var keyboardVerbose = "";
 
         BaseResponse result;
-        if (text.isEmpty() && keyboard.isPresent()) {
-            var message = new EditMessageReplyMarkup(getChatId(update), getMessageId(update)).replyMarkup(keyboard.get());
+        if (text == null && keyboard != null) {
+            var message = new EditMessageReplyMarkup(getChatId(update), getMessageId(update)).replyMarkup(keyboard);
             result = bot.execute(message);
         }
-        else if (text.isPresent()) {
-            var message = new EditMessageText(getChatId(update), getMessageId(update), text.get());
-            var parseMode = detectParseMode(text.get());
+        else if (text != null) {
+            var message = new EditMessageText(getChatId(update), getMessageId(update), text);
+            var parseMode = detectParseMode(text);
 
             if (parseMode.isPresent())
                 message = message.parseMode(parseMode.get());
 
-            if (keyboard.isPresent()) {
-                message = message.replyMarkup(keyboard.get());
-                keyboardVerbose = getInlineKeyboardVerboseString(keyboard.get());
+            if (keyboard != null) {
+                message = message.replyMarkup(keyboard);
+                keyboardVerbose = getInlineKeyboardVerboseString(keyboard);
             }
 
             result = bot.execute(message);
@@ -131,7 +132,8 @@ public abstract class AbstractHandler {
         }
 
         var resultVerbose = result.description() != null ? result.description() : "OK";
-        logger.info("{}{} -> {} ({})", text.orElse("(empty)"), keyboardVerbose, telegramUser, resultVerbose);
+        var testVerbose = text != null ? text : "(empty)";
+        logger.info("{}{} -> {} ({})", testVerbose, keyboardVerbose, telegramUser, resultVerbose);
     }
 
     private Optional<ParseMode> detectParseMode(String message) {
