@@ -20,6 +20,22 @@ public class AccountTransferRepository {
         return transaction;
     }
 
+    public BigDecimal getTransferBalance(Account account) {
+        var sql =
+                "SELECT SUM(amount) FROM " +
+                "(" +
+                "    SELECT SUM(depositAmount) AS amount FROM AccountTransfer WHERE depositAccount = :account " +
+                "    UNION " +
+                "    SELECT SUM(withdrawAmount) AS amount FROM AccountTransfer WHERE withdrawAccount = :account" +
+                ") amounts";
+
+        var query = manager.createQuery(sql)
+                .setParameter("account", account);
+
+        var result = query.getSingleResult();
+        return result == null ? BigDecimal.ZERO : (BigDecimal) result;
+    }
+
     private AccountTransfer transferFactory(BigDecimal withdrawAmount, Account withdrawAccount, BigDecimal depositAmount, Account depositAccount) {
         var transfer = new AccountTransfer();
         transfer.setWithdrawAmount(withdrawAmount);

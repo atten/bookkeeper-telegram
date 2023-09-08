@@ -51,7 +51,7 @@ class Bot {
             new SlashStartHandler(bot, telegramUserRepository),
             new SlashClearAssociationsHandler(bot, telegramUserRepository, merchantExpenditureRepository),
             new ViewMonthlyExpensesHandler(bot, telegramUserRepository, accountRepository, transactionRepository),
-            new ViewAssetsHandler(bot, telegramUserRepository, accountRepository, transactionRepository),
+            new ViewAssetsHandler(bot, telegramUserRepository, accountRepository, transactionRepository, transferRepository),
 
             // 3. text input and callbacks
             new SelectMonthlyExpendituresCallbackHandler(bot, telegramUserRepository, transactionRepository),

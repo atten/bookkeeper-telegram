@@ -72,7 +72,7 @@ public class AccountTransactionRepository {
         return result;
     }
 
-    public BigDecimal getTotalBalance(Account account) {
+    public BigDecimal getTransactionBalance(Account account) {
         var sql = "SELECT SUM(amount) from AccountTransaction WHERE account=:account ";
 
         var query = manager.createQuery(sql)

@@ -2,6 +2,7 @@ package bookkeeper.telegram.scenarios.viewAssets;
 
 import bookkeeper.services.repositories.AccountRepository;
 import bookkeeper.services.repositories.AccountTransactionRepository;
+import bookkeeper.services.repositories.AccountTransferRepository;
 import bookkeeper.services.repositories.TelegramUserRepository;
 import bookkeeper.telegram.shared.AbstractHandler;
 import com.pengrad.telegrambot.TelegramBot;
@@ -16,9 +17,9 @@ import java.util.Objects;
 public class ViewAssetsHandler extends AbstractHandler {
     private final AssetsResponseFactory assetsResponseFactory;
 
-    public ViewAssetsHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository, AccountRepository accountRepository, AccountTransactionRepository transactionRepository) {
+    public ViewAssetsHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository, AccountRepository accountRepository, AccountTransactionRepository transactionRepository, AccountTransferRepository transferRepository) {
         super(bot, telegramUserRepository);
-        this.assetsResponseFactory = new AssetsResponseFactory(accountRepository, transactionRepository);
+        this.assetsResponseFactory = new AssetsResponseFactory(accountRepository, transactionRepository, transferRepository);
     }
 
     /**
