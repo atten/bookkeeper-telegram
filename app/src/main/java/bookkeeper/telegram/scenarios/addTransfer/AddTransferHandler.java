@@ -1,11 +1,12 @@
 package bookkeeper.telegram.scenarios.addTransfer;
 
-import bookkeeper.entities.Account;
 import bookkeeper.services.repositories.AccountRepository;
 import bookkeeper.services.repositories.AccountTransferRepository;
 import bookkeeper.services.repositories.TelegramUserRepository;
 import bookkeeper.telegram.shared.AbstractHandler;
 import bookkeeper.telegram.shared.CallbackMessageRegistry;
+import bookkeeper.telegram.shared.exceptions.AccountNotFound;
+import bookkeeper.telegram.shared.exceptions.SkipHandlerException;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Update;
 
@@ -37,7 +38,7 @@ public class AddTransferHandler extends AbstractHandler {
      * Stage 3: transfer creation.
      */
     @Override
-    public Boolean handle(Update update) {
+    public Boolean handle(Update update) throws SkipHandlerException {
         // reverse order is intentional because latter stages contains more strict conditions.
         return handleStage3(update) || handleStage2(update) || handleStage1(update) || handleStage0(update);
     }
@@ -103,20 +104,13 @@ public class AddTransferHandler extends AbstractHandler {
         return true;
     }
 
-    private Boolean handleStage3(Update update) {
+    private Boolean handleStage3(Update update) throws SkipHandlerException {
         var callbackMessage = CallbackMessageRegistry.getCallbackMessage(update);
         if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof AddTransferCallback memory))
             return false;
 
-        Account withdrawAccount;
-        Account depositAccount;
-        try {
-            withdrawAccount = accountRepository.get(memory.getWithdrawAccountId()).orElseThrow();
-            depositAccount = accountRepository.get(memory.getDepositAccountId()).orElseThrow();
-        } catch (NoSuchElementException e) {
-            return false;
-        }
-
+        var withdrawAccount = accountRepository.get(memory.getWithdrawAccountId()).orElseThrow(() -> new AccountNotFound(memory.getWithdrawAccountId()));
+        var depositAccount = accountRepository.get(memory.getDepositAccountId()).orElseThrow(() -> new AccountNotFound(memory.getDepositAccountId()));
         var transfer = transferRepository.create(memory.getWithdrawAmount(), withdrawAccount, memory.getDepositAmount(), depositAccount);
         editMessage(update, responseFactory.getDescriptionForTransferCreated(transfer));
         return true;

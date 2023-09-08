@@ -4,6 +4,7 @@ import bookkeeper.services.repositories.AccountTransactionRepository;
 import bookkeeper.services.repositories.TelegramUserRepository;
 import bookkeeper.telegram.shared.AbstractHandler;
 import bookkeeper.telegram.shared.CallbackMessageRegistry;
+import bookkeeper.telegram.shared.exceptions.AccountTransactionNotFound;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Update;
 
@@ -28,18 +29,13 @@ public class ApproveTransactionCallbackHandler extends AbstractHandler {
      * Handle "Approve transaction" click: mark given transaction as approved.
      */
     @Override
-    public Boolean handle(Update update) {
+    public Boolean handle(Update update) throws AccountTransactionNotFound {
         var callbackMessage = CallbackMessageRegistry.getCallbackMessage(update);
         if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof ApproveTransactionCallback cm))
             return false;
 
-        var transaction = transactionRepository.find(cm.getTransactionId());
+        var transaction = transactionRepository.get(cm.getTransactionId()).orElseThrow(() -> new AccountTransactionNotFound(cm.getTransactionId()));
         var pendingTransactionsCount = cm.getPendingTransactionIds().size();
-
-        if (transaction == null) {
-            logger.warn(String.format("transaction id=%s not found!", cm.getTransactionId()));
-            return false;
-        }
 
         transactionRepository.approve(transaction);
 
@@ -48,13 +44,7 @@ public class ApproveTransactionCallbackHandler extends AbstractHandler {
         }
         else {
             var nextPendingTransactionId = cm.getPendingTransactionIds().get(0);
-            var nextPendingTransaction = transactionRepository.find(nextPendingTransactionId);
-
-            if (nextPendingTransaction == null) {
-                logger.warn(String.format("transaction id=%s not found!", nextPendingTransactionId));
-                return false;
-            }
-
+            var nextPendingTransaction = transactionRepository.get(nextPendingTransactionId).orElseThrow(() -> new AccountTransactionNotFound(nextPendingTransactionId));
             var remainingTransactionIds = cm.getPendingTransactionIds().stream().skip(1).collect(Collectors.toList());
             editMessage(update, getResponseMessage(nextPendingTransaction, remainingTransactionIds.size()), getResponseKeyboard(nextPendingTransaction, remainingTransactionIds));
         }

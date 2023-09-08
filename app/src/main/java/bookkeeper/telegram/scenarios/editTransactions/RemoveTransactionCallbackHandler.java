@@ -4,6 +4,7 @@ import bookkeeper.services.repositories.AccountTransactionRepository;
 import bookkeeper.services.repositories.TelegramUserRepository;
 import bookkeeper.telegram.shared.AbstractHandler;
 import bookkeeper.telegram.shared.CallbackMessageRegistry;
+import bookkeeper.telegram.shared.exceptions.AccountTransactionNotFound;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Update;
 
@@ -25,19 +26,12 @@ public class RemoveTransactionCallbackHandler extends AbstractHandler {
      * Handle "Cancel" click: delete given transaction.
      */
     @Override
-    public Boolean handle(Update update) {
+    public Boolean handle(Update update) throws AccountTransactionNotFound {
         var callbackMessage = CallbackMessageRegistry.getCallbackMessage(update);
-        if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof RemoveTransactionCallback))
+        if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof RemoveTransactionCallback cm))
             return false;
 
-        var cm = (RemoveTransactionCallback) callbackMessage.get();
-        var transaction = transactionRepository.find(cm.getTransactionId());
-
-        if (transaction == null) {
-            logger.warn(String.format("transaction id=%s not found!", cm.getTransactionId()));
-            return false;
-        }
-
+        var transaction = transactionRepository.get(cm.getTransactionId()).orElseThrow(() -> new AccountTransactionNotFound(cm.getTransactionId()));
         transactionRepository.remove(transaction);
         editMessage(update, strikeoutMessage(getResponseMessage(transaction)));
         return true;

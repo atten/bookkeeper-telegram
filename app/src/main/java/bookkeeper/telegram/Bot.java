@@ -12,6 +12,7 @@ import bookkeeper.telegram.scenarios.viewMonthlyExpenses.ViewMonthlyExpensesHand
 import bookkeeper.telegram.scenarios.addTransactions.freehand.FreehandRecordHandler;
 import bookkeeper.telegram.scenarios.addTransactions.tinkoff.TinkoffSmsHandler;
 import bookkeeper.telegram.shared.AbstractHandler;
+import bookkeeper.telegram.shared.exceptions.SkipHandlerException;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.Update;
@@ -101,7 +102,14 @@ class Bot {
         entityManager.getTransaction().begin();
 
         for (AbstractHandler handler : handlers) {
-            Boolean processed = handler.handle(update);
+            Boolean processed;
+            try {
+                processed = handler.handle(update);
+            } catch (SkipHandlerException e) {
+                logger.warn(e.toString());
+                handler.sendMessage(update, String.format("Ошибка: `%s`", e.getLocalizedMessage()));
+                break;
+            }
             if (processed)
                 break;
         }

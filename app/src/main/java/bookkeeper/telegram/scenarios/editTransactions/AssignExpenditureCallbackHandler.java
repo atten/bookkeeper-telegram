@@ -9,6 +9,7 @@ import bookkeeper.services.parsers.Spending;
 import bookkeeper.services.parsers.SpendingParserRegistry;
 import bookkeeper.telegram.shared.AbstractHandler;
 import bookkeeper.telegram.shared.CallbackMessageRegistry;
+import bookkeeper.telegram.shared.exceptions.AccountTransactionNotFound;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
@@ -41,17 +42,12 @@ public class AssignExpenditureCallbackHandler extends AbstractHandler {
      * 3. Associate pending AccountTransactions with same merchant too (if any).
      */
     @Override
-    public Boolean handle(Update update) {
+    public Boolean handle(Update update) throws AccountTransactionNotFound {
         var callbackMessage = CallbackMessageRegistry.getCallbackMessage(update);
         if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof AssignExpenditureCallback cm))
             return false;
 
-        var transaction = transactionRepository.find(cm.getTransactionId());
-        if (transaction == null) {
-            logger.warn(String.format("AccountTransaction with id=%s not found", cm.getTransactionId()));
-            return false;
-        }
-
+        var transaction = transactionRepository.get(cm.getTransactionId()).orElseThrow(() -> new AccountTransactionNotFound(cm.getTransactionId()));
         var merchant = getSpendingFromTransaction(transaction).getMerchant();
         var newExpenditure = cm.getExpenditure();
         var hasAssociation = merchantExpenditureRepository.find(merchant, getTelegramUser(update)).isPresent();

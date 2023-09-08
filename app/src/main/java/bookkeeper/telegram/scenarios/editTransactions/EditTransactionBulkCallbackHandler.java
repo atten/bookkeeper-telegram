@@ -4,6 +4,7 @@ import bookkeeper.services.repositories.AccountTransactionRepository;
 import bookkeeper.services.repositories.TelegramUserRepository;
 import bookkeeper.telegram.shared.AbstractHandler;
 import bookkeeper.telegram.shared.CallbackMessageRegistry;
+import bookkeeper.telegram.shared.exceptions.AccountTransactionNotFound;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Update;
 
@@ -25,20 +26,13 @@ public class EditTransactionBulkCallbackHandler extends AbstractHandler {
     }
 
     @Override
-    public Boolean handle(Update update) {
+    public Boolean handle(Update update) throws AccountTransactionNotFound {
         var callbackMessage = CallbackMessageRegistry.getCallbackMessage(update);
-        if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof EditTransactionBulkCallback))
+        if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof EditTransactionBulkCallback cm))
             return false;
 
-        var cm = (EditTransactionBulkCallback) callbackMessage.get();
-        var transaction = transactionRepository.find(cm.getTransactionIds().get(0));
+        var transaction = transactionRepository.get(cm.getTransactionIds().get(0)).orElseThrow(() -> new AccountTransactionNotFound(cm.getTransactionIds().get(0)));
         var pendingTransactionIds = cm.getTransactionIds().stream().skip(1).collect(Collectors.toList());
-
-        if (transaction == null) {
-            logger.warn(String.format("transaction id=%s not found!", cm.getTransactionIds().get(0)));
-            return false;
-        }
-
         editMessage(update, getResponseMessage(transaction, pendingTransactionIds.size()), getResponseKeyboard(transaction, pendingTransactionIds));
         return true;
     }

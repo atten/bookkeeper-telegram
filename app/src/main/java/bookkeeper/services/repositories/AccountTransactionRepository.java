@@ -5,7 +5,6 @@ import bookkeeper.entities.AccountTransaction;
 import bookkeeper.entities.TelegramUser;
 import bookkeeper.enums.Expenditure;
 import jakarta.persistence.EntityManager;
-import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -18,9 +17,8 @@ public class AccountTransactionRepository {
         this.manager = manager;
     }
 
-    @Nullable
-    public AccountTransaction find(long transactionId) {
-        return manager.find(AccountTransaction.class, transactionId);
+    public Optional<AccountTransaction> get(long transactionId) {
+        return Optional.ofNullable(manager.find(AccountTransaction.class, transactionId));
     }
 
     public List<AccountTransaction> findByIds(List<Long> transactionIds) {

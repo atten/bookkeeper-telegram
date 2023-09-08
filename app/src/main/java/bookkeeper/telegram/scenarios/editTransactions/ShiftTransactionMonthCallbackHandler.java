@@ -4,6 +4,7 @@ import bookkeeper.services.repositories.AccountTransactionRepository;
 import bookkeeper.services.repositories.TelegramUserRepository;
 import bookkeeper.telegram.shared.AbstractHandler;
 import bookkeeper.telegram.shared.CallbackMessageRegistry;
+import bookkeeper.telegram.shared.exceptions.AccountTransactionNotFound;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Update;
 
@@ -28,20 +29,13 @@ public class ShiftTransactionMonthCallbackHandler extends AbstractHandler {
      * Handle "Shift transaction month" click: subtract 1 month from current transaction timestamp.
      */
     @Override
-    public Boolean handle(Update update) {
+    public Boolean handle(Update update) throws AccountTransactionNotFound {
         var callbackMessage = CallbackMessageRegistry.getCallbackMessage(update);
-        if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof ShiftTransactionMonthCallback))
+        if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof ShiftTransactionMonthCallback cm))
             return false;
 
-        var cm = (ShiftTransactionMonthCallback) callbackMessage.get();
-        var transaction = transactionRepository.find(cm.getTransactionId());
+        var transaction = transactionRepository.get(cm.getTransactionId()).orElseThrow(() -> new AccountTransactionNotFound(cm.getTransactionId()));
         var pendingTransactionsCount = cm.getPendingTransactionIds().size();
-
-        if (transaction == null) {
-            logger.warn(String.format("transaction id=%s not found!", cm.getTransactionId()));
-            return false;
-        }
-
         var days = 30 * cm.getMonthOffset();
         transaction.setTimestamp(transaction.getTimestamp().plus(days, ChronoUnit.DAYS));
 

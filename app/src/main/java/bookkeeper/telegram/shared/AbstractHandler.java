@@ -2,6 +2,7 @@ package bookkeeper.telegram.shared;
 
 import bookkeeper.entities.TelegramUser;
 import bookkeeper.services.repositories.TelegramUserRepository;
+import bookkeeper.telegram.shared.exceptions.SkipHandlerException;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.User;
@@ -31,13 +32,13 @@ public abstract class AbstractHandler {
         this.telegramUserRepository = telegramUserRepository;
     }
 
-    public abstract Boolean handle(Update update);
+    public abstract Boolean handle(Update update) throws SkipHandlerException;
 
-    protected void sendMessage(Update update, String text, Keyboard keyboard) {
+    public void sendMessage(Update update, String text, Keyboard keyboard) {
         sendMessage(update, text, Optional.of(keyboard), false);
     }
 
-    protected void sendMessage(Update update, String text) {
+    public void sendMessage(Update update, String text) {
         sendMessage(update, text, Optional.empty(), false);
     }
 
@@ -45,15 +46,15 @@ public abstract class AbstractHandler {
         sendMessage(update, text, Optional.of(keyboard), true);
     }
 
-    protected void editMessage(Update update, String text, InlineKeyboardMarkup keyboard) {
+    public void editMessage(Update update, String text, InlineKeyboardMarkup keyboard) {
         editMessage(update, Optional.of(text), Optional.of(keyboard));
     }
 
-    protected void editMessage(Update update, String text) {
+    public void editMessage(Update update, String text) {
         editMessage(update, Optional.of(text), Optional.empty());
     }
 
-    protected void editMessage(Update update, InlineKeyboardMarkup keyboard) {
+    public void editMessage(Update update, InlineKeyboardMarkup keyboard) {
         editMessage(update, Optional.empty(), Optional.of(keyboard));
     }
 
