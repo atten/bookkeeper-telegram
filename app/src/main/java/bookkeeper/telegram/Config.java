@@ -74,7 +74,7 @@ public class Config {
             "jakarta.persistence.jdbc.password"
         ).forEach(s -> {
             var value = System.getenv(s);
-            if (!Objects.equals(value, ""))
+            if (value != null && !value.isEmpty())
                 result.put(s, value);
         } );
 
@@ -95,7 +95,7 @@ public class Config {
         for (var key : p.keySet()) {
             var strKey = (String) key;
             var value = System.getenv(strKey);
-            if (!Objects.equals(value, ""))
+            if (value != null && !value.isEmpty())
                 p.setProperty(strKey, value);
         }
 

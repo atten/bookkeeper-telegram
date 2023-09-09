@@ -6,11 +6,12 @@ services:
     image: "${DOCKER_IMAGE}"
     links:
       - postgres
+      - redis
     restart: unless-stopped
     environment:
       - NOTIFY_TELEGRAM_USER_ID=${NOTIFY_TELEGRAM_USER_ID}
       - BOT_TOKEN=${BOT_TOKEN}
-      - jedis.redis.path=redis://redis
+      - jedis.redis.path=redis://redis:6379
       - jakarta.persistence.jdbc.url=${JDBC_URL}
       - jakarta.persistence.jdbc.user=${POSTGRES_USER}
       - jakarta.persistence.jdbc.password=${POSTGRES_PASSWORD}

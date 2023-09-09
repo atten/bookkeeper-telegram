@@ -37,7 +37,8 @@ class StringShortener {
 
     String unshrink(String shrinked) {
         try (var redis = jedisPool.getResource()) {
-            return redis.get(shrinked);
+            var result = redis.get(shrinked);
+            return result != null ? result : shrinked;
         }
     }
 }
