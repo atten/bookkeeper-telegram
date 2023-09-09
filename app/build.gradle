@@ -14,22 +14,25 @@ repositories {
 }
 
 dependencies {
+    // telegram
+    implementation 'com.github.pengrad:java-telegram-bot-api:6.7.0'
+
     // database
     implementation 'jakarta.persistence:jakarta.persistence-api:3.1.0'
     implementation 'org.hibernate.orm:hibernate-core:6.2.7.Final'
     implementation 'org.postgresql:postgresql:42.5.4'
 
-    // utils
-    implementation 'org.reflections:reflections:0.10.2'
-    implementation 'org.junit.platform:junit-platform-commons:1.9.2'
-    implementation 'org.apache.commons:commons-lang3:3.13.0'
-
-    // telegram
-    implementation 'com.github.pengrad:java-telegram-bot-api:6.7.0'
+    // redis
+    implementation 'redis.clients:jedis:5.0.0-beta2'
 
     // logging
     implementation 'org.slf4j:slf4j-api:2.0.5'
     implementation 'ch.qos.logback:logback-classic:1.4.7'
+
+    // utils
+    implementation 'org.reflections:reflections:0.10.2'
+    implementation 'org.junit.platform:junit-platform-commons:1.9.2'
+    implementation 'org.apache.commons:commons-lang3:3.13.0'
 
     // tests
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'

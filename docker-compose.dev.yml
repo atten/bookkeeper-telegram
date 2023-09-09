@@ -14,6 +14,13 @@ services:
     ports:
       - '5434:5432'
 
+  redis_dev:
+    container_name: bookkeeper-redis-dev
+    image: redis:alpine
+    restart: unless-stopped
+    ports:
+      - '6390:6379'
+
 volumes:
   postgres_dev:
     name: bookkeeper-postgres-dev

@@ -5,14 +5,16 @@ import jakarta.persistence.Persistence;
 import org.hibernate.HibernateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import redis.clients.jedis.JedisPool;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
-class Config {
+public class Config {
     private static final Logger logger = LoggerFactory.getLogger(Config.class);
 
     static String botToken() {
@@ -26,6 +28,11 @@ class Config {
         var em = Persistence.createEntityManagerFactory("default", dataSourceConfig()).createEntityManager();
         migrate(em);
         return em;
+    }
+
+    public static JedisPool redisPool() {
+        var path = applicationProperties().getProperty("jedis.redis.path");
+        return new JedisPool(path);
     }
 
     static Optional<Integer> telegramUserIdToNotify() {
@@ -55,6 +62,9 @@ class Config {
         }
     }
 
+    /**
+     * Build JDBC config from env variables (if not set, defaults will be taken from META-INF/persistence.xml).
+     */
     private static Map<String, String> dataSourceConfig() {
         Map<String, String> result = new HashMap<>();
 
@@ -69,5 +79,26 @@ class Config {
         } );
 
         return result;
+    }
+
+    private static Properties applicationProperties() {
+        var p = new Properties();
+        var resource = Config.class.getResource("/application.properties");
+        Objects.requireNonNull(resource);
+        try {
+            p.load(new FileInputStream(resource.getPath()));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        // update values from env variables
+        for (var key : p.keySet()) {
+            var strKey = (String) key;
+            var value = System.getenv(strKey);
+            if (!Objects.equals(value, ""))
+                p.setProperty(strKey, value);
+        }
+
+        return p;
     }
 }

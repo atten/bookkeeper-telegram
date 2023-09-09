@@ -1,8 +1,7 @@
 package bookkeeper.telegram.shared;
 
-import org.junit.platform.commons.util.LruCache;
-
-import java.util.Map;
+import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.params.SetParams;
 
 /**
  * Class used to compact callback messages for buttons.
@@ -12,13 +11,14 @@ import java.util.Map;
  * API error ( error event) will return otherwise.
  */
 class StringShortener {
-    private final int CACHE_SIZE = 1000;
+    private final SetParams SET_PARAMS = new SetParams().ex(3600 * 24 * 365);
 
-    private final Map<String, String> cache = new LruCache<>(CACHE_SIZE);
+    private final JedisPool jedisPool;
     private final int maxStringLength;
 
-    StringShortener(int maxLength) {
+    StringShortener(int maxLength, JedisPool jedisPool) {
         this.maxStringLength = maxLength;
+        this.jedisPool = jedisPool;
     }
 
     String shrink(String input) {
@@ -29,11 +29,15 @@ class StringShortener {
         if (shrinked.length() > maxStringLength)
             throw new RuntimeException("Not enough shrinked");
 
-        cache.putIfAbsent(shrinked, input);
+        try (var redis = jedisPool.getResource()) {
+            redis.set(shrinked, input, SET_PARAMS);
+        }
         return shrinked;
     }
 
     String unshrink(String shrinked) {
-        return cache.getOrDefault(shrinked, shrinked);
+        try (var redis = jedisPool.getResource()) {
+            return redis.get(shrinked);
+        }
     }
 }

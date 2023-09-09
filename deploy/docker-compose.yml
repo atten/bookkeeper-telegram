@@ -10,6 +10,7 @@ services:
     environment:
       - NOTIFY_TELEGRAM_USER_ID=${NOTIFY_TELEGRAM_USER_ID}
       - BOT_TOKEN=${BOT_TOKEN}
+      - jedis.redis.path=redis://redis
       - jakarta.persistence.jdbc.url=${JDBC_URL}
       - jakarta.persistence.jdbc.user=${POSTGRES_USER}
       - jakarta.persistence.jdbc.password=${POSTGRES_PASSWORD}
@@ -29,6 +30,11 @@ services:
       interval: 1s
       timeout: 1s
       retries: 5
+
+  redis:
+    container_name: bookkeeper-redis
+    image: redis:alpine
+    restart: unless-stopped
 
 volumes:
   postgres: {}
