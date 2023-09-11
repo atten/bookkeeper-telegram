@@ -4,10 +4,12 @@ import bookkeeper.services.repositories.TelegramUserRepository;
 import bookkeeper.telegram.shared.AbstractHandler;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Update;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Print incoming request to console.
  */
+@Slf4j
 class LoggingHandler extends AbstractHandler {
     LoggingHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository) {
         super(bot, telegramUserRepository);
@@ -15,7 +17,7 @@ class LoggingHandler extends AbstractHandler {
 
     @Override
     public Boolean handle(Update update) {
-        logger.info("{} -> {}", getTelegramUser(update), updateToString(update));
+        log.info("{} -> {}", getTelegramUser(update), updateToString(update));
         return false;
     }
 

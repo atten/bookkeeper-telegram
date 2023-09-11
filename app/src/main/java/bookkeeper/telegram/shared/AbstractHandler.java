@@ -14,8 +14,7 @@ import com.pengrad.telegrambot.request.EditMessageReplyMarkup;
 import com.pengrad.telegrambot.request.EditMessageText;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.BaseResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -23,10 +22,10 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Slf4j
 public abstract class AbstractHandler {
     private final TelegramBot bot;
     private final TelegramUserRepository telegramUserRepository;
-    protected final Logger logger = LoggerFactory.getLogger(getClass());
 
     public AbstractHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository) {
         this.bot = bot;
@@ -102,7 +101,7 @@ public abstract class AbstractHandler {
         var result = bot.execute(message);
         var resultVerbose = result.description() != null ? result.description() : "OK";
 
-        logger.info("{}{} -> {} ({})", text, keyboardVerbose, telegramUser, resultVerbose);
+        log.info("{}{} -> {} ({})", text, keyboardVerbose, telegramUser, resultVerbose);
     }
 
     private void editMessagePrivate(Update update, @Nullable String text, @Nullable InlineKeyboardMarkup keyboard) {
@@ -133,7 +132,7 @@ public abstract class AbstractHandler {
 
         var resultVerbose = result.description() != null ? result.description() : "OK";
         var testVerbose = text != null ? text : "(empty)";
-        logger.info("{}{} -> {} ({})", testVerbose, keyboardVerbose, telegramUser, resultVerbose);
+        log.info("{}{} -> {} ({})", testVerbose, keyboardVerbose, telegramUser, resultVerbose);
     }
 
     private Optional<ParseMode> detectParseMode(String message) {

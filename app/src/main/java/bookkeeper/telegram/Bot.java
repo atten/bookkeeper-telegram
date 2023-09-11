@@ -19,15 +19,14 @@ import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
 import jakarta.persistence.EntityManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 
+@Slf4j
 class Bot {
     private static final TelegramBot bot = new TelegramBot(Config.botToken());
     private static final EntityManager entityManager = Config.entityManager();
-    private static final Logger logger = LoggerFactory.getLogger(Bot.class);
     private final List<AbstractHandler> handlers;
 
     Bot() {
@@ -78,7 +77,7 @@ class Bot {
         var result = bot.execute(message);
         var resultVerbose = result.description() != null ? result.description() : "OK";
 
-        logger.info("{} -> {} ({})", text, telegramUserId, resultVerbose);
+        log.info("{} -> {} ({})", text, telegramUserId, resultVerbose);
     }
 
     /**
@@ -86,12 +85,10 @@ class Bot {
      */
     void listen() {
         bot.setUpdatesListener(updates -> {
-            for (var update : updates) {
-                processUpdate(update);
-            }
+            updates.forEach(this::processUpdate);
             return UpdatesListener.CONFIRMED_UPDATES_ALL;
         });
-        logger.info("Start listening...");
+        log.info("Start listening...");
     }
 
     /**
@@ -106,7 +103,7 @@ class Bot {
             try {
                 processed = handler.handle(update);
             } catch (SkipHandlerException e) {
-                logger.warn(e.toString());
+                log.warn(e.toString());
                 handler.sendMessage(update, String.format("Ошибка: `%s`", e.getLocalizedMessage()));
                 break;
             }

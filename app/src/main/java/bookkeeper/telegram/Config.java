@@ -2,9 +2,8 @@ package bookkeeper.telegram;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Persistence;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.HibernateException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import redis.clients.jedis.JedisPool;
 
 import java.io.FileInputStream;
@@ -14,9 +13,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
+@Slf4j
 public class Config {
-    private static final Logger logger = LoggerFactory.getLogger(Config.class);
-
     static String botToken() {
         return System.getenv("BOT_TOKEN");
     }
@@ -58,7 +56,7 @@ public class Config {
         try {
             query.getSingleResult();
         } catch (HibernateException e) {
-            logger.warn(e.toString());
+            log.warn(e.toString());
         }
     }
 
