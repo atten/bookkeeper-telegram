@@ -1,16 +1,18 @@
 package bookkeeper.telegram;
 
-import bookkeeper.services.repositories.TelegramUserRepository;
+import bookkeeper.service.repository.TelegramUserRepository;
 import bookkeeper.telegram.shared.AbstractHandler;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Update;
 
+import javax.inject.Inject;
 import java.util.Objects;
 
 /**
  * Scenario: User starts bot usage.
  */
 class SlashStartHandler extends AbstractHandler {
+    @Inject
     SlashStartHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository) {
         super(bot, telegramUserRepository);
     }

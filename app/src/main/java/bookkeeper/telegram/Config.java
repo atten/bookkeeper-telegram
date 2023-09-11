@@ -1,11 +1,15 @@
 package bookkeeper.telegram;
 
+import com.pengrad.telegrambot.TelegramBot;
+import dagger.Provides;
+import dagger.Module;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Persistence;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.HibernateException;
 import redis.clients.jedis.JedisPool;
 
+import javax.inject.Singleton;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -13,26 +17,39 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
+@Module
 @Slf4j
-public class Config {
-    static String botToken() {
+public abstract class Config {
+    private static String botToken() {
         return System.getenv("BOT_TOKEN");
+    }
+
+    @Provides
+    @Singleton
+    static TelegramBot telegramBot() {
+        return new TelegramBot(botToken());
     }
 
     /**
      There's only one instance of database writer (the bot itself), so we can use a single persistence context throughout runtime.
      */
+    @Provides
+    @Singleton
     static EntityManager entityManager() {
         var em = Persistence.createEntityManagerFactory("default", dataSourceConfig()).createEntityManager();
         migrate(em);
         return em;
     }
 
+    @Provides
+    @Singleton
     public static JedisPool redisPool() {
         var path = applicationProperties().getProperty("jedis.redis.path");
         return new JedisPool(path);
     }
 
+    @Provides
+    @Singleton
     static Optional<Integer> telegramUserIdToNotify() {
         var userId = System.getenv("NOTIFY_TELEGRAM_USER_ID");
         if (userId == null)

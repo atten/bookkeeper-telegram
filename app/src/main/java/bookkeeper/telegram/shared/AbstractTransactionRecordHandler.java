@@ -1,9 +1,10 @@
 package bookkeeper.telegram.shared;
 
-import bookkeeper.entities.AccountTransaction;
-import bookkeeper.services.registries.TransactionParserRegistry;
-import bookkeeper.services.repositories.AccountTransactionRepository;
-import bookkeeper.services.repositories.TelegramUserRepository;
+import bookkeeper.entity.AccountTransaction;
+import bookkeeper.enums.HandlerPriority;
+import bookkeeper.service.registry.TransactionParserRegistry;
+import bookkeeper.service.repository.AccountTransactionRepository;
+import bookkeeper.service.repository.TelegramUserRepository;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Update;
 
@@ -25,6 +26,11 @@ public class AbstractTransactionRecordHandler extends AbstractHandler {
         super(bot, telegramUserRepository);
         this.transactionParserRegistry = transactionParserRegistry;
         this.transactionRepository = transactionRepository;
+    }
+
+    @Override
+    public HandlerPriority getPriority() {
+        return HandlerPriority.LOW_MESSAGE;
     }
 
     /**

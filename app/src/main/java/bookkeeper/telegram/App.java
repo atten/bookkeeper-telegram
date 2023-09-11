@@ -3,7 +3,9 @@ package bookkeeper.telegram;
 public class App {
 
     public static void main(String[] args) {
-        var bot = new Bot();
+        TelegramContainer container = DaggerTelegramContainer.builder().build();
+
+        var bot = container.bot();
 
         var notify = Config.telegramUserIdToNotify();
         notify.ifPresent(bot::notifyStartup);

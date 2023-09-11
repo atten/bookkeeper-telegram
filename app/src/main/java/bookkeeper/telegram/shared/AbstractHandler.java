@@ -1,8 +1,9 @@
 package bookkeeper.telegram.shared;
 
-import bookkeeper.entities.TelegramUser;
-import bookkeeper.services.repositories.TelegramUserRepository;
-import bookkeeper.telegram.shared.exceptions.SkipHandlerException;
+import bookkeeper.entity.TelegramUser;
+import bookkeeper.enums.HandlerPriority;
+import bookkeeper.service.repository.TelegramUserRepository;
+import bookkeeper.telegram.shared.exception.SkipHandlerException;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.User;
@@ -34,7 +35,11 @@ public abstract class AbstractHandler {
 
     public abstract Boolean handle(Update update) throws SkipHandlerException;
 
-    public void sendMessage(Update update, String text, Keyboard keyboard) {
+    public HandlerPriority getPriority() {
+        return HandlerPriority.NORMAL_COMMAND;
+    }
+
+    protected void sendMessage(Update update, String text, Keyboard keyboard) {
         sendMessage(update, text, keyboard, false);
     }
 
@@ -46,15 +51,15 @@ public abstract class AbstractHandler {
         sendMessage(update, text, keyboard, true);
     }
 
-    public void editMessage(Update update, String text, InlineKeyboardMarkup keyboard) {
+    protected void editMessage(Update update, String text, InlineKeyboardMarkup keyboard) {
         editMessagePrivate(update, text, keyboard);
     }
 
-    public void editMessage(Update update, String text) {
+    protected void editMessage(Update update, String text) {
         editMessage(update, text, null);
     }
 
-    public void editMessage(Update update, InlineKeyboardMarkup keyboard) {
+    protected void editMessage(Update update, InlineKeyboardMarkup keyboard) {
         editMessagePrivate(update, null, keyboard);
     }
 

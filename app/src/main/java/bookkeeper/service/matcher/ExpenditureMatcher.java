@@ -1,0 +1,10 @@
+package bookkeeper.service.matcher;
+
+import bookkeeper.entity.TelegramUser;
+import bookkeeper.enums.Expenditure;
+import bookkeeper.service.parser.Spending;
+
+public interface ExpenditureMatcher {
+
+    Expenditure match(Spending spending, TelegramUser telegramUser);
+}

@@ -1,18 +1,27 @@
 package bookkeeper.telegram;
 
-import bookkeeper.services.repositories.TelegramUserRepository;
+import bookkeeper.service.repository.TelegramUserRepository;
 import bookkeeper.telegram.shared.AbstractHandler;
+import bookkeeper.enums.HandlerPriority;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Update;
 import lombok.extern.slf4j.Slf4j;
+
+import javax.inject.Inject;
 
 /**
  * Print incoming request to console.
  */
 @Slf4j
 class LoggingHandler extends AbstractHandler {
+    @Inject
     LoggingHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository) {
         super(bot, telegramUserRepository);
+    }
+
+    @Override
+    public HandlerPriority getPriority() {
+        return HandlerPriority.HIGHEST_LOGGING;
     }
 
     @Override
