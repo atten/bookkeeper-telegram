@@ -54,7 +54,7 @@ public class FreehandAccountMatcher implements AccountMatcher {
     }
 
     /**
-     * Find account of most recent user transaction is specified currency. Create one as a fallback.
+     * Find account of most recent user transaction of specified currency. Create one as a fallback.
      */
     private Account getLastUsedAccount(TelegramUser user, Currency currency) {
         var recentTransactions = transactionRepository.findRecent(user, currency, 1);

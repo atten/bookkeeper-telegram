@@ -66,9 +66,12 @@ public class TransactionParserRegistry {
 
     public List<AccountTransaction> parseMultiple(String[] rawMessages, TelegramUser user) throws ParseException {
         List<AccountTransaction> results = new ArrayList<>();
+        // transactions within same batch must have same creation timestamp for further filtering
+        var now = Instant.now();
 
         for (var message : rawMessages ) {
             var transaction = parse(message, user);
+            transaction.setCreatedAt(now);
 
             if (transaction.isEmpty())
                 continue;

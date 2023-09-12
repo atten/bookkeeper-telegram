@@ -60,19 +60,14 @@ class AssignExpenditureCallbackHandler extends AbstractHandler {
         if (useAssociationFurther) {
             merchantExpenditureRepository.addMerchantAssociation(merchant, newExpenditure, getTelegramUser(update));
             var keyboard = new InlineKeyboardMarkup().addRow(new RemoveMerchantExpenditureCallback(merchant, newExpenditure).asButton("Отмена"));
-            editMessage(update, getResponseMessage(merchant, newExpenditure), keyboard);
+            sendMessage(update, getResponseMessage(merchant, newExpenditure), keyboard);
         }
 
         // step 2
         transaction.setExpenditure(newExpenditure);
 
         if (pendingTransactionsCount == 0) {
-            // if message was edited in the step 1, then send a new one, otherwise reuse existing
-            if (useAssociationFurther)
-                sendMessage(update, getResponseMessage(transaction), getResponseKeyboard(transaction));
-            else
-                editMessage(update, getResponseMessage(transaction), getResponseKeyboard(transaction));
-
+            editMessage(update, getResponseMessage(transaction), getResponseKeyboard(transaction));
         } else {
             var pendingTransactions = transactionRepository.findByIds(cm.getPendingTransactionIds());
 
@@ -81,11 +76,7 @@ class AssignExpenditureCallbackHandler extends AbstractHandler {
                 updateTransactionsExpenditure(pendingTransactions, merchant, newExpenditure);
             }
 
-            if (useAssociationFurther) {
-                sendMessage(update, getResponseMessage(transaction, pendingTransactionsCount), getResponseKeyboard(transaction, cm.getPendingTransactionIds()));
-            } else {
-                editMessage(update, getResponseMessage(transaction, pendingTransactionsCount), getResponseKeyboard(transaction, cm.getPendingTransactionIds()));
-            }
+            editMessage(update, getResponseMessage(transaction, pendingTransactionsCount), getResponseKeyboard(transaction, cm.getPendingTransactionIds()));
         }
 
         return true;

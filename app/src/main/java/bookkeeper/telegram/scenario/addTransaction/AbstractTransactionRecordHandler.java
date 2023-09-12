@@ -1,10 +1,11 @@
-package bookkeeper.telegram.shared;
+package bookkeeper.telegram.scenario.addTransaction;
 
 import bookkeeper.entity.AccountTransaction;
 import bookkeeper.enums.HandlerPriority;
 import bookkeeper.service.registry.TransactionParserRegistry;
 import bookkeeper.service.repository.AccountTransactionRepository;
 import bookkeeper.service.repository.TelegramUserRepository;
+import bookkeeper.telegram.shared.AbstractHandler;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Update;
 
@@ -43,10 +44,10 @@ public class AbstractTransactionRecordHandler extends AbstractHandler {
         if (update.message() == null)
             return false;
 
-        var smsList = getMessageText(update).split("\n");
+        var rawMessages = getMessageText(update).split("\n");
         List<AccountTransaction> transactions;
         try {
-            transactions = transactionParserRegistry.parseMultiple(smsList, getTelegramUser(update));
+            transactions = transactionParserRegistry.parseMultiple(rawMessages, getTelegramUser(update));
         } catch (ParseException e) {
             // provided sms was not parsed
             return false;

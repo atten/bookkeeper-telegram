@@ -4,7 +4,7 @@ import bookkeeper.service.matcher.ExpenditureMatcherByMerchant;
 import bookkeeper.service.repository.AccountRepository;
 import bookkeeper.service.repository.AccountTransactionRepository;
 import bookkeeper.service.repository.TelegramUserRepository;
-import bookkeeper.telegram.shared.AbstractTransactionRecordHandler;
+import bookkeeper.telegram.scenario.addTransaction.AbstractTransactionRecordHandler;
 import com.pengrad.telegrambot.TelegramBot;
 
 import javax.inject.Inject;

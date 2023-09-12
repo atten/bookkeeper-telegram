@@ -42,7 +42,9 @@ class ApproveTransactionCallbackHandler extends AbstractHandler {
         transactionRepository.approve(transaction);
 
         if (pendingTransactionsCount == 0) {
-            editMessage(update, getResponseKeyboard(transaction));
+            // show summary message for added/edited transactions within batch
+            var allAddedTransactions = transactionRepository.findByCreatedAt(transaction.getCreatedAt(), getTelegramUser(update));
+            editMessage(update, getResponseMessage(allAddedTransactions), getResponseKeyboard(allAddedTransactions));
         }
         else {
             var nextPendingTransactionId = cm.getPendingTransactionIds().get(0);

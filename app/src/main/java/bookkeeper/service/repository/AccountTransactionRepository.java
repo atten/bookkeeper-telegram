@@ -32,11 +32,19 @@ public class AccountTransactionRepository {
     }
 
     public List<AccountTransaction> findRecent(TelegramUser user, Currency currency, int count) {
-        var sql = "SELECT i FROM AccountTransaction i WHERE account.telegramUser=:user AND account.currency=:currency ORDER BY timestamp DESC LIMIT :count";
+        var sql = "SELECT i FROM AccountTransaction i WHERE account.telegramUser=:user AND account.currency=:currency ORDER BY createdAt DESC LIMIT :count";
         var query = manager.createQuery(sql, AccountTransaction.class)
             .setParameter("user", user)
             .setParameter("currency", currency.getCurrencyCode())
             .setParameter("count", count);
+        return query.getResultList();
+    }
+
+    public List<AccountTransaction> findByCreatedAt(Instant createdAt, TelegramUser user) {
+        var sql = "SELECT i FROM AccountTransaction i WHERE account.telegramUser=:user AND createdAt = :createdAt";
+        var query = manager.createQuery(sql, AccountTransaction.class)
+                .setParameter("createdAt", createdAt)
+                .setParameter("user", user);
         return query.getResultList();
     }
 
