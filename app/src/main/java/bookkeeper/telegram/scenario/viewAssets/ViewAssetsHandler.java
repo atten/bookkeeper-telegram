@@ -1,8 +1,5 @@
 package bookkeeper.telegram.scenario.viewAssets;
 
-import bookkeeper.service.repository.AccountRepository;
-import bookkeeper.service.repository.AccountTransactionRepository;
-import bookkeeper.service.repository.AccountTransferRepository;
 import bookkeeper.service.repository.TelegramUserRepository;
 import bookkeeper.telegram.shared.AbstractHandler;
 import bookkeeper.service.registry.CallbackMessageRegistry;
@@ -22,9 +19,9 @@ class ViewAssetsHandler extends AbstractHandler {
     private final AssetsResponseFactory assetsResponseFactory;
 
     @Inject
-    ViewAssetsHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository, AccountRepository accountRepository, AccountTransactionRepository transactionRepository, AccountTransferRepository transferRepository) {
+    ViewAssetsHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository, AssetsResponseFactory assetsResponseFactory) {
         super(bot, telegramUserRepository);
-        this.assetsResponseFactory = new AssetsResponseFactory(accountRepository, transactionRepository, transferRepository);
+        this.assetsResponseFactory = assetsResponseFactory;
     }
 
     /**
