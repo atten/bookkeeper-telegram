@@ -7,7 +7,7 @@ import jakarta.persistence.EntityManager;
 
 import javax.inject.Inject;
 import java.time.Instant;
-import java.util.Objects;
+import java.util.Optional;
 
 @Reusable
 public class TelegramUserRepository {
@@ -19,15 +19,16 @@ public class TelegramUserRepository {
     }
 
     public TelegramUser getOrCreate(User user) {
-        var telegramUser = manager.find(TelegramUser.class, user.id());
-
-        if (telegramUser == null)
-            telegramUser = newUserFactory(user);
+        var telegramUser = Optional.ofNullable(
+            manager.find(TelegramUser.class, user.id())
+        ).orElseGet(
+            () -> newUserFactory(user)
+        );
 
         // update attributes:
         // set lang only if it's different from default
         var updateLanguageCode = user.languageCode();
-        if (!Objects.equals(updateLanguageCode, "en"))
+        if (!updateLanguageCode.equals("en"))
             telegramUser.setLanguageCode(updateLanguageCode);
 
         return manager.merge(telegramUser);
@@ -43,6 +44,7 @@ public class TelegramUserRepository {
         telegramUser.setUsername(user.username());
         telegramUser.setFirstAccess(Instant.now());
         telegramUser.setLastAccess(Instant.now());
+        telegramUser.setLanguageCode("en");
         return telegramUser;
     }
 

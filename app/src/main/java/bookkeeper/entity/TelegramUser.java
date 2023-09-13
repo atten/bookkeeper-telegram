@@ -32,7 +32,7 @@ public class TelegramUser implements Serializable {
     @Setter
     private Instant lastAccess;
 
-    @Column(name = "language_code")
+    @Column(nullable = false, name = "language_code")
     @Getter
     @Setter
     private String languageCode;

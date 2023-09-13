@@ -1,1 +1,0 @@
-UPDATE telegram_users SET language_code = 'fr' WHERE language_code = null;
