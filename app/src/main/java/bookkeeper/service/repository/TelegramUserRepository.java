@@ -7,6 +7,7 @@ import jakarta.persistence.EntityManager;
 
 import javax.inject.Inject;
 import java.time.Instant;
+import java.util.Objects;
 
 @Reusable
 public class TelegramUserRepository {
@@ -26,7 +27,7 @@ public class TelegramUserRepository {
         // update attributes:
         // set lang only if it's different from default
         var updateLanguageCode = user.languageCode();
-        if (!updateLanguageCode.equals("en"))
+        if (!Objects.equals(updateLanguageCode, "en"))
             telegramUser.setLanguageCode(updateLanguageCode);
 
         return manager.merge(telegramUser);
