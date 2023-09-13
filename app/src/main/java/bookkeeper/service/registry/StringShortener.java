@@ -1,4 +1,4 @@
-package bookkeeper.telegram.shared;
+package bookkeeper.service.registry;
 
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.params.SetParams;

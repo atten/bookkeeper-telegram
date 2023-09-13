@@ -3,7 +3,7 @@ package bookkeeper.telegram.scenario.editTransaction;
 import bookkeeper.service.repository.AccountTransactionRepository;
 import bookkeeper.service.repository.TelegramUserRepository;
 import bookkeeper.telegram.shared.AbstractHandler;
-import bookkeeper.telegram.shared.CallbackMessageRegistry;
+import bookkeeper.service.registry.CallbackMessageRegistry;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Update;
 

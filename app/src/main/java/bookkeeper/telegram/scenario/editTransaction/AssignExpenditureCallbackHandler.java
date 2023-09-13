@@ -8,7 +8,7 @@ import bookkeeper.service.repository.TelegramUserRepository;
 import bookkeeper.service.parser.Spending;
 import bookkeeper.service.parser.SpendingParserRegistry;
 import bookkeeper.telegram.shared.AbstractHandler;
-import bookkeeper.telegram.shared.CallbackMessageRegistry;
+import bookkeeper.service.registry.CallbackMessageRegistry;
 import bookkeeper.telegram.shared.exception.AccountTransactionNotFound;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Update;

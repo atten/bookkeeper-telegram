@@ -1,6 +1,7 @@
-package bookkeeper.telegram.shared;
+package bookkeeper.service.registry;
 
 import bookkeeper.telegram.Config;
+import bookkeeper.telegram.shared.CallbackMessage;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 
@@ -12,7 +13,7 @@ import java.util.Optional;
 public class CallbackMessageRegistry {
     private static final StringShortener shortener = new StringShortener(55, Config.redisPool());
 
-    static InlineKeyboardButton createButton(CallbackMessage message, String text) {
+    public static InlineKeyboardButton createButton(CallbackMessage message, String text) {
         return new InlineKeyboardButton(text).callbackData(shortener.shrink(serialize(message)));
     }
 
