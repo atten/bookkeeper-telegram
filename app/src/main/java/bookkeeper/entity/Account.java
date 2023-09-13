@@ -27,7 +27,7 @@ public class Account {
     @Setter
     private TelegramUser telegramUser;
 
-    @Column(nullable = false, name = "created_at")
+    @Column(nullable = false, name = "created_at", updatable = false)
     @Getter
     @Setter
     private Instant createdAt;

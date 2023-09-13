@@ -23,6 +23,12 @@ public class TelegramUserRepository {
         if (telegramUser == null)
             telegramUser = newUserFactory(user);
 
+        // update attributes:
+        // set lang only if it's different from default
+        var updateLanguageCode = user.languageCode();
+        if (!updateLanguageCode.equals("en"))
+            telegramUser.setLanguageCode(updateLanguageCode);
+
         return manager.merge(telegramUser);
     }
 

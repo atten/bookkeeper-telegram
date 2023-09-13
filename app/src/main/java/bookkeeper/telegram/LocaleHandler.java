@@ -25,8 +25,8 @@ class LocaleHandler extends AbstractHandler {
 
     @Override
     public Boolean handle(Update update) {
-        var languageCode = getUser(update).languageCode();
-        Locale.setDefault(Locale.forLanguageTag(languageCode));
+        var user = getTelegramUser(update);
+        Locale.setDefault(Locale.forLanguageTag(user.getLanguageCode()));
         return false;
     }
 

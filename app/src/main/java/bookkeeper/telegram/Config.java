@@ -6,7 +6,7 @@ import dagger.Module;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Persistence;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.HibernateException;
+import org.hibernate.JDBCException;
 import redis.clients.jedis.JedisPool;
 
 import javax.inject.Singleton;
@@ -72,8 +72,8 @@ public abstract class Config {
         var query = entityManager.createNativeQuery(sql);
         try {
             query.getSingleResult();
-        } catch (HibernateException e) {
-            log.warn(e.toString());
+        } catch (JDBCException e) {
+            log.warn(e.getCause().toString());
         }
     }
 

@@ -22,7 +22,7 @@ public class TelegramUser implements Serializable {
     @Setter
     private String username;
 
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = false)
     @Getter
     @Setter
     private Instant firstAccess;
@@ -31,6 +31,11 @@ public class TelegramUser implements Serializable {
     @Getter
     @Setter
     private Instant lastAccess;
+
+    @Column(name = "language_code")
+    @Getter
+    @Setter
+    private String languageCode;
 
     public String toString() {
         return String.format("%s (id=%d)", username, telegramId);

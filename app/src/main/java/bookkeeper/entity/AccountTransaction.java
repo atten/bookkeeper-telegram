@@ -41,7 +41,7 @@ public class AccountTransaction {
     @Setter
     private String raw;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", updatable = false)
     @Getter
     @Setter
     private Instant createdAt;  // the moment when record added
