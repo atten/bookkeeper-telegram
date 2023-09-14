@@ -37,6 +37,7 @@ dependencies {
     implementation 'org.reflections:reflections:0.10.2'
     implementation 'org.junit.platform:junit-platform-commons:1.9.2'
     implementation 'org.apache.commons:commons-lang3:3.13.0'
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.14.2'
 
     // tests
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'

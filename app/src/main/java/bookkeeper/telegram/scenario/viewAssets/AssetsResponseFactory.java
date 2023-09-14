@@ -1,36 +1,66 @@
 package bookkeeper.telegram.scenario.viewAssets;
 
+import bookkeeper.entity.Account;
 import bookkeeper.entity.TelegramUser;
+import bookkeeper.service.client.CbrApiClient;
 import bookkeeper.service.repository.AccountRepository;
 import bookkeeper.service.repository.AccountTransactionRepository;
 import bookkeeper.service.repository.AccountTransferRepository;
 import bookkeeper.service.repository.ExchangeRateRepository;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.inject.Inject;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Slf4j
 class AssetsResponseFactory {
     private final AccountRepository accountRepository;
     private final AccountTransactionRepository transactionRepository;
     private final AccountTransferRepository transferRepository;
     private final ExchangeRateRepository exchangeRateRepository;
+    private final CbrApiClient apiClient;
 
     @Inject
-    AssetsResponseFactory(AccountRepository accountRepository, AccountTransactionRepository transactionRepository, AccountTransferRepository transferRepository, ExchangeRateRepository exchangeRateRepository) {
+    AssetsResponseFactory(AccountRepository accountRepository, AccountTransactionRepository transactionRepository, AccountTransferRepository transferRepository, ExchangeRateRepository exchangeRateRepository, CbrApiClient apiClient) {
         this.accountRepository = accountRepository;
         this.transactionRepository = transactionRepository;
         this.transferRepository = transferRepository;
         this.exchangeRateRepository = exchangeRateRepository;
+        this.apiClient = apiClient;
     }
 
     String getTotalAssets(TelegramUser user, int monthOffset) {
-        var dateVerbose = LocalDate.now().plusMonths(monthOffset).format(DateTimeFormatter.ofPattern("MMMM yyyy"));
+        var exchangeDate = monthOffset >= 0 ?
+                LocalDate.now() :
+                // last day of month = first day of next month - 1 day
+                LocalDate.now().plusMonths(monthOffset + 1).withDayOfMonth(1).minusDays(1);
+        var accounts = accountRepository.filter(user);
         var exchangeCurrency = Currency.getInstance("RUB");
-        var exchangeRateCache = new HashMap<Currency, BigDecimal>();
+        var currencies = accounts.stream().map(Account::getCurrency).collect(Collectors.toSet());
+        var exchangeRates = exchangeRateRepository.getExchangeRates(currencies, exchangeCurrency, exchangeDate);
+        var missingRates = currencies.stream().filter(currency -> !exchangeRates.containsKey(currency)).collect(Collectors.toSet());
+
+        log.info(String.format("Exchange date: %s", exchangeDate));
+        log.info(String.format("Required exchange rates: %s", currencies));
+        log.info(String.format("Existing exchange rates: %s", exchangeRates));
+        log.info(String.format("Missing  exchange rates: %s", missingRates));
+
+        if (!missingRates.isEmpty()) {
+            try {
+                log.info("Backfill exchange rates...");
+                var backfilledRates = backfillMissingExchangeRates(missingRates, exchangeCurrency, exchangeDate);
+                exchangeRates.putAll(backfilledRates);
+            } catch (IOException e) {
+                log.error(e.toString());
+            } finally {
+                log.info(String.format("Complete exchange rates: %s", exchangeRates));
+            }
+        }
 
         var assets = accountRepository.filter(user).stream()
             .map(account ->
@@ -39,7 +69,7 @@ class AssetsResponseFactory {
                     BigDecimal.ZERO
                         .add(transactionRepository.getTransactionBalance(account, monthOffset))
                         .add(transferRepository.getTransferBalance(account, monthOffset)),
-                    exchangeRateCache.computeIfAbsent(account.getCurrency(), currency -> exchangeRateRepository.getExchangeRate(currency, exchangeCurrency).orElse(BigDecimal.ZERO)),
+                    exchangeRates.getOrDefault(account.getCurrency(), BigDecimal.ZERO),
                     exchangeCurrency
                 )
             ).toList();
@@ -60,7 +90,22 @@ class AssetsResponseFactory {
             .collect(Collectors.joining("\n"));
 
         var summary = String.format("Итог: %,.2f %s", netAssets, exchangeCurrency.getSymbol());
+        var monthOffsetVerbose = LocalDate.now().plusMonths(monthOffset).format(DateTimeFormatter.ofPattern("MMMM yyyy"));
 
-        return String.format("Сводка по всем счетам на конец *%s*:\n```\n%s\n```%s\n", dateVerbose, content, summary);
+        return String.format("Сводка по всем счетам на конец *%s*:\n```\n%s\n```%s\n", monthOffsetVerbose, content, summary);
+    }
+
+    /**
+     * Collect and backfill missing exchange rates.
+     */
+    private Map<Currency, BigDecimal> backfillMissingExchangeRates(Set<Currency> missing, Currency exchangeCurrency, LocalDate date) throws IOException {
+        var responseMap = apiClient.getRubExchangeRates(date);
+        var backfilledMap = responseMap
+            .keySet()
+            .stream()
+            .filter(missing::contains)
+            .collect(Collectors.toMap(currency -> currency, responseMap::get));
+        exchangeRateRepository.backfillExchangeRates(backfilledMap, exchangeCurrency, date);
+        return backfilledMap;
     }
 }

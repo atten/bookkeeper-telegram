@@ -3,12 +3,13 @@ package bookkeeper.service.repository;
 import bookkeeper.entity.ExchangeRate;
 import dagger.Reusable;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.NoResultException;
 
 import javax.inject.Inject;
 import java.math.BigDecimal;
-import java.util.Currency;
-import java.util.Optional;
+import java.time.LocalDate;
+import java.time.ZoneOffset;
+import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Reusable
@@ -20,25 +21,54 @@ public class ExchangeRateRepository {
         this.manager = manager;
     }
 
-    public Optional<BigDecimal> getExchangeRate(Currency singularCurrency, Currency exchangeCurrency) {
-        if (singularCurrency.equals(exchangeCurrency))
-            return Optional.of(BigDecimal.ONE);
+    public Map<Currency, BigDecimal> getExchangeRates(Set<Currency> currencies, Currency exchangeCurrency, LocalDate date) {
+        var rates = new HashMap<Currency, BigDecimal>();
 
-        var currencies = Stream.of(singularCurrency, exchangeCurrency).map(Currency::getCurrencyCode).toList();
+        // handle 1 RUB = 1 RUB case
+        if (currencies.contains(exchangeCurrency)) {
+            rates.put(exchangeCurrency, BigDecimal.ONE);
+        }
+
+        var currenciesFilter = Stream.concat(
+            currencies.stream(),
+            Stream.of(exchangeCurrency)
+        )
+            .map(Currency::getCurrencyCode)
+            .collect(Collectors.toSet());
 
         var sql = "SELECT i from ExchangeRate i " +
-                "WHERE i.singularCurrency IN :currencies " +
-                "AND i.exchangeCurrency IN :currencies " +
-                "AND date_trunc('day', timestamp) = date_trunc('day', current_timestamp) " +
-                "ORDER BY i.timestamp DESC LIMIT 1";
+                "WHERE i.singularCurrency IN :currenciesFilter " +
+                "AND i.exchangeCurrency IN :currenciesFilter " +
+                "AND date(i.timestamp) = :date";
 
         var query = manager.createQuery(sql, ExchangeRate.class)
-            .setParameter("currencies", currencies);
+            .setParameter("currenciesFilter", currenciesFilter)
+            .setParameter("date", date);
 
-        try {
-            return Optional.of(query.getSingleResult().getPrice());
-        } catch (NoResultException e) {
-            return Optional.empty();
+        for (var row : query.getResultList()) {
+            if (row.getExchangeCurrency().equals(exchangeCurrency)) {
+                rates.put(row.getSingularCurrency(), row.getPrice());
+            }
         }
+
+        return rates;
+    }
+
+    public void backfillExchangeRates(Map<Currency, BigDecimal> rates, Currency exchangeCurrency, LocalDate date) {
+        var entities = rates
+            .keySet()
+            .stream()
+            .map(currency -> exchangeRateFactory(currency, exchangeCurrency, rates.get(currency), date))
+            .toList();
+        entities.forEach(manager::persist);
+    }
+
+    private ExchangeRate exchangeRateFactory(Currency singularCurrency, Currency exchangeCurrency, BigDecimal price, LocalDate date) {
+        var obj = new ExchangeRate();
+        obj.setSingularCurrency(singularCurrency);
+        obj.setExchangeCurrency(exchangeCurrency);
+        obj.setPrice(price);
+        obj.setTimestamp(date.atTime(12, 0).toInstant(ZoneOffset.UTC));
+        return obj;
     }
 }
