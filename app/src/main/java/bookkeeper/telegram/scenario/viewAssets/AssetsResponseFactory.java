@@ -44,22 +44,23 @@ class AssetsResponseFactory {
                 )
             ).toList();
 
+        var netAssets = assets.stream().map(Asset::getExchangeBalance).reduce(BigDecimal.ZERO, BigDecimal::add).floatValue();
+
         var content = assets
             .stream()
             .sorted(Comparator.comparing(i -> i.getExchangeBalance().negate())) // descending order
             .map(asset ->
                 String.format(
-                    "%-15.15s: %15.15s: %15.15s",
+                    "%-15.15s: %15.15s: %5.5s",
                     asset.account().getName(),
                     String.format("% ,.2f %s", asset.balance(), asset.account().getCurrency().getSymbol()),
-                    String.format("% ,.2f %s", asset.getExchangeBalance(), asset.exchangeCurrency().getSymbol())
+                    String.format("%.1f%%", asset.getExchangeBalance().floatValue() / netAssets * 100)
                 )
             )
             .collect(Collectors.joining("\n"));
 
-        var netAssets = assets.stream().map(Asset::getExchangeBalance).reduce(BigDecimal.ZERO, BigDecimal::add);
-        var summary = String.format("%-15.15s: % ,.2f %s", "Итог", netAssets, exchangeCurrency.getSymbol());
+        var summary = String.format("Итог: %,.2f %s", netAssets, exchangeCurrency.getSymbol());
 
-        return String.format("Сводка по всем счетам на конец *%s*:\n```\n%s\n%s\n```", dateVerbose, content, summary);
+        return String.format("Сводка по всем счетам на конец *%s*:\n```\n%s\n```%s\n", dateVerbose, content, summary);
     }
 }
