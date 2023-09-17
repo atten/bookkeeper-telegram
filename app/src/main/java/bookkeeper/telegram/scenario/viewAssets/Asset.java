@@ -9,4 +9,8 @@ record Asset(Account account, BigDecimal balance, BigDecimal exchangeRate, Curre
     BigDecimal getExchangeBalance() {
         return balance.multiply(exchangeRate);
     }
+
+    boolean isEmpty() {
+        return balance.equals(BigDecimal.ZERO);
+    }
 }

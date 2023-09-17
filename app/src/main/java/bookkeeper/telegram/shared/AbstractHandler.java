@@ -69,7 +69,7 @@ public abstract class AbstractHandler {
         return telegramUser;
     }
 
-    protected User getUser(Update update) {
+    private User getUser(Update update) {
         if (update.message() != null)
             return update.message().from();
         if (update.callbackQuery() != null)

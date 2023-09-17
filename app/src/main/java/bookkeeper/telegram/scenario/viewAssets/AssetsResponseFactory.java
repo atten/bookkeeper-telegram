@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+import java.time.format.TextStyle;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -76,12 +78,14 @@ class AssetsResponseFactory {
 
         var netAssets = assets.stream().map(Asset::getExchangeBalance).reduce(BigDecimal.ZERO, BigDecimal::add).floatValue();
 
+        var nbsp = "\u00A0";
         var content = assets
             .stream()
+            .filter(asset -> !asset.isEmpty())
             .sorted(Comparator.comparing(i -> i.getExchangeBalance().negate())) // descending order
             .map(asset ->
                 String.format(
-                    "%-15.15s: %15.15s: %5.5s",
+                    "%-15.15s %15.15s | %5.5s".replace(" | ", nbsp + "|" + nbsp),
                     asset.account().getName(),
                     String.format("% ,.2f %s", asset.balance(), asset.account().getCurrency().getSymbol()),
                     String.format("%.1f%%", asset.getExchangeBalance().floatValue() / netAssets * 100)
@@ -89,10 +93,16 @@ class AssetsResponseFactory {
             )
             .collect(Collectors.joining("\n"));
 
-        var summary = String.format("Итог: %,.2f %s", netAssets, exchangeCurrency.getSymbol());
-        var monthOffsetVerbose = LocalDate.now().plusMonths(monthOffset).format(DateTimeFormatter.ofPattern("MMMM yyyy"));
+        var date = LocalDate.now().plusMonths(monthOffset);
+        var monthShortVerbose = date.getMonth().getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault());
 
-        return String.format("Сводка по всем счетам на конец *%s*:\n```\n%s\n```%s\n", monthOffsetVerbose, content, summary);
+        var result = new StringJoiner("\n\n");
+        result
+            .add(String.format("\uD83D\uDCD8 Сводка по непустым счетам на конец *%s*:", date.format(DateTimeFormatter.ofPattern("MMMM yyyy"))))
+            .add(String.format("```\n%s```", content))
+            .add(String.format("\uD83D\uDCC8 *Курс на %s*:\n%s", exchangeDate.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)), exchangeRatesVerbose(exchangeRates)))
+            .add(String.format("\uD83C\uDFDB *Итог за %s*: %,.2f %s", monthShortVerbose, netAssets, exchangeCurrency.getSymbol()));
+        return result.toString();
     }
 
     /**
@@ -107,5 +117,17 @@ class AssetsResponseFactory {
             .collect(Collectors.toMap(currency -> currency, responseMap::get));
         exchangeRateRepository.backfillExchangeRates(backfilledMap, exchangeCurrency, date);
         return backfilledMap;
+    }
+
+    /**
+     * Example: EUR 100, USD 99
+     */
+    private String exchangeRatesVerbose(Map<Currency, BigDecimal> rates) {
+        return rates
+            .entrySet()
+            .stream()
+            .filter(entry -> !entry.getValue().equals(BigDecimal.ONE))  // skip native currency
+            .map(entry -> String.format("%s %s", entry.getKey().getCurrencyCode(), entry.getValue()))
+            .collect(Collectors.joining(" | "));
     }
 }
