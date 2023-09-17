@@ -42,7 +42,7 @@ class MonthlyExpensesResponseFactory {
             debitByCurrency.putIfAbsent(currency, BigDecimal.ZERO);
             allByCurrency.putIfAbsent(currency, BigDecimal.ZERO);
 
-            lines.add(String.format("*%s*", account.getName()));
+            lines.add(String.format("\uD83D\uDCD8 *%s*", account.getName()));
             lines.add("```");
 
             for (var expenditure : amountByExpenditure.keySet()) {
@@ -65,7 +65,7 @@ class MonthlyExpensesResponseFactory {
             lines.add("```");
         }
 
-        lines.add(String.format("*Всего за %s*", periodVerbose));
+        lines.add(String.format("*\uD83D\uDCDA Всего за %s*", periodVerbose));
         lines.add("```");
         lines.add(String.format("%-7s %s", "Расходы", amountByCurrencyString(creditByCurrency)));
         lines.add(String.format("%-7s %s", "Доходы", amountByCurrencyString(debitByCurrency)));
