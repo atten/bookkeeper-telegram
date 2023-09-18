@@ -7,13 +7,13 @@ import bookkeeper.telegram.scenario.viewMonthlyExpenses.ViewMonthlyExpensesWithO
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 
 import java.math.BigDecimal;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
+
+import static bookkeeper.telegram.shared.StringUtil.getDateShort;
 
 public class TransactionResponseFactory {
 
@@ -38,7 +38,7 @@ public class TransactionResponseFactory {
             statsVerbose = String.format("в *%s*", transaction.getExpenditure().getVerboseName());
             if (!isTransactionRecent(transaction)) {
                 // add date (e.g. 10.01.23) if transaction was added earlier than 12h ago
-                statsVerbose += " " + transaction.date().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT));
+                statsVerbose += " " + getDateShort(transaction.date());
             }
         } else {
             totalItemsVerbose = totalItemsVerbose + ": ";

@@ -5,8 +5,8 @@ import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.format.TextStyle;
-import java.util.Locale;
+
+import static bookkeeper.telegram.shared.StringUtil.getMonthName;
 
 public abstract class CallbackMessage implements Serializable {
 
@@ -14,7 +14,7 @@ public abstract class CallbackMessage implements Serializable {
         return CallbackMessageRegistry.createButton(this, text);
     }
     private InlineKeyboardButton asMonthButton(LocalDate relativeDate, int offset, boolean forward) {
-        var monthName = relativeDate.plusMonths(offset).getMonth().getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault());
+        var monthName = getMonthName(relativeDate.plusMonths(offset));
         if (forward)
             return asButton(String.format("В %s ▶️", monthName));
         return asButton(String.format("◀️ В %s", monthName));

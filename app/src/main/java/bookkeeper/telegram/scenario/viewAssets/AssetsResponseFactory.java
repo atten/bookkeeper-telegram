@@ -13,11 +13,10 @@ import javax.inject.Inject;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
-import java.time.format.TextStyle;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static bookkeeper.telegram.shared.StringUtil.*;
 
 @Slf4j
 class AssetsResponseFactory {
@@ -93,15 +92,12 @@ class AssetsResponseFactory {
             )
             .collect(Collectors.joining("\n"));
 
-        var date = LocalDate.now().plusMonths(monthOffset);
-        var monthShortVerbose = date.getMonth().getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault());
-
         var result = new StringJoiner("\n\n");
         result
-            .add(String.format("\uD83D\uDCD8 Сводка по непустым счетам на конец *%s*:", date.format(DateTimeFormatter.ofPattern("MMMM yyyy"))))
+            .add(String.format("\uD83D\uDCD8 Сводка по непустым счетам на конец *%s*:", getMonthYearRelative(monthOffset)))
             .add(String.format("```\n%s```", content))
-            .add(String.format("\uD83D\uDCC8 *Курс на %s*:\n%s", exchangeDate.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)), exchangeRatesVerbose(exchangeRates)))
-            .add(String.format("\uD83C\uDFDB *Итог за %s*: %,.2f %s", monthShortVerbose, netAssets, exchangeCurrency.getSymbol()));
+            .add(String.format("\uD83D\uDCC8 *Курс на %s*:\n%s", getDateShort(exchangeDate), exchangeRatesVerbose(exchangeRates)))
+            .add(String.format("\uD83C\uDFDB *Итог за %s*: %,.2f %s", getMonthName(monthOffset), netAssets, exchangeCurrency.getSymbol()));
         return result.toString();
     }
 

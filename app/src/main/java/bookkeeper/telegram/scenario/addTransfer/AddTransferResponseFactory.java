@@ -6,8 +6,9 @@ import bookkeeper.service.repository.AccountRepository;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
+
+import static bookkeeper.telegram.shared.StringUtil.getDateShort;
+import static bookkeeper.telegram.shared.StringUtil.getMonthYearShort;
 
 class AddTransferResponseFactory {
     private final AccountRepository accountRepository;
@@ -25,13 +26,11 @@ class AddTransferResponseFactory {
     }
 
     String getDescriptionForMonth(AddTransferCallback memory) {
-        var dateVerbose = LocalDate.now().plusMonths(memory.getMonthOffset()).format(DateTimeFormatter.ofPattern("MMM yyyy"));
-        return String.format("Выберите месяц перевода (выбран %s):", dateVerbose);
+        return String.format("Выберите месяц перевода (выбран %s):", getMonthYearShort(memory.getMonthOffset()));
     }
 
     String getDescriptionForTransferCreated(AccountTransfer transfer) {
-        var month = transfer.date().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT));
-        return String.format("Перевод %s создан!", month);
+        return String.format("Перевод %s создан!", getDateShort(transfer.date()));
     }
 
     InlineKeyboardMarkup getKeyboardForWithdrawAccount(TelegramUser user, AddTransferCallback memory) {
@@ -39,7 +38,7 @@ class AddTransferResponseFactory {
         accountRepository.filter(user, memory.getWithdrawCurrency())
                 .stream()
                 .filter(account -> account.getId() != memory.getDepositAccountId())
-                .map(account -> memory.setWithdrawAccountId(account.getId()).asButton(account.getName()))
+                .map(account -> memory.setWithdrawAccountId(account.getId()).asButton("\uD83D\uDCD8 " + account.getName()))
                 .forEach(kb::addRow);
         return kb;
     }
@@ -49,7 +48,7 @@ class AddTransferResponseFactory {
         accountRepository.filter(user, memory.getDepositCurrency())
                 .stream()
                 .filter(account -> account.getId() != memory.getWithdrawAccountId())
-                .map(account -> memory.setDepositAccountId(account.getId()).asButton(account.getName()))
+                .map(account -> memory.setDepositAccountId(account.getId()).asButton("\uD83D\uDCD8 " + account.getName()))
                 .forEach(kb::addRow);
         return kb;
     }

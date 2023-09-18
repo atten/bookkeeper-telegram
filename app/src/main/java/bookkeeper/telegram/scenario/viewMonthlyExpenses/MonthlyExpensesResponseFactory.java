@@ -8,9 +8,10 @@ import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static bookkeeper.telegram.shared.StringUtil.getMonthYearShort;
 
 class MonthlyExpensesResponseFactory {
     private final AccountRepository accountRepository;
@@ -28,7 +29,6 @@ class MonthlyExpensesResponseFactory {
         var allByCurrency = new HashMap<Currency, BigDecimal>();
         var maxExpenditureLength = Expenditure.enabledValues().stream().map(expenditure -> expenditure.getVerboseName().length()).max(Comparator.naturalOrder()).orElse(0);
         var formatString = "%-" + maxExpenditureLength + "s %s";  // example: "%-15s %s"
-        var periodVerbose = LocalDate.now().plusMonths(monthOffset).format(DateTimeFormatter.ofPattern("MMM yyyy"));
         var accounts = accountRepository.filter(user);
 
         for (var account : accounts) {
@@ -65,7 +65,7 @@ class MonthlyExpensesResponseFactory {
             lines.add("```");
         }
 
-        lines.add(String.format("*\uD83D\uDCDA Всего за %s*", periodVerbose));
+        lines.add(String.format("*\uD83D\uDCDA Всего за %s*", getMonthYearShort(monthOffset)));
         lines.add("```");
         lines.add(String.format("%-7s %s", "Расходы", amountByCurrencyString(creditByCurrency)));
         lines.add(String.format("%-7s %s", "Доходы", amountByCurrencyString(debitByCurrency)));
