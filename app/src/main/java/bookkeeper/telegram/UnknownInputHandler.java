@@ -1,20 +1,17 @@
 package bookkeeper.telegram;
 
-import bookkeeper.service.repository.TelegramUserRepository;
-import bookkeeper.telegram.shared.AbstractHandler;
 import bookkeeper.enums.HandlerPriority;
-import com.pengrad.telegrambot.TelegramBot;
-import com.pengrad.telegrambot.model.Update;
+import bookkeeper.telegram.shared.AbstractHandler;
+import bookkeeper.telegram.shared.Request;
 
 import javax.inject.Inject;
 
 /**
  * Inform user that input can't be processed.
  */
-class UnknownInputHandler extends AbstractHandler {
+class UnknownInputHandler implements AbstractHandler {
     @Inject
-    UnknownInputHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository) {
-        super(bot, telegramUserRepository);
+    UnknownInputHandler() {
     }
 
     @Override
@@ -22,9 +19,8 @@ class UnknownInputHandler extends AbstractHandler {
         return HandlerPriority.LOWEST_FINALIZE;
     }
 
-    @Override
-    public Boolean handle(Update update) {
-        sendMessage(update, "Неверная или неподдерживаемая команда, попробуйте по-другому.");
+    public Boolean handle(Request request) {
+        request.sendMessage("Неверная или неподдерживаемая команда, попробуйте по-другому.");
         return true;
     }
 }

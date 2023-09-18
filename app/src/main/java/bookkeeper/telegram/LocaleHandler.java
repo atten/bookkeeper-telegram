@@ -1,10 +1,8 @@
 package bookkeeper.telegram;
 
-import bookkeeper.service.repository.TelegramUserRepository;
-import bookkeeper.telegram.shared.AbstractHandler;
 import bookkeeper.enums.HandlerPriority;
-import com.pengrad.telegrambot.TelegramBot;
-import com.pengrad.telegrambot.model.Update;
+import bookkeeper.telegram.shared.AbstractHandler;
+import bookkeeper.telegram.shared.Request;
 
 import javax.inject.Inject;
 import java.util.Locale;
@@ -12,20 +10,17 @@ import java.util.Locale;
 /**
  * Set regional settings (e.g. language) for current request.
  */
-class LocaleHandler extends AbstractHandler {
+class LocaleHandler implements AbstractHandler {
     @Inject
-    LocaleHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository) {
-        super(bot, telegramUserRepository);
-    }
+    LocaleHandler() {}
 
     @Override
     public HandlerPriority getPriority() {
         return HandlerPriority.HIGH_CONFIGURATION;
     }
 
-    @Override
-    public Boolean handle(Update update) {
-        var user = getTelegramUser(update);
+    public Boolean handle(Request request) {
+        var user = request.getTelegramUser();
         Locale.setDefault(Locale.forLanguageTag(user.getLanguageCode()));
         return false;
     }

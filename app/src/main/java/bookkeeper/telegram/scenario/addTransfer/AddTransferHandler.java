@@ -1,23 +1,24 @@
 package bookkeeper.telegram.scenario.addTransfer;
 
+import bookkeeper.service.registry.CallbackMessageRegistry;
 import bookkeeper.service.repository.AccountRepository;
 import bookkeeper.service.repository.AccountTransferRepository;
-import bookkeeper.service.repository.TelegramUserRepository;
 import bookkeeper.telegram.shared.AbstractHandler;
-import bookkeeper.service.registry.CallbackMessageRegistry;
+import bookkeeper.telegram.shared.Request;
 import bookkeeper.telegram.shared.exception.AccountNotFound;
 import bookkeeper.telegram.shared.exception.SkipHandlerException;
-import com.pengrad.telegrambot.TelegramBot;
-import com.pengrad.telegrambot.model.Update;
 
 import javax.inject.Inject;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Currency;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Scenario: User adds new transfer.
  */
-class AddTransferHandler extends AbstractHandler {
+class AddTransferHandler implements AbstractHandler {
     private static final String COMMAND = "/new_transfer";
 
     private final AccountRepository accountRepository;
@@ -25,8 +26,7 @@ class AddTransferHandler extends AbstractHandler {
     private final AddTransferResponseFactory responseFactory;
 
     @Inject
-    AddTransferHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository, AccountRepository accountRepository, AccountTransferRepository transferRepository) {
-        super(bot, telegramUserRepository);
+    AddTransferHandler(AccountRepository accountRepository, AccountTransferRepository transferRepository) {
         this.accountRepository = accountRepository;
         this.transferRepository = transferRepository;
         this.responseFactory = new AddTransferResponseFactory(accountRepository);
@@ -40,18 +40,17 @@ class AddTransferHandler extends AbstractHandler {
      * Stage 3: month selection.
      * Stage 4: transfer creation.
      */
-    @Override
-    public Boolean handle(Update update) throws SkipHandlerException {
+    public Boolean handle(Request request) throws SkipHandlerException {
         // arrange sub-handlers in reverse order because latter stages contains more strict conditions.
-        return createTransfer(update) ||
-                displayMonthOffsetSelector(update) ||
-                displayDepositAccountSelector(update) ||
-                displayWithdrawAccountSelector(update) ||
-                displayHelpMessage(update);
+        return createTransfer(request) ||
+                displayMonthOffsetSelector(request) ||
+                displayDepositAccountSelector(request) ||
+                displayWithdrawAccountSelector(request) ||
+                displayHelpMessage(request);
     }
 
-    private Boolean displayHelpMessage(Update update) {
-        var msg = getMessageText(update);
+    private Boolean displayHelpMessage(Request request) {
+        var msg = request.getMessageText();
         if (!Objects.equals(msg, COMMAND))
             return false;
 
@@ -61,12 +60,12 @@ class AddTransferHandler extends AbstractHandler {
                 String.format("Пример №2: `%s 1000 rub` (если суммы и валюты совпадают)", COMMAND)
         );
 
-        sendMessage(update, String.join("\n", lines));
+        request.sendMessage(String.join("\n", lines));
         return true;
     }
 
-    private Boolean displayWithdrawAccountSelector(Update update) {
-        var msg = getMessageText(update);
+    private Boolean displayWithdrawAccountSelector(Request request) {
+        var msg = request.getMessageText();
         if (!msg.startsWith(COMMAND))
             return false;
 
@@ -95,24 +94,24 @@ class AddTransferHandler extends AbstractHandler {
             return false;
         }
 
-        var user = getTelegramUser(update);
+        var user = request.getTelegramUser();
         var memory = new AddTransferCallback(amountWithdraw, currencyWithdraw, amountDeposit, currencyDeposit);
-        replyMessage(update, responseFactory.getDescriptionForWithdrawAccount(), responseFactory.getKeyboardForWithdrawAccount(user, memory));
+        request.replyMessage(responseFactory.getDescriptionForWithdrawAccount(), responseFactory.getKeyboardForWithdrawAccount(user, memory));
         return true;
     }
 
-    private Boolean displayDepositAccountSelector(Update update) {
-        var callbackMessage = CallbackMessageRegistry.getCallbackMessage(update);
+    private Boolean displayDepositAccountSelector(Request request) {
+        var callbackMessage = CallbackMessageRegistry.getCallbackMessage(request.getUpdate());
         if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof AddTransferCallback memory))
             return false;
 
-        var user = getTelegramUser(update);
-        editMessage(update, responseFactory.getDescriptionForDepositAccount(), responseFactory.getKeyboardForDepositAccount(user, memory));
+        var user = request.getTelegramUser();
+        request.editMessage(responseFactory.getDescriptionForDepositAccount(), responseFactory.getKeyboardForDepositAccount(user, memory));
         return true;
     }
 
-    private Boolean displayMonthOffsetSelector(Update update) {
-        var callbackMessage = CallbackMessageRegistry.getCallbackMessage(update);
+    private Boolean displayMonthOffsetSelector(Request request) {
+        var callbackMessage = CallbackMessageRegistry.getCallbackMessage(request.getUpdate());
         if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof AddTransferCallback memory))
             return false;
 
@@ -120,12 +119,12 @@ class AddTransferHandler extends AbstractHandler {
         if (memory.getWithdrawAccountId() == 0 || memory.getDepositAccountId() == 0)
             return false;
 
-        editMessage(update, responseFactory.getDescriptionForMonth(memory), responseFactory.getKeyboardForMonth(memory));
+        request.editMessage(responseFactory.getDescriptionForMonth(memory), responseFactory.getKeyboardForMonth(memory));
         return true;
     }
 
-    private Boolean createTransfer(Update update) throws AccountNotFound {
-        var callbackMessage = CallbackMessageRegistry.getCallbackMessage(update);
+    private Boolean createTransfer(Request request) throws AccountNotFound {
+        var callbackMessage = CallbackMessageRegistry.getCallbackMessage(request.getUpdate());
         if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof AddTransferCallback memory))
             return false;
 
@@ -135,7 +134,7 @@ class AddTransferHandler extends AbstractHandler {
         var withdrawAccount = accountRepository.get(memory.getWithdrawAccountId()).orElseThrow(() -> new AccountNotFound(memory.getWithdrawAccountId()));
         var depositAccount = accountRepository.get(memory.getDepositAccountId()).orElseThrow(() -> new AccountNotFound(memory.getDepositAccountId()));
         var transfer = transferRepository.create(memory.getWithdrawAmount(), withdrawAccount, memory.getDepositAmount(), depositAccount, memory.getMonthOffset());
-        editMessage(update, responseFactory.getDescriptionForTransferCreated(transfer));
+        request.editMessage(responseFactory.getDescriptionForTransferCreated(transfer));
         return true;
     }
 }

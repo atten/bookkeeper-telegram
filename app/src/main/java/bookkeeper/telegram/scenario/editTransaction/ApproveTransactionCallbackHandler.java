@@ -1,12 +1,10 @@
 package bookkeeper.telegram.scenario.editTransaction;
 
-import bookkeeper.service.repository.AccountTransactionRepository;
-import bookkeeper.service.repository.TelegramUserRepository;
-import bookkeeper.telegram.shared.AbstractHandler;
 import bookkeeper.service.registry.CallbackMessageRegistry;
+import bookkeeper.service.repository.AccountTransactionRepository;
+import bookkeeper.telegram.shared.AbstractHandler;
+import bookkeeper.telegram.shared.Request;
 import bookkeeper.telegram.shared.exception.AccountTransactionNotFound;
-import com.pengrad.telegrambot.TelegramBot;
-import com.pengrad.telegrambot.model.Update;
 
 import javax.inject.Inject;
 import java.util.stream.Collectors;
@@ -18,21 +16,19 @@ import static bookkeeper.telegram.shared.TransactionResponseFactory.getResponseM
 /**
  * Scenario: user approves transaction.
  */
-class ApproveTransactionCallbackHandler extends AbstractHandler {
+class ApproveTransactionCallbackHandler implements AbstractHandler {
     private final AccountTransactionRepository transactionRepository;
 
     @Inject
-    ApproveTransactionCallbackHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository, AccountTransactionRepository transactionRepository) {
-        super(bot, telegramUserRepository);
+    ApproveTransactionCallbackHandler(AccountTransactionRepository transactionRepository) {
         this.transactionRepository = transactionRepository;
     }
 
     /**
      * Handle "Approve transaction" click: mark given transaction as approved.
      */
-    @Override
-    public Boolean handle(Update update) throws AccountTransactionNotFound {
-        var callbackMessage = CallbackMessageRegistry.getCallbackMessage(update);
+    public Boolean handle(Request request) throws AccountTransactionNotFound {
+        var callbackMessage = CallbackMessageRegistry.getCallbackMessage(request.getUpdate());
         if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof ApproveTransactionCallback cm))
             return false;
 
@@ -43,14 +39,14 @@ class ApproveTransactionCallbackHandler extends AbstractHandler {
 
         if (pendingTransactionsCount == 0) {
             // show summary message for added/edited transactions within batch
-            var allAddedTransactions = transactionRepository.findByCreatedAt(transaction.getCreatedAt(), getTelegramUser(update));
-            editMessage(update, getResponseMessage(allAddedTransactions), getResponseKeyboard(allAddedTransactions));
+            var allAddedTransactions = transactionRepository.findByCreatedAt(transaction.getCreatedAt(), request.getTelegramUser());
+            request.editMessage(getResponseMessage(allAddedTransactions), getResponseKeyboard(allAddedTransactions));
         }
         else {
             var nextPendingTransactionId = cm.getPendingTransactionIds().get(0);
             var nextPendingTransaction = transactionRepository.get(nextPendingTransactionId).orElseThrow(() -> new AccountTransactionNotFound(nextPendingTransactionId));
             var remainingTransactionIds = cm.getPendingTransactionIds().stream().skip(1).collect(Collectors.toList());
-            editMessage(update, getResponseMessage(nextPendingTransaction, remainingTransactionIds.size()), getResponseKeyboard(nextPendingTransaction, remainingTransactionIds));
+            request.editMessage(getResponseMessage(nextPendingTransaction, remainingTransactionIds.size()), getResponseKeyboard(nextPendingTransaction, remainingTransactionIds));
         }
 
         return true;

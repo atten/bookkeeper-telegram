@@ -1,12 +1,10 @@
 package bookkeeper.telegram.scenario.viewMonthlyExpenses;
 
+import bookkeeper.service.registry.CallbackMessageRegistry;
 import bookkeeper.service.repository.AccountRepository;
 import bookkeeper.service.repository.AccountTransactionRepository;
-import bookkeeper.service.repository.TelegramUserRepository;
 import bookkeeper.telegram.shared.AbstractHandler;
-import bookkeeper.service.registry.CallbackMessageRegistry;
-import com.pengrad.telegrambot.TelegramBot;
-import com.pengrad.telegrambot.model.Update;
+import bookkeeper.telegram.shared.Request;
 
 import javax.inject.Inject;
 import java.util.Objects;
@@ -15,43 +13,41 @@ import java.util.Objects;
 /**
  * Scenario: user requests monthly expense statistics.
  */
-class ViewMonthlyExpensesHandler extends AbstractHandler {
+class ViewMonthlyExpensesHandler implements AbstractHandler {
     private final MonthlyExpensesResponseFactory monthlyExpensesResponseFactory;
 
     @Inject
-    ViewMonthlyExpensesHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository, AccountRepository accountRepository, AccountTransactionRepository transactionRepository) {
-        super(bot, telegramUserRepository);
+    ViewMonthlyExpensesHandler(AccountRepository accountRepository, AccountTransactionRepository transactionRepository) {
         this.monthlyExpensesResponseFactory = new MonthlyExpensesResponseFactory(accountRepository, transactionRepository);
     }
 
     /**
      * Display monthly expense statistics
      */
-    @Override
-    public Boolean handle(Update update) {
-        return handleCallbackMessage(update) || handleSlashExpenses(update);
+    public Boolean handle(Request request) {
+        return handleCallbackMessage(request) || handleSlashExpenses(request);
     }
 
-    private Boolean handleCallbackMessage(Update update) {
-        var callbackMessage = CallbackMessageRegistry.getCallbackMessage(update);
+    private Boolean handleCallbackMessage(Request request) {
+        var callbackMessage = CallbackMessageRegistry.getCallbackMessage(request.getUpdate());
         if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof ViewMonthlyExpensesWithOffsetCallback cm))
             return false;
 
-        var user = getTelegramUser(update);
+        var user = request.getTelegramUser();
         var message = monthlyExpensesResponseFactory.getMonthlyExpenses(user, cm.getMonthOffset());
         var keyboard = MonthlyExpensesResponseFactory.getMonthlyExpensesKeyboard(cm.getMonthOffset());
-        editMessage(update, message, keyboard);
+        request.editMessage(message, keyboard);
         return true;
     }
 
-    private Boolean handleSlashExpenses(Update update) {
-        if (!Objects.equals(getMessageText(update), "/expenses"))
+    private Boolean handleSlashExpenses(Request request) {
+        if (!Objects.equals(request.getMessageText(), "/expenses"))
             return false;
 
-        var user = getTelegramUser(update);
+        var user = request.getTelegramUser();
         var message = monthlyExpensesResponseFactory.getMonthlyExpenses(user, 0);
         var keyboard = MonthlyExpensesResponseFactory.getMonthlyExpensesKeyboard(0);
-        sendMessage(update, message, keyboard);
+        request.sendMessage(message, keyboard);
         return true;
     }
 }

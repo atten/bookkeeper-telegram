@@ -1,10 +1,8 @@
 package bookkeeper.telegram.scenario.viewAssets;
 
-import bookkeeper.service.repository.TelegramUserRepository;
-import bookkeeper.telegram.shared.AbstractHandler;
 import bookkeeper.service.registry.CallbackMessageRegistry;
-import com.pengrad.telegrambot.TelegramBot;
-import com.pengrad.telegrambot.model.Update;
+import bookkeeper.telegram.shared.AbstractHandler;
+import bookkeeper.telegram.shared.Request;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 
 import javax.inject.Inject;
@@ -15,43 +13,41 @@ import java.util.Objects;
 /**
  * Scenario: user requests total assets.
  */
-class ViewAssetsHandler extends AbstractHandler {
+class ViewAssetsHandler implements AbstractHandler {
     private final AssetsResponseFactory assetsResponseFactory;
 
     @Inject
-    ViewAssetsHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository, AssetsResponseFactory assetsResponseFactory) {
-        super(bot, telegramUserRepository);
+    ViewAssetsHandler(AssetsResponseFactory assetsResponseFactory) {
         this.assetsResponseFactory = assetsResponseFactory;
     }
 
     /**
      * Display total assets overview
      */
-    @Override
-    public Boolean handle(Update update) {
-        return handleCallbackMessage(update) || handleSlashAssets(update);
+    public Boolean handle(Request request) {
+        return handleCallbackMessage(request) || handleSlashAssets(request);
     }
 
-    private Boolean handleSlashAssets(Update update) {
-        if (!Objects.equals(getMessageText(update), "/assets"))
+    private Boolean handleSlashAssets(Request request) {
+        if (!Objects.equals(request.getMessageText(), "/assets"))
             return false;
 
-        sendMessageWithAssets(update, 0, false);
+        sendMessageWithAssets(request, 0, false);
         return true;
     }
 
-    private Boolean handleCallbackMessage(Update update) {
-        var callbackMessage = CallbackMessageRegistry.getCallbackMessage(update);
+    private Boolean handleCallbackMessage(Request request) {
+        var callbackMessage = CallbackMessageRegistry.getCallbackMessage(request.getUpdate());
         if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof ViewAssetsWithOffsetCallback cm))
             return false;
 
-        sendMessageWithAssets(update, cm.getMonthOffset(), true);
+        sendMessageWithAssets(request, cm.getMonthOffset(), true);
         return true;
     }
 
-    private void sendMessageWithAssets(Update update, int monthOffset, boolean edit) {
+    private void sendMessageWithAssets(Request request, int monthOffset, boolean edit) {
         var date = LocalDate.now();
-        var user = getTelegramUser(update);
+        var user = request.getTelegramUser();
         var message = assetsResponseFactory.getTotalAssets(user, monthOffset);
         var keyboard = new InlineKeyboardMarkup().addRow(
                 new ViewAssetsWithOffsetCallback(monthOffset - 1).asPrevMonthButton(date, monthOffset - 1),
@@ -59,9 +55,9 @@ class ViewAssetsHandler extends AbstractHandler {
         );
 
         if (edit)
-            editMessage(update, message, keyboard);
+            request.editMessage(message, keyboard);
         else
-            sendMessage(update, message, keyboard);
+            request.sendMessage(message, keyboard);
     }
 
 }

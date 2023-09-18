@@ -2,13 +2,11 @@ package bookkeeper.telegram.scenario.viewMonthlyExpenses;
 
 import bookkeeper.entity.TelegramUser;
 import bookkeeper.enums.Expenditure;
+import bookkeeper.service.registry.CallbackMessageRegistry;
 import bookkeeper.service.repository.AccountTransactionRepository;
-import bookkeeper.service.repository.TelegramUserRepository;
 import bookkeeper.telegram.scenario.editTransaction.EditTransactionBulkCallback;
 import bookkeeper.telegram.shared.AbstractHandler;
-import bookkeeper.service.registry.CallbackMessageRegistry;
-import com.pengrad.telegrambot.TelegramBot;
-import com.pengrad.telegrambot.model.Update;
+import bookkeeper.telegram.shared.Request;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 
@@ -23,26 +21,24 @@ import java.util.stream.Collectors;
 /**
  * Scenario: user browses monthly expenses.
  */
-class SelectMonthlyExpendituresCallbackHandler extends AbstractHandler {
+class SelectMonthlyExpendituresCallbackHandler implements AbstractHandler {
     private final AccountTransactionRepository transactionRepository;
 
     @Inject
-    SelectMonthlyExpendituresCallbackHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository, AccountTransactionRepository transactionRepository) {
-        super(bot, telegramUserRepository);
+    SelectMonthlyExpendituresCallbackHandler(AccountTransactionRepository transactionRepository) {
         this.transactionRepository = transactionRepository;
     }
 
     /**
      * Display expenditures selector to browse monthly transactions
      */
-    @Override
-    public Boolean handle(Update update) {
-        var callbackMessage = CallbackMessageRegistry.getCallbackMessage(update);
+    public Boolean handle(Request request) {
+        var callbackMessage = CallbackMessageRegistry.getCallbackMessage(request.getUpdate());
         if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof SelectMonthlyExpendituresCallback cm))
             return false;
 
-        var user = getTelegramUser(update);
-        editMessage(update, getResponseKeyboard(cm.getMonthOffset(), user));
+        var user = request.getTelegramUser();
+        request.editMessage(getResponseKeyboard(cm.getMonthOffset(), user));
 
         return true;
     }

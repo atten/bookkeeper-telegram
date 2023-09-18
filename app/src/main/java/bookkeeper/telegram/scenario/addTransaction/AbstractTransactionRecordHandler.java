@@ -4,10 +4,8 @@ import bookkeeper.entity.AccountTransaction;
 import bookkeeper.enums.HandlerPriority;
 import bookkeeper.service.registry.TransactionParserRegistry;
 import bookkeeper.service.repository.AccountTransactionRepository;
-import bookkeeper.service.repository.TelegramUserRepository;
 import bookkeeper.telegram.shared.AbstractHandler;
-import com.pengrad.telegrambot.TelegramBot;
-import com.pengrad.telegrambot.model.Update;
+import bookkeeper.telegram.shared.Request;
 
 import java.text.ParseException;
 import java.util.List;
@@ -19,12 +17,11 @@ import static bookkeeper.telegram.shared.TransactionResponseFactory.getResponseM
 /**
  * Scenario: user stores transactions.
  */
-public class AbstractTransactionRecordHandler extends AbstractHandler {
+public class AbstractTransactionRecordHandler implements AbstractHandler {
     private final TransactionParserRegistry transactionParserRegistry;
     private final AccountTransactionRepository transactionRepository;
 
-    public AbstractTransactionRecordHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository, AccountTransactionRepository transactionRepository, TransactionParserRegistry transactionParserRegistry) {
-        super(bot, telegramUserRepository);
+    public AbstractTransactionRecordHandler(AccountTransactionRepository transactionRepository, TransactionParserRegistry transactionParserRegistry) {
         this.transactionParserRegistry = transactionParserRegistry;
         this.transactionRepository = transactionRepository;
     }
@@ -39,22 +36,21 @@ public class AbstractTransactionRecordHandler extends AbstractHandler {
      * 1. Take telegram message contains one or more raw transactions
      * 2. Transform them to AccountTransaction and put to AccountTransactionRepository.
      */
-    @Override
-    public Boolean handle(Update update) {
-        if (update.message() == null)
+    public Boolean handle(Request request) {
+        if (request.getMessageText().isEmpty())
             return false;
 
-        var rawMessages = getMessageText(update).split("\n");
+        var rawMessages = request.getMessageText().split("\n");
         List<AccountTransaction> transactions;
         try {
-            transactions = transactionParserRegistry.parseMultiple(rawMessages, getTelegramUser(update));
+            transactions = transactionParserRegistry.parseMultiple(rawMessages, request.getTelegramUser());
         } catch (ParseException e) {
             // provided sms was not parsed
             return false;
         }
 
         transactions.forEach(transactionRepository::save);
-        replyMessage(update, getResponseMessage(transactions), getResponseKeyboard(transactions));
+        request.replyMessage(getResponseMessage(transactions), getResponseKeyboard(transactions));
         return true;
 
     }

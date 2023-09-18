@@ -1,10 +1,8 @@
 package bookkeeper.telegram.scenario.editTransaction;
 
 import bookkeeper.service.repository.MerchantExpenditureRepository;
-import bookkeeper.service.repository.TelegramUserRepository;
 import bookkeeper.telegram.shared.AbstractHandler;
-import com.pengrad.telegrambot.TelegramBot;
-import com.pengrad.telegrambot.model.Update;
+import bookkeeper.telegram.shared.Request;
 
 import javax.inject.Inject;
 import java.util.Objects;
@@ -14,21 +12,19 @@ import static bookkeeper.telegram.shared.TransactionResponseFactory.pluralizeTem
 /**
  * Scenario: User clears merchant-expenditure associations.
  */
-class SlashClearAssociationsHandler extends AbstractHandler {
+class SlashClearAssociationsHandler implements AbstractHandler {
     private final MerchantExpenditureRepository merchantExpenditureRepository;
 
     @Inject
-    SlashClearAssociationsHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository, MerchantExpenditureRepository merchantExpenditureRepository) {
-        super(bot, telegramUserRepository);
+    SlashClearAssociationsHandler(MerchantExpenditureRepository merchantExpenditureRepository) {
         this.merchantExpenditureRepository = merchantExpenditureRepository;
     }
 
-    @Override
-    public Boolean handle(Update update) {
-        if (!Objects.equals(getMessageText(update), "/clear_associations"))
+    public Boolean handle(Request request) {
+        if (!Objects.equals(request.getMessageText(), "/clear_associations"))
             return false;
 
-        var count = merchantExpenditureRepository.removeMerchantAssociations(getTelegramUser(update));
+        var count = merchantExpenditureRepository.removeMerchantAssociations(request.getTelegramUser());
         var message = pluralizeTemplate(
             count,
             "%s привязка категории очищена.",
@@ -36,7 +32,7 @@ class SlashClearAssociationsHandler extends AbstractHandler {
             "%s привязок категорий очищено."
         );
 
-        sendMessage(update, message);
+        request.sendMessage(message);
         return true;
     }
 }

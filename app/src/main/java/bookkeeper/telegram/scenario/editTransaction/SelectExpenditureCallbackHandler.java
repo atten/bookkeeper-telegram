@@ -1,11 +1,9 @@
 package bookkeeper.telegram.scenario.editTransaction;
 
 import bookkeeper.enums.Expenditure;
-import bookkeeper.service.repository.TelegramUserRepository;
-import bookkeeper.telegram.shared.AbstractHandler;
 import bookkeeper.service.registry.CallbackMessageRegistry;
-import com.pengrad.telegrambot.TelegramBot;
-import com.pengrad.telegrambot.model.Update;
+import bookkeeper.telegram.shared.AbstractHandler;
+import bookkeeper.telegram.shared.Request;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 
@@ -18,23 +16,21 @@ import java.util.stream.Collectors;
 /**
  * Scenario: user assigns transaction expenditure.
  */
-class SelectExpenditureCallbackHandler extends AbstractHandler {
+class SelectExpenditureCallbackHandler implements AbstractHandler {
 
     @Inject
-    SelectExpenditureCallbackHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository) {
-        super(bot, telegramUserRepository);
+    SelectExpenditureCallbackHandler() {
     }
 
     /**
      * Handle "Pick Expenditure" button click: display Expenditures list for given AccountTransaction
      */
-    @Override
-    public Boolean handle(Update update) {
-        var callbackMessage = CallbackMessageRegistry.getCallbackMessage(update);
+    public Boolean handle(Request request) {
+        var callbackMessage = CallbackMessageRegistry.getCallbackMessage(request.getUpdate());
         if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof SelectExpenditureCallback cm))
             return false;
 
-        editMessage(update, getResponseKeyboard(cm.getTransactionId(), cm.getPendingTransactionIds()));
+        request.editMessage(getResponseKeyboard(cm.getTransactionId(), cm.getPendingTransactionIds()));
         return true;
     }
 

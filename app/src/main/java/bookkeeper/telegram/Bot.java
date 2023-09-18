@@ -1,7 +1,9 @@
 package bookkeeper.telegram;
 
 
+import bookkeeper.service.repository.TelegramUserRepository;
 import bookkeeper.telegram.shared.AbstractHandler;
+import bookkeeper.telegram.shared.Request;
 import bookkeeper.telegram.shared.exception.SkipHandlerException;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
@@ -21,19 +23,21 @@ class Bot {
     private final TelegramBot bot;
     private final EntityManager entityManager;
     private final List<AbstractHandler> handlers;
+    private final TelegramUserRepository userRepository;
 
     @Inject
     Bot(
         TelegramBot telegramBot,
         EntityManager entityManager,
-        Set<AbstractHandler> handlers
-    ) {
+        Set<AbstractHandler> handlers,
+        TelegramUserRepository userRepository) {
         this.bot = telegramBot;
         this.entityManager = entityManager;
         this.handlers = handlers
             .stream()
             .sorted(Comparator.comparing(AbstractHandler::getPriority))
             .toList();
+        this.userRepository = userRepository;
         log.info(String.format("%s handlers loaded", this.handlers.size()));
     }
 
@@ -64,13 +68,15 @@ class Bot {
     private void processUpdate(Update update) {
         entityManager.getTransaction().begin();
 
+        var request = new Request(update, bot, userRepository);
+
         for (AbstractHandler handler : handlers) {
             Boolean processed;
             try {
-                processed = handler.handle(update);
+                processed = handler.handle(request);
             } catch (SkipHandlerException e) {
                 log.warn(e.toString());
-                handler.sendMessage(update, String.format("Ошибка: `%s`", e.getLocalizedMessage()));
+                request.sendMessage(String.format("Ошибка: `%s`", e.getLocalizedMessage()));
                 break;
             }
             if (processed)

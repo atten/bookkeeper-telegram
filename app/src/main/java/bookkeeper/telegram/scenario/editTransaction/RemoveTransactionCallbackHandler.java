@@ -1,42 +1,38 @@
 package bookkeeper.telegram.scenario.editTransaction;
 
-import bookkeeper.service.repository.AccountTransactionRepository;
-import bookkeeper.service.repository.TelegramUserRepository;
-import bookkeeper.telegram.shared.AbstractHandler;
 import bookkeeper.service.registry.CallbackMessageRegistry;
+import bookkeeper.service.repository.AccountTransactionRepository;
+import bookkeeper.telegram.shared.AbstractHandler;
+import bookkeeper.telegram.shared.Request;
 import bookkeeper.telegram.shared.exception.AccountTransactionNotFound;
-import com.pengrad.telegrambot.TelegramBot;
-import com.pengrad.telegrambot.model.Update;
 
 import javax.inject.Inject;
 
-import static bookkeeper.telegram.shared.TransactionResponseFactory.*;
+import static bookkeeper.telegram.shared.TransactionResponseFactory.getResponseMessage;
 
 
 /**
  * Scenario: user cancels transaction addition.
  */
-class RemoveTransactionCallbackHandler extends AbstractHandler {
+class RemoveTransactionCallbackHandler implements AbstractHandler {
     private final AccountTransactionRepository transactionRepository;
 
     @Inject
-    RemoveTransactionCallbackHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository, AccountTransactionRepository transactionRepository) {
-        super(bot, telegramUserRepository);
+    RemoveTransactionCallbackHandler(AccountTransactionRepository transactionRepository) {
         this.transactionRepository = transactionRepository;
     }
 
     /**
      * Handle "Cancel" click: delete given transaction.
      */
-    @Override
-    public Boolean handle(Update update) throws AccountTransactionNotFound {
-        var callbackMessage = CallbackMessageRegistry.getCallbackMessage(update);
+    public Boolean handle(Request request) throws AccountTransactionNotFound {
+        var callbackMessage = CallbackMessageRegistry.getCallbackMessage(request.getUpdate());
         if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof RemoveTransactionCallback cm))
             return false;
 
         var transaction = transactionRepository.get(cm.getTransactionId()).orElseThrow(() -> new AccountTransactionNotFound(cm.getTransactionId()));
         transactionRepository.remove(transaction);
-        editMessage(update, strikeoutMessage(getResponseMessage(transaction)));
+        request.editMessage(strikeoutMessage(getResponseMessage(transaction)));
         return true;
     }
 

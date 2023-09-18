@@ -1,12 +1,10 @@
 package bookkeeper.telegram.scenario.editTransaction;
 
-import bookkeeper.service.repository.AccountTransactionRepository;
-import bookkeeper.service.repository.TelegramUserRepository;
-import bookkeeper.telegram.shared.AbstractHandler;
 import bookkeeper.service.registry.CallbackMessageRegistry;
+import bookkeeper.service.repository.AccountTransactionRepository;
+import bookkeeper.telegram.shared.AbstractHandler;
+import bookkeeper.telegram.shared.Request;
 import bookkeeper.telegram.shared.exception.AccountTransactionNotFound;
-import com.pengrad.telegrambot.TelegramBot;
-import com.pengrad.telegrambot.model.Update;
 
 import javax.inject.Inject;
 import java.time.temporal.ChronoUnit;
@@ -18,21 +16,19 @@ import static bookkeeper.telegram.shared.TransactionResponseFactory.getResponseM
 /**
  * Scenario: user changes transaction month.
  */
-class ShiftTransactionMonthCallbackHandler extends AbstractHandler {
+class ShiftTransactionMonthCallbackHandler implements AbstractHandler {
     private final AccountTransactionRepository transactionRepository;
 
     @Inject
-    ShiftTransactionMonthCallbackHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository, AccountTransactionRepository transactionRepository) {
-        super(bot, telegramUserRepository);
+    ShiftTransactionMonthCallbackHandler(AccountTransactionRepository transactionRepository) {
         this.transactionRepository = transactionRepository;
     }
 
     /**
      * Handle "Shift transaction month" click: subtract 1 month from current transaction timestamp.
      */
-    @Override
-    public Boolean handle(Update update) throws AccountTransactionNotFound {
-        var callbackMessage = CallbackMessageRegistry.getCallbackMessage(update);
+    public Boolean handle(Request request) throws AccountTransactionNotFound {
+        var callbackMessage = CallbackMessageRegistry.getCallbackMessage(request.getUpdate());
         if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof ShiftTransactionMonthCallback cm))
             return false;
 
@@ -42,10 +38,10 @@ class ShiftTransactionMonthCallbackHandler extends AbstractHandler {
         transaction.setTimestamp(transaction.getTimestamp().plus(days, ChronoUnit.DAYS));
 
         if (pendingTransactionsCount == 0) {
-            editMessage(update, getResponseMessage(transaction), getResponseKeyboard(transaction));
+            request.editMessage(getResponseMessage(transaction), getResponseKeyboard(transaction));
         }
         else {
-            editMessage(update, getResponseMessage(transaction, pendingTransactionsCount), getResponseKeyboard(transaction, cm.getPendingTransactionIds()));
+            request.editMessage(getResponseMessage(transaction, pendingTransactionsCount), getResponseKeyboard(transaction, cm.getPendingTransactionIds()));
         }
 
         return true;

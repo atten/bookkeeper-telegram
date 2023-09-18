@@ -1,10 +1,8 @@
 package bookkeeper.telegram.scenario.addAccount;
 
 import bookkeeper.service.repository.AccountRepository;
-import bookkeeper.service.repository.TelegramUserRepository;
 import bookkeeper.telegram.shared.AbstractHandler;
-import com.pengrad.telegrambot.TelegramBot;
-import com.pengrad.telegrambot.model.Update;
+import bookkeeper.telegram.shared.Request;
 
 import javax.inject.Inject;
 import java.util.Arrays;
@@ -15,22 +13,20 @@ import java.util.stream.Collectors;
 /**
  * Scenario: User adds new account.
  */
-class AddAccountHandler extends AbstractHandler {
+class AddAccountHandler implements AbstractHandler {
     private final AccountRepository accountRepository;
 
     @Inject
-    AddAccountHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository, AccountRepository accountRepository) {
-        super(bot, telegramUserRepository);
+    AddAccountHandler(AccountRepository accountRepository) {
         this.accountRepository = accountRepository;
     }
 
     /**
      * Display help text (if sent without params), or create account with given params.
      */
-    @Override
-    public Boolean handle(Update update) {
+    public Boolean handle(Request request) {
         var cmd = "/new_account";
-        var msg = getMessageText(update);
+        var msg = request.getMessageText();
         if (!msg.startsWith(cmd))
             return false;
 
@@ -42,7 +38,7 @@ class AddAccountHandler extends AbstractHandler {
                 String.format("Пример: `%s копилка USD`", cmd)
             );
 
-            sendMessage(update, String.join("\n", lines));
+            request.sendMessage(String.join("\n", lines));
             return true;
         }
 
@@ -58,8 +54,8 @@ class AddAccountHandler extends AbstractHandler {
             return false;
         }
 
-        accountRepository.getOrCreate(accountName, currency, getTelegramUser(update));
-        sendMessage(update, "Готово!");
+        accountRepository.getOrCreate(accountName, currency, request.getTelegramUser());
+        request.sendMessage("Готово!");
         return true;
     }
 }

@@ -3,9 +3,7 @@ package bookkeeper.telegram.scenario.addTransaction.freehand;
 import bookkeeper.service.matcher.ExpenditureMatcherByMerchant;
 import bookkeeper.service.repository.AccountRepository;
 import bookkeeper.service.repository.AccountTransactionRepository;
-import bookkeeper.service.repository.TelegramUserRepository;
 import bookkeeper.telegram.scenario.addTransaction.AbstractTransactionRecordHandler;
-import com.pengrad.telegrambot.TelegramBot;
 
 import javax.inject.Inject;
 
@@ -16,7 +14,7 @@ import javax.inject.Inject;
 class FreehandRecordHandler extends AbstractTransactionRecordHandler {
 
     @Inject
-    FreehandRecordHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository, AccountRepository accountRepository, AccountTransactionRepository transactionRepository, ExpenditureMatcherByMerchant expenditureMatcherByMerchant) {
-        super(bot, telegramUserRepository, transactionRepository, new TransactionParserRegistryFactoryFreehand(accountRepository, transactionRepository, expenditureMatcherByMerchant).create());
+    FreehandRecordHandler(AccountRepository accountRepository, AccountTransactionRepository transactionRepository, ExpenditureMatcherByMerchant expenditureMatcherByMerchant) {
+        super(transactionRepository, new TransactionParserRegistryFactoryFreehand(accountRepository, transactionRepository, expenditureMatcherByMerchant).create());
     }
 }

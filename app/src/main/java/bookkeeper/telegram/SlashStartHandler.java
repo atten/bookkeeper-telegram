@@ -1,9 +1,7 @@
 package bookkeeper.telegram;
 
-import bookkeeper.service.repository.TelegramUserRepository;
 import bookkeeper.telegram.shared.AbstractHandler;
-import com.pengrad.telegrambot.TelegramBot;
-import com.pengrad.telegrambot.model.Update;
+import bookkeeper.telegram.shared.Request;
 
 import javax.inject.Inject;
 import java.util.Objects;
@@ -11,21 +9,18 @@ import java.util.Objects;
 /**
  * Scenario: User starts bot usage.
  */
-class SlashStartHandler extends AbstractHandler {
+class SlashStartHandler implements AbstractHandler {
     @Inject
-    SlashStartHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository) {
-        super(bot, telegramUserRepository);
-    }
+    SlashStartHandler() {}
 
     /**
      * Display welcome message.
      */
-    @Override
-    public Boolean handle(Update update) {
-        if (!Objects.equals(getMessageText(update), "/start"))
+    public Boolean handle(Request request) {
+        if (!Objects.equals(request.getMessageText(), "/start"))
             return false;
 
-        sendMessage(update, "Добро пожаловать!");
+        request.sendMessage("Добро пожаловать!");
         return true;
     }
 }

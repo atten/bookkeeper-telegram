@@ -1,11 +1,9 @@
 package bookkeeper.telegram.scenario.editTransaction;
 
-import bookkeeper.service.repository.AccountTransactionRepository;
-import bookkeeper.service.repository.TelegramUserRepository;
-import bookkeeper.telegram.shared.AbstractHandler;
 import bookkeeper.service.registry.CallbackMessageRegistry;
-import com.pengrad.telegrambot.TelegramBot;
-import com.pengrad.telegrambot.model.Update;
+import bookkeeper.service.repository.AccountTransactionRepository;
+import bookkeeper.telegram.shared.AbstractHandler;
+import bookkeeper.telegram.shared.Request;
 
 import javax.inject.Inject;
 
@@ -15,21 +13,19 @@ import static bookkeeper.telegram.shared.TransactionResponseFactory.getResponseK
 /**
  * Scenario: user approves transactions in bulk.
  */
-class ApproveTransactionBulkCallbackHandler extends AbstractHandler {
+class ApproveTransactionBulkCallbackHandler implements AbstractHandler {
     private final AccountTransactionRepository transactionRepository;
 
     @Inject
-    ApproveTransactionBulkCallbackHandler(TelegramBot bot, TelegramUserRepository telegramUserRepository, AccountTransactionRepository transactionRepository) {
-        super(bot, telegramUserRepository);
+    ApproveTransactionBulkCallbackHandler(AccountTransactionRepository transactionRepository) {
         this.transactionRepository = transactionRepository;
     }
 
     /**
      * Handle "Approve transactions" click: mark given transactions as approved.
      */
-    @Override
-    public Boolean handle(Update update) {
-        var callbackMessage = CallbackMessageRegistry.getCallbackMessage(update);
+    public Boolean handle(Request request) {
+        var callbackMessage = CallbackMessageRegistry.getCallbackMessage(request.getUpdate());
         if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof ApproveTransactionBulkCallback cm))
             return false;
 
@@ -37,7 +33,7 @@ class ApproveTransactionBulkCallbackHandler extends AbstractHandler {
 
         transactions.forEach(transactionRepository::approve);
 
-        editMessage(update, getResponseKeyboard(transactions));
+        request.editMessage(getResponseKeyboard(transactions));
         return true;
     }
 }
