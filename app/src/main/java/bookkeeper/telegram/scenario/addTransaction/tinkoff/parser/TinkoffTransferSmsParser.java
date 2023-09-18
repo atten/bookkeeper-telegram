@@ -13,6 +13,8 @@ public class TinkoffTransferSmsParser implements SpendingParser<TinkoffTransferS
 
     @Override
     public TinkoffTransferSms parse(String rawMessage) throws ParseException {
+        rawMessage = rawMessage.replace("Платеж. Счет", "Перевод. Счет");
+
         String[] parts = rawMessage.split(" ");
         if (!rawMessage.startsWith("Перевод. Счет") || parts.length < 9)
             throw new ParseException(rawMessage, 0);
