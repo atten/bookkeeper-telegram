@@ -69,18 +69,23 @@ class Bot {
         entityManager.getTransaction().begin();
 
         var request = new Request(update, bot, userRepository);
+        Boolean processed = false;
 
         for (AbstractHandler handler : handlers) {
-            Boolean processed;
             try {
                 processed = handler.handle(request);
             } catch (SkipHandlerException e) {
+                processed = true;
                 log.warn(e.toString());
                 request.sendMessage(String.format("Ошибка: `%s`", e.getLocalizedMessage()));
                 break;
             }
             if (processed)
                 break;
+        }
+
+        if (!processed) {
+            request.sendMessage("Неверная или неподдерживаемая команда, попробуйте по-другому.");
         }
 
         entityManager.getTransaction().commit();

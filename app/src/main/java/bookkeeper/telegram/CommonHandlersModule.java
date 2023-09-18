@@ -19,8 +19,4 @@ abstract class CommonHandlersModule {
     @Binds
     @IntoSet
     abstract AbstractHandler slashStartHandler(SlashStartHandler handler);
-
-    @Binds
-    @IntoSet
-    abstract AbstractHandler unknownInputHandler(UnknownInputHandler handler);
 }

@@ -6,7 +6,6 @@ import bookkeeper.telegram.shared.Request;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 
 import javax.inject.Inject;
-import java.time.LocalDate;
 import java.util.Objects;
 
 
@@ -46,12 +45,11 @@ class ViewAssetsHandler implements AbstractHandler {
     }
 
     private void sendMessageWithAssets(Request request, int monthOffset, boolean edit) {
-        var date = LocalDate.now();
         var user = request.getTelegramUser();
         var message = assetsResponseFactory.getTotalAssets(user, monthOffset);
         var keyboard = new InlineKeyboardMarkup().addRow(
-                new ViewAssetsWithOffsetCallback(monthOffset - 1).asPrevMonthButton(date, monthOffset - 1),
-                new ViewAssetsWithOffsetCallback(monthOffset + 1).asNextMonthButton(date, monthOffset + 1)
+                new ViewAssetsWithOffsetCallback(monthOffset - 1).asPrevMonthButton(monthOffset - 1),
+                new ViewAssetsWithOffsetCallback(monthOffset + 1).asNextMonthButton(monthOffset + 1)
         );
 
         if (edit)

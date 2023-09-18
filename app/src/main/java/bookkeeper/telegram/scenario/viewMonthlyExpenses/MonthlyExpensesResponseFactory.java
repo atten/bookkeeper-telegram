@@ -7,7 +7,6 @@ import bookkeeper.service.repository.AccountTransactionRepository;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -79,9 +78,8 @@ class MonthlyExpensesResponseFactory {
         var keyboard = new InlineKeyboardMarkup()
                 .addRow(new SelectMonthlyExpendituresCallback(monthOffset).asButton("Разобрать"));
 
-        var date = LocalDate.now();
-        var prevMonthButton = new ViewMonthlyExpensesWithOffsetCallback(monthOffset - 1).asPrevMonthButton(date, monthOffset - 1);
-        var nextMonthButton = new ViewMonthlyExpensesWithOffsetCallback(monthOffset + 1).asNextMonthButton(date, monthOffset + 1);
+        var prevMonthButton = new ViewMonthlyExpensesWithOffsetCallback(monthOffset - 1).asPrevMonthButton(monthOffset - 1);
+        var nextMonthButton = new ViewMonthlyExpensesWithOffsetCallback(monthOffset + 1).asNextMonthButton(monthOffset + 1);
         return keyboard.addRow(prevMonthButton, nextMonthButton);
     }
 

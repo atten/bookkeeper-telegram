@@ -5,8 +5,6 @@ import bookkeeper.entity.TelegramUser;
 import bookkeeper.service.repository.AccountRepository;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 
-import java.time.LocalDate;
-
 import static bookkeeper.telegram.shared.StringUtil.getDateShort;
 import static bookkeeper.telegram.shared.StringUtil.getMonthYearShort;
 
@@ -54,11 +52,10 @@ class AddTransferResponseFactory {
     }
 
     InlineKeyboardMarkup getKeyboardForMonth(AddTransferCallback memory) {
-        var date = LocalDate.now();
         var offset = memory.getMonthOffset();
         return new InlineKeyboardMarkup().addRow(
-            memory.setMonthOffset(offset - 1).asPrevMonthButton(date, offset - 1),
-            memory.setMonthOffset(offset + 1).asNextMonthButton(date, offset + 1),
+            memory.setMonthOffset(offset - 1).asPrevMonthButton(offset - 1),
+            memory.setMonthOffset(offset + 1).asNextMonthButton(offset + 1),
             memory.setMonthOffset(offset).markReady().asButton("✅ Готово")
         );
     }

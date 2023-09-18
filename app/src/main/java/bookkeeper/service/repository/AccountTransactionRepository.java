@@ -62,6 +62,21 @@ public class AccountTransactionRepository {
         return query.getResultList();
     }
 
+    public List<AccountTransaction> findByRawText(String text, int monthOffset, TelegramUser user) {
+        var sql = "SELECT i from AccountTransaction i " +
+            "WHERE i.account.telegramUser=:user " +
+            "AND i.raw ILIKE :text " +
+            "AND date_trunc('month', i.timestamp) = date_trunc('month', current_timestamp) + :monthOffset MONTH " +
+            "ORDER BY timestamp ASC";
+
+        var query = manager.createQuery(sql, AccountTransaction.class)
+            .setParameter("user", user)
+            .setParameter("text", '%' + text + '%')
+            .setParameter("monthOffset", monthOffset);
+
+        return query.getResultList();
+    }
+
     public Map<Expenditure, BigDecimal> getMonthlyAmount(Account account, int monthOffset) {
         var sql = "SELECT expenditure, SUM(amount) from AccountTransaction " +
                 "WHERE account=:account " +

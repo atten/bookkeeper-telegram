@@ -5,6 +5,7 @@ import bookkeeper.telegram.scenario.addTransaction.freehand.FreehandHandlersModu
 import bookkeeper.telegram.scenario.addTransaction.tinkoff.TinkoffHandlersModule;
 import bookkeeper.telegram.scenario.addTransfer.AddTransferHandlersModule;
 import bookkeeper.telegram.scenario.editTransaction.EditTransactionHandlersModule;
+import bookkeeper.telegram.scenario.searchTransactions.SearchTransactionsHandlersModule;
 import bookkeeper.telegram.scenario.viewAssets.ViewAssetsHandlerModule;
 import bookkeeper.telegram.scenario.viewMonthlyExpenses.ViewMonthlyExpensesHandlersModule;
 import dagger.Component;
@@ -21,7 +22,8 @@ import javax.inject.Singleton;
         FreehandHandlersModule.class,
         TinkoffHandlersModule.class,
         AddAccountHandlersModule.class,
-        CommonHandlersModule.class
+        CommonHandlersModule.class,
+        SearchTransactionsHandlersModule.class,
     }
 )
 interface TelegramContainer {

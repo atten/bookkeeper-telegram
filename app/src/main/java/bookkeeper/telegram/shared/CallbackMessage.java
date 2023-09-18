@@ -20,8 +20,16 @@ public abstract class CallbackMessage implements Serializable {
         return asButton(String.format("◀️ В %s", monthName));
     }
 
+    public InlineKeyboardButton asNextMonthButton(int offset) {
+        return asMonthButton(LocalDate.now(), offset, true);
+    }
+
     public InlineKeyboardButton asNextMonthButton(LocalDate relativeDate, int offset) {
         return asMonthButton(relativeDate, offset, true);
+    }
+
+    public InlineKeyboardButton asPrevMonthButton(int offset) {
+        return asMonthButton(LocalDate.now(), offset, false);
     }
 
     public InlineKeyboardButton asPrevMonthButton(LocalDate relativeDate, int offset) {

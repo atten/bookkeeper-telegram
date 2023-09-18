@@ -14,6 +14,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 import static bookkeeper.telegram.shared.StringUtil.getDateShort;
+import static bookkeeper.telegram.shared.StringUtil.pluralizeTemplate;
 
 public class TransactionResponseFactory {
 
@@ -136,26 +137,6 @@ public class TransactionResponseFactory {
         }
 
         return kb;
-    }
-
-    private static String pluralize(Integer count, String single, String few, String many) {
-        var n = count % 100;
-        if (count == 0)
-            return many;
-        if (n >= 5 && n <= 20)
-            return many;
-        if (count % 10 == 1)
-            return single;
-        if (count % 10 <= 4)
-            return few;
-        return many;
-    }
-
-    /**
-     * pluralize for %s-strings
-     */
-    public static String pluralizeTemplate(Integer count, String single, String few, String many) {
-        return String.format(pluralize(count, single, few, many), count);
     }
 
     private static boolean isTransactionRecent(AccountTransaction transaction) {

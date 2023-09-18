@@ -9,6 +9,6 @@ public enum HandlerPriority {
     NORMAL_COMMAND,
     // Uncategorized text input with severity below normal.
     LOW_MESSAGE,
-    // Handlers which do not fit into categories above.
-    LOWEST_FINALIZE
+    // Uncategorized text input with severity under below (in case it clashes with handlers with LOW).
+    LOWEST_MESSAGE
 }

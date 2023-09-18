@@ -7,7 +7,7 @@ import bookkeeper.telegram.shared.Request;
 import javax.inject.Inject;
 import java.util.Objects;
 
-import static bookkeeper.telegram.shared.TransactionResponseFactory.pluralizeTemplate;
+import static bookkeeper.telegram.shared.StringUtil.pluralizeTemplate;
 
 /**
  * Scenario: User clears merchant-expenditure associations.
