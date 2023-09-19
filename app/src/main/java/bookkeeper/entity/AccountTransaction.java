@@ -10,6 +10,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.Currency;
 
 
 @Entity
@@ -70,4 +71,6 @@ public class AccountTransaction {
     public LocalDate date() {
         return LocalDate.ofInstant(getTimestamp(), ZoneId.systemDefault());
     }
+
+    public Currency currency() { return account.getCurrency(); }
 }

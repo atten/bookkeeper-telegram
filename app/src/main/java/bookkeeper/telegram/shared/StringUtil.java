@@ -1,13 +1,59 @@
 package bookkeeper.telegram.shared;
 
+import bookkeeper.entity.Account;
+import bookkeeper.entity.AccountTransaction;
+
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.time.format.TextStyle;
 import java.util.Arrays;
+import java.util.Currency;
 import java.util.Locale;
 
 public class StringUtil {
+    public static String ICON_ACCOUNT = "\uD83D\uDCD8";       // 📘
+    public static String ICON_RATES = "\uD83D\uDCC8";         // 📈
+    public static String ICON_ASSETS = "\uD83C\uDFDB";        // 🏛
+    static String ICON_EXPENDITURE = "\uD83D\uDCDD";          // 📝
+    static String ICON_DELETE = "\uD83D\uDDD1";               // 🗑
+
+    public static String getNumberIcon(int number) {
+        switch (number) {
+            case 1 -> { return "1️⃣"; }
+            case 2 -> { return "2️⃣"; }
+            case 3 -> { return "3️⃣"; }
+            case 4 -> { return "4️⃣"; }
+            case 5 -> { return "5️⃣"; }
+            case 6 -> { return "6️⃣"; }
+            case 7 -> { return "7️⃣"; }
+            case 8 -> { return "8️⃣"; }
+            case 9 -> { return "9️⃣"; }
+            case 10 -> { return "\uD83D\uDD1F"; }
+            default -> { return "\uD83D\uDD23"; }
+        }
+    }
+
+    public static String getAmount(AccountTransaction transaction) {
+        return getAmount(transaction.getAmount(), transaction.currency());
+    }
+
+    static String getAmount(BigDecimal amount, Account account) {
+        return getAmount(amount, account.getCurrency());
+    }
+
+    /**
+     * 100 ₽ (credit) | +100 ₽ (debit)
+     */
+    public static String getAmount(BigDecimal amount, Currency currency) {
+        return String.format(
+            "%s %s",
+            amount.negate().toString().replace("-", "+"),
+            currency.getSymbol()
+        );
+    }
+
     /**
      * Январь
      */

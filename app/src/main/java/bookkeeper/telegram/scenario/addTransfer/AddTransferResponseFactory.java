@@ -5,8 +5,7 @@ import bookkeeper.entity.TelegramUser;
 import bookkeeper.service.repository.AccountRepository;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 
-import static bookkeeper.telegram.shared.StringUtil.getDateShort;
-import static bookkeeper.telegram.shared.StringUtil.getMonthYearShort;
+import static bookkeeper.telegram.shared.StringUtil.*;
 
 class AddTransferResponseFactory {
     private final AccountRepository accountRepository;
@@ -36,7 +35,7 @@ class AddTransferResponseFactory {
         accountRepository.filter(user, memory.getWithdrawCurrency())
                 .stream()
                 .filter(account -> account.getId() != memory.getDepositAccountId())
-                .map(account -> memory.setWithdrawAccountId(account.getId()).asButton("\uD83D\uDCD8 " + account.getName()))
+                .map(account -> memory.setWithdrawAccountId(account.getId()).asButton(ICON_ACCOUNT + " " + account.getName()))
                 .forEach(kb::addRow);
         return kb;
     }
@@ -46,7 +45,7 @@ class AddTransferResponseFactory {
         accountRepository.filter(user, memory.getDepositCurrency())
                 .stream()
                 .filter(account -> account.getId() != memory.getWithdrawAccountId())
-                .map(account -> memory.setDepositAccountId(account.getId()).asButton("\uD83D\uDCD8 " + account.getName()))
+                .map(account -> memory.setDepositAccountId(account.getId()).asButton(ICON_ACCOUNT + " " + account.getName()))
                 .forEach(kb::addRow);
         return kb;
     }
