@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static bookkeeper.telegram.shared.StringUtil.ICON_ACCOUNT;
 import static bookkeeper.telegram.shared.StringUtil.getMonthYearShort;
 
 class MonthlyExpensesResponseFactory {
@@ -41,7 +42,7 @@ class MonthlyExpensesResponseFactory {
             debitByCurrency.putIfAbsent(currency, BigDecimal.ZERO);
             allByCurrency.putIfAbsent(currency, BigDecimal.ZERO);
 
-            lines.add(String.format("\uD83D\uDCD8 *%s*", account.getName()));
+            lines.add(String.format("%s *%s*", ICON_ACCOUNT, account.getName()));
             lines.add("```");
 
             for (var expenditure : amountByExpenditure.keySet()) {

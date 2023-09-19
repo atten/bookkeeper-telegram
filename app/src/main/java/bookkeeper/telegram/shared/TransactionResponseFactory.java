@@ -13,8 +13,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
-import static bookkeeper.telegram.shared.StringUtil.getDateShort;
-import static bookkeeper.telegram.shared.StringUtil.pluralizeTemplate;
+import static bookkeeper.telegram.shared.StringUtil.*;
 
 public class TransactionResponseFactory {
 
@@ -53,13 +52,9 @@ public class TransactionResponseFactory {
         var totalAmount = transactions.stream().map(AccountTransaction::getAmount).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
         var account = transactions.get(0).getAccount();
         var accountVerbose = String.format("на счет %s", account.getName());
-        var totalAccountVerbose = String.format(
-            "стоимостью %s %s",
-            totalAmount.negate().toString().replace("-", "+"),
-            account.getCurrency().getSymbol()
-        );
+        var totalAccountVerbose = getAmount(totalAmount, account);
 
-        return totalItemsVerbose + " " + statsVerbose + " " + accountVerbose + " " + totalAccountVerbose + ".";
+        return totalItemsVerbose + " " + statsVerbose + " " + accountVerbose + " стоимостью " + totalAccountVerbose + ".";
     }
 
     public static String getResponseMessage(AccountTransaction transaction) {
@@ -103,23 +98,24 @@ public class TransactionResponseFactory {
         var transactionId = transaction.getId();
 
         var kb = new InlineKeyboardMarkup();
-        var selectExpenditureButton = new SelectExpenditureCallback(transactionId).asButton("\uD83D\uDCDD Категория");
+        var selectExpenditureButton = new SelectExpenditureCallback(transactionId).asButton(ICON_EXPENDITURE + " Категория");
         var prevMonthButton = new ShiftTransactionMonthCallback(transactionId, -1).asPrevMonthButton(transaction.date(), -1);
         var nextMonthButton = new ShiftTransactionMonthCallback(transactionId, +1).asNextMonthButton(transaction.date(), +1);
-        var removeButton = new RemoveTransactionCallback(transactionId).asButton("\uD83D\uDDD1 Отмена");
+        var accountButton = new SelectAccountCallback(transactionId).asButton(ICON_ACCOUNT + " Счёт");
+        var removeButton = new RemoveTransactionCallback(transactionId).asButton(ICON_DELETE + " Отмена");
         var approveButton = new ApproveTransactionCallback(transactionId).asButton("✅ Подтвердить");
 
         if (transaction.isApproved())
             return kb.addRow(selectExpenditureButton);
 
         return kb.addRow(selectExpenditureButton, prevMonthButton, nextMonthButton)
-                .addRow(removeButton, approveButton);
+                .addRow(accountButton, removeButton, approveButton);
     }
 
     public static InlineKeyboardMarkup getResponseKeyboard(AccountTransaction transaction, List<Long> pendingTransactionIds) {
         var transactionId = transaction.getId();
 
-        var selectExpenditureButton = new SelectExpenditureCallback(transactionId).setPendingTransactionIds(pendingTransactionIds).asButton("\uD83D\uDCDD Категория");
+        var selectExpenditureButton = new SelectExpenditureCallback(transactionId).setPendingTransactionIds(pendingTransactionIds).asButton(ICON_EXPENDITURE + " Категория");
         var prevMonthButton = new ShiftTransactionMonthCallback(transactionId, -1).setPendingTransactionIds(pendingTransactionIds).asPrevMonthButton(transaction.date(), -1);
         var nextMonthButton = new ShiftTransactionMonthCallback(transactionId, +1).setPendingTransactionIds(pendingTransactionIds).asNextMonthButton(transaction.date(), +1);
 

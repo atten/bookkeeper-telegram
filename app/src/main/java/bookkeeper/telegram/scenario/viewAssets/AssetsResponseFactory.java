@@ -94,10 +94,10 @@ class AssetsResponseFactory {
 
         var result = new StringJoiner("\n\n");
         result
-            .add(String.format("\uD83D\uDCD8 Сводка по непустым счетам на конец *%s*:", getMonthYearRelative(monthOffset)))
+            .add(String.format(ICON_ACCOUNT + " Сводка по непустым счетам на конец *%s*:", getMonthYearRelative(monthOffset)))
             .add(String.format("```\n%s```", content))
-            .add(String.format("\uD83D\uDCC8 *Курс на %s*:\n%s", getDateShort(exchangeDate), exchangeRatesVerbose(exchangeRates)))
-            .add(String.format("\uD83C\uDFDB *Итог за %s*: %,.2f %s", getMonthName(monthOffset), netAssets, exchangeCurrency.getSymbol()));
+            .add(String.format(ICON_RATES + " *Курс на %s*:\n%s", getDateShort(exchangeDate), exchangeRatesVerbose(exchangeRates)))
+            .add(String.format(ICON_ASSETS + " *Итог за %s*: %,.2f %s", getMonthName(monthOffset), netAssets, exchangeCurrency.getSymbol()));
         return result.toString();
     }
 

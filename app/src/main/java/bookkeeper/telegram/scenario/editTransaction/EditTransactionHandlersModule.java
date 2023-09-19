@@ -42,5 +42,13 @@ public abstract class EditTransactionHandlersModule {
 
     @Binds
     @IntoSet
+    abstract AbstractHandler selectAccountCallbackHandler(SelectAccountCallbackHandler handler);
+
+    @Binds
+    @IntoSet
+    abstract AbstractHandler switchAccountCallbackHandler(SwitchAccountCallbackHandler handler);
+
+    @Binds
+    @IntoSet
     abstract AbstractHandler slashClearAssociationsHandler(SlashClearAssociationsHandler handler);
 }

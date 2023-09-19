@@ -7,6 +7,7 @@ import bookkeeper.telegram.shared.exception.AccountTransactionNotFound;
 
 import javax.inject.Inject;
 
+import static bookkeeper.telegram.shared.StringUtil.strikeoutMessage;
 import static bookkeeper.telegram.shared.TransactionResponseFactory.getResponseMessage;
 
 
@@ -33,9 +34,5 @@ class RemoveTransactionCallbackHandler implements AbstractHandler {
         transactionRepository.remove(transaction);
         request.editMessage(strikeoutMessage(getResponseMessage(transaction)));
         return true;
-    }
-
-    private String strikeoutMessage(String message) {
-        return String.format("<del>%s</del>", message);
     }
 }

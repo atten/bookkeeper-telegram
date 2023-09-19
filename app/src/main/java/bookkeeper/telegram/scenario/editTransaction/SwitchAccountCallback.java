@@ -3,12 +3,15 @@ package bookkeeper.telegram.scenario.editTransaction;
 import bookkeeper.telegram.shared.CallbackMessage;
 import lombok.Getter;
 
-public class RemoveTransactionCallback extends CallbackMessage {
+class SwitchAccountCallback extends CallbackMessage {
     @Getter
     private final long transactionId;
+    @Getter
+    private final long accountId;
 
-    public RemoveTransactionCallback(long transactionId) {
+    SwitchAccountCallback(long transactionId, long accountId) {
         this.transactionId = transactionId;
+        this.accountId = accountId;
     }
 
 }
