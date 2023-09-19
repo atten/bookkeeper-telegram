@@ -2,7 +2,6 @@ package bookkeeper.telegram.scenario.viewMonthlyExpenses;
 
 import bookkeeper.entity.TelegramUser;
 import bookkeeper.enums.Expenditure;
-import bookkeeper.service.registry.CallbackMessageRegistry;
 import bookkeeper.service.repository.AccountTransactionRepository;
 import bookkeeper.telegram.scenario.editTransaction.EditTransactionBulkCallback;
 import bookkeeper.telegram.shared.AbstractHandler;
@@ -33,7 +32,7 @@ class SelectMonthlyExpendituresCallbackHandler implements AbstractHandler {
      * Display expenditures selector to browse monthly transactions
      */
     public Boolean handle(Request request) {
-        var callbackMessage = CallbackMessageRegistry.getCallbackMessage(request.getUpdate());
+        var callbackMessage = request.getCallbackMessage();
         if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof SelectMonthlyExpendituresCallback cm))
             return false;
 

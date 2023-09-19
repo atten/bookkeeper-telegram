@@ -4,7 +4,7 @@ package bookkeeper.telegram;
 import bookkeeper.service.repository.TelegramUserRepository;
 import bookkeeper.telegram.shared.AbstractHandler;
 import bookkeeper.telegram.shared.Request;
-import bookkeeper.telegram.shared.exception.SkipHandlerException;
+import bookkeeper.telegram.shared.exception.HandlerInterruptException;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.Update;
@@ -74,7 +74,7 @@ class Bot {
         for (AbstractHandler handler : handlers) {
             try {
                 processed = handler.handle(request);
-            } catch (SkipHandlerException e) {
+            } catch (HandlerInterruptException e) {
                 processed = true;
                 log.warn(e.toString());
                 request.sendMessage(String.format("Ошибка: `%s`", e.getLocalizedMessage()));

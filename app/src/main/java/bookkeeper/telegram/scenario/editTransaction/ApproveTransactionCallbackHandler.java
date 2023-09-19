@@ -1,6 +1,5 @@
 package bookkeeper.telegram.scenario.editTransaction;
 
-import bookkeeper.service.registry.CallbackMessageRegistry;
 import bookkeeper.service.repository.AccountTransactionRepository;
 import bookkeeper.telegram.shared.AbstractHandler;
 import bookkeeper.telegram.shared.Request;
@@ -28,7 +27,7 @@ class ApproveTransactionCallbackHandler implements AbstractHandler {
      * Handle "Approve transaction" click: mark given transaction as approved.
      */
     public Boolean handle(Request request) throws AccountTransactionNotFound {
-        var callbackMessage = CallbackMessageRegistry.getCallbackMessage(request.getUpdate());
+        var callbackMessage = request.getCallbackMessage();
         if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof ApproveTransactionCallback cm))
             return false;
 

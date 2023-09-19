@@ -1,7 +1,6 @@
 package bookkeeper.telegram.scenario.editTransaction;
 
 import bookkeeper.enums.Expenditure;
-import bookkeeper.service.registry.CallbackMessageRegistry;
 import bookkeeper.telegram.shared.AbstractHandler;
 import bookkeeper.telegram.shared.Request;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
@@ -26,7 +25,7 @@ class SelectExpenditureCallbackHandler implements AbstractHandler {
      * Handle "Pick Expenditure" button click: display Expenditures list for given AccountTransaction
      */
     public Boolean handle(Request request) {
-        var callbackMessage = CallbackMessageRegistry.getCallbackMessage(request.getUpdate());
+        var callbackMessage = request.getCallbackMessage();
         if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof SelectExpenditureCallback cm))
             return false;
 

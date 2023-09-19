@@ -1,6 +1,5 @@
 package bookkeeper.telegram.scenario.viewAssets;
 
-import bookkeeper.service.registry.CallbackMessageRegistry;
 import bookkeeper.telegram.shared.AbstractHandler;
 import bookkeeper.telegram.shared.Request;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
@@ -36,7 +35,7 @@ class ViewAssetsHandler implements AbstractHandler {
     }
 
     private Boolean handleCallbackMessage(Request request) {
-        var callbackMessage = CallbackMessageRegistry.getCallbackMessage(request.getUpdate());
+        var callbackMessage = request.getCallbackMessage();
         if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof ViewAssetsWithOffsetCallback cm))
             return false;
 

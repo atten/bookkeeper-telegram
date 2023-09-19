@@ -1,6 +1,5 @@
 package bookkeeper.telegram.scenario.editTransaction;
 
-import bookkeeper.service.registry.CallbackMessageRegistry;
 import bookkeeper.service.repository.AccountTransactionRepository;
 import bookkeeper.telegram.shared.AbstractHandler;
 import bookkeeper.telegram.shared.Request;
@@ -28,7 +27,7 @@ class ShiftTransactionMonthCallbackHandler implements AbstractHandler {
      * Handle "Shift transaction month" click: subtract 1 month from current transaction timestamp.
      */
     public Boolean handle(Request request) throws AccountTransactionNotFound {
-        var callbackMessage = CallbackMessageRegistry.getCallbackMessage(request.getUpdate());
+        var callbackMessage = request.getCallbackMessage();
         if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof ShiftTransactionMonthCallback cm))
             return false;
 

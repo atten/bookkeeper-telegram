@@ -1,12 +1,11 @@
 package bookkeeper.telegram.scenario.addTransfer;
 
-import bookkeeper.service.registry.CallbackMessageRegistry;
 import bookkeeper.service.repository.AccountRepository;
 import bookkeeper.service.repository.AccountTransferRepository;
 import bookkeeper.telegram.shared.AbstractHandler;
 import bookkeeper.telegram.shared.Request;
 import bookkeeper.telegram.shared.exception.AccountNotFound;
-import bookkeeper.telegram.shared.exception.SkipHandlerException;
+import bookkeeper.telegram.shared.exception.HandlerInterruptException;
 
 import javax.inject.Inject;
 import java.math.BigDecimal;
@@ -40,7 +39,7 @@ class AddTransferHandler implements AbstractHandler {
      * Stage 3: month selection.
      * Stage 4: transfer creation.
      */
-    public Boolean handle(Request request) throws SkipHandlerException {
+    public Boolean handle(Request request) throws HandlerInterruptException {
         // arrange sub-handlers in reverse order because latter stages contains more strict conditions.
         return createTransfer(request) ||
                 displayMonthOffsetSelector(request) ||
@@ -101,7 +100,7 @@ class AddTransferHandler implements AbstractHandler {
     }
 
     private Boolean displayDepositAccountSelector(Request request) {
-        var callbackMessage = CallbackMessageRegistry.getCallbackMessage(request.getUpdate());
+        var callbackMessage = request.getCallbackMessage();
         if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof AddTransferCallback memory))
             return false;
 
@@ -111,7 +110,7 @@ class AddTransferHandler implements AbstractHandler {
     }
 
     private Boolean displayMonthOffsetSelector(Request request) {
-        var callbackMessage = CallbackMessageRegistry.getCallbackMessage(request.getUpdate());
+        var callbackMessage = request.getCallbackMessage();
         if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof AddTransferCallback memory))
             return false;
 
@@ -124,7 +123,7 @@ class AddTransferHandler implements AbstractHandler {
     }
 
     private Boolean createTransfer(Request request) throws AccountNotFound {
-        var callbackMessage = CallbackMessageRegistry.getCallbackMessage(request.getUpdate());
+        var callbackMessage = request.getCallbackMessage();
         if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof AddTransferCallback memory))
             return false;
 

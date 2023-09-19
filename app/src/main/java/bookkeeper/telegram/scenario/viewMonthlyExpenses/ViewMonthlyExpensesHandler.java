@@ -1,6 +1,5 @@
 package bookkeeper.telegram.scenario.viewMonthlyExpenses;
 
-import bookkeeper.service.registry.CallbackMessageRegistry;
 import bookkeeper.service.repository.AccountRepository;
 import bookkeeper.service.repository.AccountTransactionRepository;
 import bookkeeper.telegram.shared.AbstractHandler;
@@ -29,7 +28,7 @@ class ViewMonthlyExpensesHandler implements AbstractHandler {
     }
 
     private Boolean handleCallbackMessage(Request request) {
-        var callbackMessage = CallbackMessageRegistry.getCallbackMessage(request.getUpdate());
+        var callbackMessage = request.getCallbackMessage();
         if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof ViewMonthlyExpensesWithOffsetCallback cm))
             return false;
 

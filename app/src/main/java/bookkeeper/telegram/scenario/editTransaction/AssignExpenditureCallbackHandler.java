@@ -4,7 +4,6 @@ import bookkeeper.entity.AccountTransaction;
 import bookkeeper.enums.Expenditure;
 import bookkeeper.service.parser.Spending;
 import bookkeeper.service.parser.SpendingParserRegistry;
-import bookkeeper.service.registry.CallbackMessageRegistry;
 import bookkeeper.service.repository.AccountTransactionRepository;
 import bookkeeper.service.repository.MerchantExpenditureRepository;
 import bookkeeper.telegram.shared.AbstractHandler;
@@ -41,7 +40,7 @@ class AssignExpenditureCallbackHandler implements AbstractHandler {
      * 3. Associate pending AccountTransactions with same merchant too (if any).
      */
     public Boolean handle(Request request) throws AccountTransactionNotFound {
-        var callbackMessage = CallbackMessageRegistry.getCallbackMessage(request.getUpdate());
+        var callbackMessage = request.getCallbackMessage();
         if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof AssignExpenditureCallback cm))
             return false;
 

@@ -2,12 +2,11 @@ package bookkeeper.telegram.scenario.searchTransactions;
 
 import bookkeeper.entity.TelegramUser;
 import bookkeeper.enums.HandlerPriority;
-import bookkeeper.service.registry.CallbackMessageRegistry;
 import bookkeeper.service.repository.AccountTransactionRepository;
 import bookkeeper.telegram.shared.AbstractHandler;
 import bookkeeper.telegram.shared.Request;
 import bookkeeper.telegram.shared.StringUtil;
-import bookkeeper.telegram.shared.exception.SkipHandlerException;
+import bookkeeper.telegram.shared.exception.HandlerInterruptException;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 
 import javax.inject.Inject;
@@ -28,7 +27,7 @@ class SearchTransactionsByRawMessageHandler implements AbstractHandler {
     }
 
     @Override
-    public Boolean handle(Request request) throws SkipHandlerException {
+    public Boolean handle(Request request) throws HandlerInterruptException {
         var inputCallback = getInputData(request);
 
         var searchQuery = inputCallback.getSearchQuery();
@@ -52,7 +51,7 @@ class SearchTransactionsByRawMessageHandler implements AbstractHandler {
     }
 
     private SearchTransactionsByRawMessageCallback getInputData(Request request) {
-        var callbackMessage = CallbackMessageRegistry.getCallbackMessage(request.getUpdate());
+        var callbackMessage = request.getCallbackMessage();
         if (callbackMessage.isPresent() && callbackMessage.get() instanceof SearchTransactionsByRawMessageCallback cm)
             return cm;
         return new SearchTransactionsByRawMessageCallback(request.getMessageText(), 0);

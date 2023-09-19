@@ -1,6 +1,7 @@
 package bookkeeper.telegram.shared;
 
 import bookkeeper.entity.TelegramUser;
+import bookkeeper.service.registry.CallbackMessageRegistry;
 import bookkeeper.service.repository.TelegramUserRepository;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Update;
@@ -13,7 +14,6 @@ import com.pengrad.telegrambot.request.EditMessageReplyMarkup;
 import com.pengrad.telegrambot.request.EditMessageText;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.BaseResponse;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Nullable;
@@ -22,9 +22,10 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static bookkeeper.telegram.shared.StringUtil.cleanString;
+
 @Slf4j
 public class Request {
-    @Getter
     private final Update update;
     private final TelegramBot bot;
     private final TelegramUserRepository telegramUserRepository;
@@ -53,6 +54,10 @@ public class Request {
         if (update.callbackQuery() != null)
             return update.callbackQuery().from();
         return update.editedMessage().from();
+    }
+
+    public Optional<CallbackMessage> getCallbackMessage() {
+        return CallbackMessageRegistry.getCallbackMessage(update);
     }
 
     public void sendMessage(String text, Keyboard keyboard) {
@@ -95,18 +100,10 @@ public class Request {
         return Optional.empty();
     }
 
-    /**
-     * Replace non-breaking spaces with regular one.
-     */
-    private static String cleanString(String input) {
-        return input.replaceAll(Arrays.toString(Character.toChars(160)), " ");
-    }
-
     private static String getInlineKeyboardVerboseString(InlineKeyboardMarkup keyboard) {
         var buttonsVerbose = Arrays.stream(keyboard.inlineKeyboard()).flatMap(Stream::of).map(InlineKeyboardButton::callbackData).collect(Collectors.joining(", "));
         return String.format("[%s]", buttonsVerbose);
     }
-
 
     private void sendMessage(String text, @Nullable Keyboard keyboard, Boolean reply) {
         var telegramUser = getTelegramUser();

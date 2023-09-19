@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.time.format.TextStyle;
+import java.util.Arrays;
 import java.util.Locale;
 
 public class StringUtil {
@@ -15,7 +16,7 @@ public class StringUtil {
         return getMonthName(date.plusMonths(monthOffset));
     }
 
-    public static String getMonthName(LocalDate date) {
+    static String getMonthName(LocalDate date) {
         return date.getMonth().getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault());
     }
 
@@ -60,5 +61,12 @@ public class StringUtil {
      */
     public static String pluralizeTemplate(Integer count, String single, String few, String many) {
         return String.format(pluralize(count, single, few, many), count);
+    }
+
+    /**
+     * Replace non-breaking spaces with regular one.
+     */
+    static String cleanString(String input) {
+        return input.replaceAll(Arrays.toString(Character.toChars(160)), " ");
     }
 }
