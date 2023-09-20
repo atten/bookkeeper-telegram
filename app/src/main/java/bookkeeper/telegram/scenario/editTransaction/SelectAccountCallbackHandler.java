@@ -32,8 +32,7 @@ class SelectAccountCallbackHandler implements AbstractHandler {
      * Handle "Pick Account" button click: display suitable Accounts list for given AccountTransaction
      */
     public Boolean handle(Request request) throws AccountTransactionNotFound {
-        var callbackMessage = request.getCallbackMessage();
-        if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof SelectAccountCallback cm))
+        if (!(request.getCallbackMessage().orElse(null) instanceof SelectAccountCallback cm))
             return false;
 
         var transaction = transactionRepository.get(cm.getTransactionId()).orElseThrow(() -> new AccountTransactionNotFound(cm.getTransactionId()));

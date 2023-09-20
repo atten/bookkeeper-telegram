@@ -100,8 +100,7 @@ class AddTransferHandler implements AbstractHandler {
     }
 
     private Boolean displayDepositAccountSelector(Request request) {
-        var callbackMessage = request.getCallbackMessage();
-        if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof AddTransferCallback memory))
+        if (!(request.getCallbackMessage().orElse(null) instanceof AddTransferCallback memory))
             return false;
 
         var user = request.getTelegramUser();
@@ -110,8 +109,7 @@ class AddTransferHandler implements AbstractHandler {
     }
 
     private Boolean displayMonthOffsetSelector(Request request) {
-        var callbackMessage = request.getCallbackMessage();
-        if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof AddTransferCallback memory))
+        if (!(request.getCallbackMessage().orElse(null) instanceof AddTransferCallback memory))
             return false;
 
         // skip unless both accounts are selected
@@ -123,8 +121,7 @@ class AddTransferHandler implements AbstractHandler {
     }
 
     private Boolean createTransfer(Request request) throws AccountNotFound {
-        var callbackMessage = request.getCallbackMessage();
-        if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof AddTransferCallback memory))
+        if (!(request.getCallbackMessage().orElse(null) instanceof AddTransferCallback memory))
             return false;
 
         if (!memory.isReady())

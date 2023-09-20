@@ -56,8 +56,7 @@ class SearchTransactionsByRawMessageHandler implements AbstractHandler {
     }
 
     private SearchTransactionsByRawMessageCallback getInputData(Request request) {
-        var callbackMessage = request.getCallbackMessage();
-        if (callbackMessage.isPresent() && callbackMessage.get() instanceof SearchTransactionsByRawMessageCallback cm)
+        if (request.getCallbackMessage().orElse(null) instanceof SearchTransactionsByRawMessageCallback cm)
             return cm;
         return new SearchTransactionsByRawMessageCallback(request.getMessageText(), 0);
     }

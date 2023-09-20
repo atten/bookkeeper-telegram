@@ -24,8 +24,7 @@ class EditTransactionBulkCallbackHandler implements AbstractHandler {
     }
 
     public Boolean handle(Request request) throws AccountTransactionNotFound {
-        var callbackMessage = request.getCallbackMessage();
-        if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof EditTransactionBulkCallback cm))
+        if (!(request.getCallbackMessage().orElse(null) instanceof EditTransactionBulkCallback cm))
             return false;
 
         var transaction = transactionRepository.get(cm.getTransactionIds().get(0)).orElseThrow(() -> new AccountTransactionNotFound(cm.getTransactionIds().get(0)));

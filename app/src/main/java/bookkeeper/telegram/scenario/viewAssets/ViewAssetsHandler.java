@@ -35,8 +35,7 @@ class ViewAssetsHandler implements AbstractHandler {
     }
 
     private Boolean handleCallbackMessage(Request request) {
-        var callbackMessage = request.getCallbackMessage();
-        if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof ViewAssetsWithOffsetCallback cm))
+        if (!(request.getCallbackMessage().orElse(null) instanceof ViewAssetsWithOffsetCallback cm))
             return false;
 
         sendMessageWithAssets(request, cm.getMonthOffset(), true);

@@ -27,8 +27,7 @@ class ShiftTransactionMonthCallbackHandler implements AbstractHandler {
      * Handle "Shift transaction month" click: subtract 1 month from current transaction timestamp.
      */
     public Boolean handle(Request request) throws AccountTransactionNotFound {
-        var callbackMessage = request.getCallbackMessage();
-        if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof ShiftTransactionMonthCallback cm))
+        if (!(request.getCallbackMessage().orElse(null) instanceof ShiftTransactionMonthCallback cm))
             return false;
 
         var transaction = transactionRepository.get(cm.getTransactionId()).orElseThrow(() -> new AccountTransactionNotFound(cm.getTransactionId()));

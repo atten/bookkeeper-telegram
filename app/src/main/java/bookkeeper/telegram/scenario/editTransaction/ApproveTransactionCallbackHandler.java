@@ -27,8 +27,7 @@ class ApproveTransactionCallbackHandler implements AbstractHandler {
      * Handle "Approve transaction" click: mark given transaction as approved.
      */
     public Boolean handle(Request request) throws AccountTransactionNotFound {
-        var callbackMessage = request.getCallbackMessage();
-        if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof ApproveTransactionCallback cm))
+        if (!(request.getCallbackMessage().orElse(null) instanceof ApproveTransactionCallback cm))
             return false;
 
         var transaction = transactionRepository.get(cm.getTransactionId()).orElseThrow(() -> new AccountTransactionNotFound(cm.getTransactionId()));

@@ -32,8 +32,7 @@ class SelectMonthlyExpendituresCallbackHandler implements AbstractHandler {
      * Display expenditures selector to browse monthly transactions
      */
     public Boolean handle(Request request) {
-        var callbackMessage = request.getCallbackMessage();
-        if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof SelectMonthlyExpendituresCallback cm))
+        if (!(request.getCallbackMessage().orElse(null) instanceof SelectMonthlyExpendituresCallback cm))
             return false;
 
         var user = request.getTelegramUser();

@@ -31,8 +31,7 @@ class SwitchAccountCallbackHandler implements AbstractHandler {
      * Handle "Switch Account" button click: assign new account to given transaction.
      */
     public Boolean handle(Request request) throws HandlerInterruptException {
-        var callbackMessage = request.getCallbackMessage();
-        if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof SwitchAccountCallback cm))
+        if (!(request.getCallbackMessage().orElse(null) instanceof SwitchAccountCallback cm))
             return false;
 
         var transaction = transactionRepository.get(cm.getTransactionId()).orElseThrow(() -> new AccountTransactionNotFound(cm.getTransactionId()));

@@ -24,8 +24,7 @@ class ApproveTransactionBulkCallbackHandler implements AbstractHandler {
      * Handle "Approve transactions" click: mark given transactions as approved.
      */
     public Boolean handle(Request request) {
-        var callbackMessage = request.getCallbackMessage();
-        if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof ApproveTransactionBulkCallback cm))
+        if (!(request.getCallbackMessage().orElse(null) instanceof ApproveTransactionBulkCallback cm))
             return false;
 
         var transactions = transactionRepository.findByIds(cm.getTransactionIds());

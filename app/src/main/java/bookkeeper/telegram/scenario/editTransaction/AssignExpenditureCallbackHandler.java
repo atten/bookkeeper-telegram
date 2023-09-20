@@ -40,8 +40,7 @@ class AssignExpenditureCallbackHandler implements AbstractHandler {
      * 3. Associate pending AccountTransactions with same merchant too (if any).
      */
     public Boolean handle(Request request) throws AccountTransactionNotFound {
-        var callbackMessage = request.getCallbackMessage();
-        if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof AssignExpenditureCallback cm))
+        if (!(request.getCallbackMessage().orElse(null) instanceof AssignExpenditureCallback cm))
             return false;
 
         var transaction = transactionRepository.get(cm.getTransactionId()).orElseThrow(() -> new AccountTransactionNotFound(cm.getTransactionId()));

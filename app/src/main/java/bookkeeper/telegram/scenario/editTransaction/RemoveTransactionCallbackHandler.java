@@ -26,8 +26,7 @@ class RemoveTransactionCallbackHandler implements AbstractHandler {
      * Handle "Cancel" click: delete given transaction.
      */
     public Boolean handle(Request request) throws AccountTransactionNotFound {
-        var callbackMessage = request.getCallbackMessage();
-        if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof RemoveTransactionCallback cm))
+        if (!(request.getCallbackMessage().orElse(null) instanceof RemoveTransactionCallback cm))
             return false;
 
         var transaction = transactionRepository.get(cm.getTransactionId()).orElseThrow(() -> new AccountTransactionNotFound(cm.getTransactionId()));

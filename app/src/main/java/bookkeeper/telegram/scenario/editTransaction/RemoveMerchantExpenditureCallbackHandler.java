@@ -19,8 +19,7 @@ class RemoveMerchantExpenditureCallbackHandler implements AbstractHandler {
     }
 
     public Boolean handle(Request request) {
-        var callbackMessage = request.getCallbackMessage();
-        if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof RemoveMerchantExpenditureCallback cm))
+        if (!(request.getCallbackMessage().orElse(null) instanceof RemoveMerchantExpenditureCallback cm))
             return false;
 
         merchantExpenditureRepository.removeMerchantAssociation(cm.getMerchant(), cm.getExpenditure(), request.getTelegramUser());

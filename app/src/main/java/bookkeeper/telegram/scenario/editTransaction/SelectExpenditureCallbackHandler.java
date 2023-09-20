@@ -25,8 +25,7 @@ class SelectExpenditureCallbackHandler implements AbstractHandler {
      * Handle "Pick Expenditure" button click: display Expenditures list for given AccountTransaction
      */
     public Boolean handle(Request request) {
-        var callbackMessage = request.getCallbackMessage();
-        if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof SelectExpenditureCallback cm))
+        if (!(request.getCallbackMessage().orElse(null) instanceof SelectExpenditureCallback cm))
             return false;
 
         request.editMessage(getResponseKeyboard(cm.getTransactionId(), cm.getPendingTransactionIds()));

@@ -28,8 +28,7 @@ class ViewMonthlyExpensesHandler implements AbstractHandler {
     }
 
     private Boolean handleCallbackMessage(Request request) {
-        var callbackMessage = request.getCallbackMessage();
-        if (!(callbackMessage.isPresent() && callbackMessage.get() instanceof ViewMonthlyExpensesWithOffsetCallback cm))
+        if (!(request.getCallbackMessage().orElse(null) instanceof ViewMonthlyExpensesWithOffsetCallback cm))
             return false;
 
         var user = request.getTelegramUser();
