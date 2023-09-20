@@ -97,6 +97,7 @@ public class Request {
             return Optional.of(ParseMode.HTML);
         if (message.contains("`") || message.contains("*"))
             return Optional.of(ParseMode.Markdown);
+        // MarkdownV2 is impractical because requires escaping of non-pairing symbols like '|', '-' etc
         return Optional.empty();
     }
 

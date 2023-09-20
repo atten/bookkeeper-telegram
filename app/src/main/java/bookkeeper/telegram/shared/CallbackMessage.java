@@ -2,6 +2,7 @@ package bookkeeper.telegram.shared;
 
 import bookkeeper.service.registry.CallbackMessageRegistry;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -13,26 +14,33 @@ public abstract class CallbackMessage implements Serializable {
     public InlineKeyboardButton asButton(String text) {
         return CallbackMessageRegistry.createButton(this, text);
     }
-    private InlineKeyboardButton asMonthButton(LocalDate relativeDate, int offset, boolean forward) {
-        var monthName = getMonthName(relativeDate.plusMonths(offset));
-        if (forward)
-            return asButton(String.format("В %s ▶️", monthName));
-        return asButton(String.format("◀️ В %s", monthName));
-    }
 
     public InlineKeyboardButton asNextMonthButton(int offset) {
-        return asMonthButton(LocalDate.now(), offset, true);
-    }
-
-    public InlineKeyboardButton asNextMonthButton(LocalDate relativeDate, int offset) {
-        return asMonthButton(relativeDate, offset, true);
+        return asMonthButton(LocalDate.now(), offset, true, "%s");
     }
 
     public InlineKeyboardButton asPrevMonthButton(int offset) {
-        return asMonthButton(LocalDate.now(), offset, false);
+        return asMonthButton(LocalDate.now(), offset, false, "%s");
     }
 
-    public InlineKeyboardButton asPrevMonthButton(LocalDate relativeDate, int offset) {
-        return asMonthButton(relativeDate, offset, false);
+    public InlineKeyboardButton asNextMonthButton(LocalDate relativeDate, String template) {
+        return asMonthButton(relativeDate, 1, true, template);
+    }
+
+    public InlineKeyboardButton asPrevMonthButton(LocalDate relativeDate, String template) {
+        return asMonthButton(relativeDate, -1, false, template);
+    }
+
+    private InlineKeyboardButton asMonthButton(LocalDate relativeDate, int offset, boolean forward, String template) {
+        var monthName = getMonthName(relativeDate.plusMonths(offset));
+
+        if (template.startsWith("%s"))
+            monthName = StringUtils.capitalize(monthName);
+
+        var templated = String.format(template, monthName);
+
+        if (forward)
+            return asButton(String.format("%s ▶️", templated));
+        return asButton(String.format("◀️ %s", templated));
     }
 }

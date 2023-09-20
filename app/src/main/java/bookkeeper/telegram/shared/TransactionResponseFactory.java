@@ -99,8 +99,8 @@ public class TransactionResponseFactory {
 
         var kb = new InlineKeyboardMarkup();
         var selectExpenditureButton = new SelectExpenditureCallback(transactionId).asButton(ICON_EXPENDITURE + " Категория");
-        var prevMonthButton = new ShiftTransactionMonthCallback(transactionId, -1).asPrevMonthButton(transaction.date(), -1);
-        var nextMonthButton = new ShiftTransactionMonthCallback(transactionId, +1).asNextMonthButton(transaction.date(), +1);
+        var prevMonthButton = new ShiftTransactionMonthCallback(transactionId, -1).asPrevMonthButton(transaction.date(), "В %s");
+        var nextMonthButton = new ShiftTransactionMonthCallback(transactionId, +1).asNextMonthButton(transaction.date(), "В %s");
         var accountButton = new SelectAccountCallback(transactionId).asButton(ICON_ACCOUNT + " Счёт");
         var removeButton = new RemoveTransactionCallback(transactionId).asButton(ICON_DELETE + " Отмена");
         var approveButton = new ApproveTransactionCallback(transactionId).asButton("✅ Подтвердить");
@@ -116,8 +116,8 @@ public class TransactionResponseFactory {
         var transactionId = transaction.getId();
 
         var selectExpenditureButton = new SelectExpenditureCallback(transactionId).setPendingTransactionIds(pendingTransactionIds).asButton(ICON_EXPENDITURE + " Категория");
-        var prevMonthButton = new ShiftTransactionMonthCallback(transactionId, -1).setPendingTransactionIds(pendingTransactionIds).asPrevMonthButton(transaction.date(), -1);
-        var nextMonthButton = new ShiftTransactionMonthCallback(transactionId, +1).setPendingTransactionIds(pendingTransactionIds).asNextMonthButton(transaction.date(), +1);
+        var prevMonthButton = new ShiftTransactionMonthCallback(transactionId, -1).setPendingTransactionIds(pendingTransactionIds).asPrevMonthButton(transaction.date(), "В %s");
+        var nextMonthButton = new ShiftTransactionMonthCallback(transactionId, +1).setPendingTransactionIds(pendingTransactionIds).asNextMonthButton(transaction.date(), "В %s");
 
         var kb = new InlineKeyboardMarkup()
             .addRow(selectExpenditureButton, prevMonthButton, nextMonthButton);

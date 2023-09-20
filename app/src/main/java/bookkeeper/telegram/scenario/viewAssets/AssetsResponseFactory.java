@@ -77,27 +77,27 @@ class AssetsResponseFactory {
 
         var netAssets = assets.stream().map(Asset::getExchangeBalance).reduce(BigDecimal.ZERO, BigDecimal::add).floatValue();
 
-        var nbsp = "\u00A0";
-        var content = assets
+        var content = new StringJoiner("\n\n");
+        assets
             .stream()
             .filter(asset -> !asset.isEmpty())
             .sorted(Comparator.comparing(i -> i.getExchangeBalance().negate())) // descending order
             .map(asset ->
                 String.format(
-                    "%-15.15s %15.15s | %5.5s".replace(" | ", nbsp + "|" + nbsp),
+                    "<u>%s</u>\n%s | %5.5s",
                     asset.account().getName(),
-                    String.format("% ,.2f %s", asset.balance(), asset.account().getCurrency().getSymbol()),
+                    String.format("%,.2f %s", asset.balance(), asset.account().getCurrency().getSymbol()),
                     String.format("%.1f%%", asset.getExchangeBalance().floatValue() / netAssets * 100)
                 )
             )
-            .collect(Collectors.joining("\n"));
+            .forEach(content::add);
 
         var result = new StringJoiner("\n\n");
         result
-            .add(String.format(ICON_ACCOUNT + " Сводка по непустым счетам на конец *%s*:", getMonthYearRelative(monthOffset)))
-            .add(String.format("```\n%s```", content))
-            .add(String.format(ICON_RATES + " *Курс на %s*:\n%s", getDateShort(exchangeDate), exchangeRatesVerbose(exchangeRates)))
-            .add(String.format(ICON_ASSETS + " *Итог за %s*: %,.2f %s", getMonthName(monthOffset), netAssets, exchangeCurrency.getSymbol()));
+            .add(String.format(ICON_ACCOUNT + " Сводка по непустым счетам на конец <b>%s</b>:", getMonthYearRelative(monthOffset)))
+            .add(content.toString())
+            .add(String.format(ICON_RATES + " <b>Курс на %s</b>:\n%s", getDateShort(exchangeDate), exchangeRatesVerbose(exchangeRates)))
+            .add(String.format(ICON_ASSETS + " <b>Итог за %s</b>: %,.2f %s", getMonthName(monthOffset), netAssets, exchangeCurrency.getSymbol()));
         return result.toString();
     }
 
