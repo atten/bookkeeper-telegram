@@ -4,6 +4,7 @@ import bookkeeper.entity.TelegramUser;
 import bookkeeper.service.registry.CallbackMessageRegistry;
 import bookkeeper.service.repository.TelegramUserRepository;
 import com.pengrad.telegrambot.TelegramBot;
+import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.User;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
@@ -57,7 +58,27 @@ public class Request {
     }
 
     public Optional<CallbackMessage> getCallbackMessage() {
-        return CallbackMessageRegistry.getCallbackMessage(update);
+        return CallbackMessageRegistry.getCallbackMessage(update.callbackQuery());
+    }
+
+    /**
+     * Retrieve callback data from Nth button of replied message (if present).
+     * Is used to extract context when user replies to message with buttons.
+     */
+    public Optional<CallbackMessage> getCallbackMessageFromReply(int index) {
+        if (getReplyToMessage().isEmpty())
+            return Optional.empty();
+
+        var button = Arrays
+            .stream(getReplyToMessage().get().replyMarkup().inlineKeyboard())
+            .flatMap(Arrays::stream)
+            .toList()
+            .get(index);
+        return CallbackMessageRegistry.getCallbackMessage(button.callbackData());
+    }
+
+    public Optional<Message> getReplyToMessage() {
+        return Optional.ofNullable(update.message().replyToMessage());
     }
 
     public void sendMessage(String text, Keyboard keyboard) {
@@ -72,16 +93,20 @@ public class Request {
         sendMessage(text, keyboard, true);
     }
 
+    public void editMessage(String text, InlineKeyboardMarkup keyboard, int messageId) {
+        editMessagePrivate(text, keyboard, messageId);
+    }
+
     public void editMessage(String text, InlineKeyboardMarkup keyboard) {
-        editMessagePrivate(text, keyboard);
+        editMessagePrivate(text, keyboard, getMessageId());
     }
 
     public void editMessage(String text) {
-        editMessage(text, null);
+        editMessagePrivate(text, null, getMessageId());
     }
 
     public void editMessage(InlineKeyboardMarkup keyboard) {
-        editMessagePrivate(null, keyboard);
+        editMessagePrivate(null, keyboard, getMessageId());
     }
 
     public String toString() {
@@ -132,16 +157,16 @@ public class Request {
         log.info("{}{} -> {} ({})", text, keyboardVerbose, telegramUser, resultVerbose);
     }
 
-    private void editMessagePrivate(@Nullable String text, @Nullable InlineKeyboardMarkup keyboard) {
+    private void editMessagePrivate(@Nullable String text, @Nullable InlineKeyboardMarkup keyboard, int messageId) {
         var keyboardVerbose = "";
 
         BaseResponse result;
         if (text == null && keyboard != null) {
-            var message = new EditMessageReplyMarkup(getChatId(), getMessageId()).replyMarkup(keyboard);
+            var message = new EditMessageReplyMarkup(getChatId(), messageId).replyMarkup(keyboard);
             result = bot.execute(message);
         }
         else if (text != null) {
-            var message = new EditMessageText(getChatId(), getMessageId(), text);
+            var message = new EditMessageText(getChatId(), messageId, text);
             var parseMode = detectParseMode(text);
 
             if (parseMode.isPresent())

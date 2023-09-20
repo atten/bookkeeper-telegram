@@ -110,10 +110,10 @@ public class StringUtil {
     }
 
     /**
-     * Replace non-breaking spaces with regular one.
+     * Strip and replace non-breaking spaces with regular one.
      */
     static String cleanString(String input) {
-        return input.replaceAll(Arrays.toString(Character.toChars(160)), " ");
+        return input.replaceAll(Arrays.toString(Character.toChars(160)), " ").strip();
     }
 
     public static String strikeoutMessage(String message) {

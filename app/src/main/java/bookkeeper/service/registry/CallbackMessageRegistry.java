@@ -2,9 +2,10 @@ package bookkeeper.service.registry;
 
 import bookkeeper.telegram.Config;
 import bookkeeper.telegram.shared.CallbackMessage;
-import com.pengrad.telegrambot.model.Update;
+import com.pengrad.telegrambot.model.CallbackQuery;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 
+import javax.annotation.Nullable;
 import java.io.*;
 import java.text.ParseException;
 import java.util.Base64;
@@ -17,11 +18,15 @@ public class CallbackMessageRegistry {
         return new InlineKeyboardButton(text).callbackData(shortener.shrink(serialize(message)));
     }
 
-    public static Optional<CallbackMessage> getCallbackMessage(Update update) {
-        if (update.callbackQuery() == null)
+    public static Optional<CallbackMessage> getCallbackMessage(@Nullable CallbackQuery callbackQuery) {
+        if (callbackQuery == null)
             return Optional.empty();
 
-        var callbackData = shortener.unshrink(update.callbackQuery().data());
+        return getCallbackMessage(callbackQuery.data());
+    }
+
+    public static Optional<CallbackMessage> getCallbackMessage(String callbackData) {
+        callbackData = shortener.unshrink(callbackData);
 
         try {
             return Optional.of(deserialize(callbackData));
