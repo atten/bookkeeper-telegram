@@ -78,7 +78,9 @@ public class Request {
     }
 
     public Optional<Message> getReplyToMessage() {
-        return Optional.ofNullable(update.message().replyToMessage());
+        if (update.message() != null)
+            return Optional.ofNullable(update.message().replyToMessage());
+        return Optional.empty();
     }
 
     public void sendMessage(String text, Keyboard keyboard) {
