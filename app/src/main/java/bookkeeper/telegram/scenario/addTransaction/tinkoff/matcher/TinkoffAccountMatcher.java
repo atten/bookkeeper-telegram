@@ -19,24 +19,19 @@ public class TinkoffAccountMatcher implements AccountMatcher {
 
     @Override
     public Optional<Account> match(Spending spending, TelegramUser user) {
-        if (spending instanceof TinkoffPurchaseSms) {
-            var obj = (TinkoffPurchaseSms) spending;
+        if (spending instanceof TinkoffPurchaseSms obj) {
             return Optional.of(getTinkoffAccount(obj.accountCurrency, user));
         }
-        if (spending instanceof TinkoffTransferSms) {
-            var obj = (TinkoffTransferSms) spending;
+        if (spending instanceof TinkoffTransferSms obj) {
             return Optional.of(getTinkoffAccount(obj.accountCurrency, user));
         }
-        if (spending instanceof TinkoffRecurringChargeSms) {
-            var obj = (TinkoffRecurringChargeSms) spending;
+        if (spending instanceof TinkoffRecurringChargeSms obj) {
             return Optional.of(getTinkoffAccount(obj.chargeCurrency, user));
         }
-        if (spending instanceof TinkoffFpsPurchaseSms) {
-            var obj = (TinkoffFpsPurchaseSms) spending;
+        if (spending instanceof TinkoffFpsPurchaseSms obj) {
             return Optional.of(getTinkoffAccount(obj.accountCurrency, user));
         }
-        if (spending instanceof TinkoffReplenishSms) {
-            var obj = (TinkoffReplenishSms) spending;
+        if (spending instanceof TinkoffReplenishSms obj) {
             return Optional.of(getTinkoffAccount(obj.accountCurrency, user));
         }
         if (spending instanceof TinkoffIgnoreSms) {

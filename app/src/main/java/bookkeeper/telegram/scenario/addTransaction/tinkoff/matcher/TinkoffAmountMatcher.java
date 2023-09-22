@@ -11,29 +11,23 @@ import java.util.Optional;
 public class TinkoffAmountMatcher implements AmountMatcher {
     @Override
     public Optional<BigDecimal> match(Spending spending) {
-        if (spending instanceof TinkoffPurchaseSms) {
-            var obj = ((TinkoffPurchaseSms) spending);
-
+        if (spending instanceof TinkoffPurchaseSms obj) {
             // "1 RUB" expenses are ephemeral and should be ignored (e.g. Mos.Transport uses it to check card validity)
             if (obj.purchaseSum.equals(BigDecimal.ONE) && obj.purchaseCurrency.equals(Currency.getInstance("RUB")))
                 return Optional.of(BigDecimal.ZERO);
 
             return Optional.of(obj.purchaseSum.negate());
         }
-        if (spending instanceof TinkoffFpsPurchaseSms) {
-            var obj = ((TinkoffFpsPurchaseSms) spending);
+        if (spending instanceof TinkoffFpsPurchaseSms obj) {
             return Optional.of(obj.purchaseSum.negate());
         }
-        if (spending instanceof TinkoffTransferSms) {
-            var obj = ((TinkoffTransferSms) spending);
+        if (spending instanceof TinkoffTransferSms obj) {
             return Optional.of(obj.transferSum.negate());
         }
-        if (spending instanceof TinkoffRecurringChargeSms) {
-            var obj = ((TinkoffRecurringChargeSms) spending);
+        if (spending instanceof TinkoffRecurringChargeSms obj) {
             return Optional.of(obj.chargeSum.negate());
         }
-        if (spending instanceof TinkoffReplenishSms) {
-            var obj = ((TinkoffReplenishSms) spending);
+        if (spending instanceof TinkoffReplenishSms obj) {
             return Optional.of(obj.replenishSum);
         }
         if (spending instanceof TinkoffIgnoreSms) {
