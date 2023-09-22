@@ -39,13 +39,13 @@ public class AccountRepository {
     }
 
     public List<Account> filter(TelegramUser user) {
-        var sql = "SELECT i FROM Account i WHERE i.telegramUser = :user";
+        var sql = "SELECT i FROM Account i WHERE i.telegramUser = :user ORDER BY i.name";
         var query = manager.createQuery(sql, Account.class).setParameter("user", user);
         return query.getResultList();
     }
 
     public List<Account> filter(TelegramUser user, Currency currency) {
-        var sql = "SELECT i FROM Account i WHERE i.telegramUser = :user AND i.currency = :currency";
+        var sql = "SELECT i FROM Account i WHERE i.telegramUser = :user AND i.currency = :currency ORDER BY i.name";
         var query = manager.createQuery(sql, Account.class)
                 .setParameter("user", user)
                 .setParameter("currency", currency.getCurrencyCode());
@@ -53,7 +53,7 @@ public class AccountRepository {
     }
 
     public List<Account> filter(String nameContains, Currency currency, TelegramUser user) {
-        var sql = "SELECT i FROM Account i WHERE i.name ILIKE :text AND i.currency=:currency AND i.telegramUser=:telegramUser";
+        var sql = "SELECT i FROM Account i WHERE i.name ILIKE :text AND i.currency=:currency AND i.telegramUser=:telegramUser ORDER BY i.name";
         var query = manager.createQuery(sql, Account.class)
             .setParameter("text", '%' + nameContains + '%')
             .setParameter("currency", currency.getCurrencyCode())
