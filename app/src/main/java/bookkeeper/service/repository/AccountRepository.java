@@ -4,10 +4,10 @@ import bookkeeper.entity.Account;
 import bookkeeper.entity.TelegramUser;
 import dagger.Reusable;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.NoResultException;
 
 import javax.inject.Inject;
 import java.time.Instant;
+import java.util.Comparator;
 import java.util.Currency;
 import java.util.List;
 import java.util.Optional;
@@ -21,18 +21,17 @@ public class AccountRepository {
         this.manager = manager;
     }
 
-    public Account getOrCreate(String name, Currency currency, TelegramUser user) {
-        var sql = "SELECT i FROM Account i WHERE i.name=:name AND i.currency=:currency AND i.telegramUser=:telegramUser";
-        var query = manager.createQuery(sql, Account.class)
-                .setParameter("name", name)
-                .setParameter("currency", currency.getCurrencyCode())
-                .setParameter("telegramUser", user);
+    /**
+     * Find account with the closest name match or create a new one.
+     */
+    public Account getMatchOrCreate(String name, Currency currency, TelegramUser user) {
+        var candidates = filter(name, currency, user)
+            .stream()
+            .sorted(Comparator.comparingInt(account -> account.getName().length()));
 
-        try {
-            return query.getSingleResult();
-        } catch (NoResultException e) {
-            return manager.merge(newAccountFactory(name, currency, user));
-        }
+        return candidates
+            .findFirst()
+            .orElseGet(() -> manager.merge(newAccountFactory(name, currency, user)));
     }
 
     public Optional<Account> get(long id) {
@@ -50,6 +49,15 @@ public class AccountRepository {
         var query = manager.createQuery(sql, Account.class)
                 .setParameter("user", user)
                 .setParameter("currency", currency.getCurrencyCode());
+        return query.getResultList();
+    }
+
+    public List<Account> filter(String nameContains, Currency currency, TelegramUser user) {
+        var sql = "SELECT i FROM Account i WHERE i.name ILIKE =:text AND i.currency=:currency AND i.telegramUser=:telegramUser";
+        var query = manager.createQuery(sql, Account.class)
+            .setParameter("text", '%' + nameContains + '%')
+            .setParameter("currency", currency.getCurrencyCode())
+            .setParameter("telegramUser", user);
         return query.getResultList();
     }
 

@@ -42,7 +42,7 @@ public class TinkoffAccountMatcher implements AccountMatcher {
     }
 
     private Account getTinkoffAccount(Currency currency, TelegramUser user) {
-        return repository.getOrCreate(
+        return repository.getMatchOrCreate(
             String.format("Tinkoff %s", currency.getCurrencyCode()),
             currency,
             user

@@ -46,7 +46,7 @@ public class FreehandAccountMatcher implements AccountMatcher {
             .map(transactions -> transactions.get(0))
             .max(Comparator.comparing(AccountTransaction::getTimestamp))
             .map(AccountTransaction::getAccount)
-            .orElseGet(() -> repository.getOrCreate(
+            .orElseGet(() -> repository.getMatchOrCreate(
                 "Счёт RUB",
                 Currency.getInstance("RUB"),
                 user
@@ -65,7 +65,7 @@ public class FreehandAccountMatcher implements AccountMatcher {
         return accounts.stream()
             .filter(account -> account.getCurrency() == currency)
             .findFirst()
-            .orElseGet(() -> repository.getOrCreate(
+            .orElseGet(() -> repository.getMatchOrCreate(
                 String.format("Счёт %s", currency.getCurrencyCode()),
                 currency,
                 user

@@ -54,7 +54,7 @@ class AddAccountHandler implements AbstractHandler {
             return false;
         }
 
-        accountRepository.getOrCreate(accountName, currency, request.getTelegramUser());
+        accountRepository.getMatchOrCreate(accountName, currency, request.getTelegramUser());
         request.sendMessage("Готово!");
         return true;
     }
