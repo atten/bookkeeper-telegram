@@ -53,7 +53,7 @@ public class AccountRepository {
     }
 
     public List<Account> filter(String nameContains, Currency currency, TelegramUser user) {
-        var sql = "SELECT i FROM Account i WHERE i.name ILIKE =:text AND i.currency=:currency AND i.telegramUser=:telegramUser";
+        var sql = "SELECT i FROM Account i WHERE i.name ILIKE :text AND i.currency=:currency AND i.telegramUser=:telegramUser";
         var query = manager.createQuery(sql, Account.class)
             .setParameter("text", '%' + nameContains + '%')
             .setParameter("currency", currency.getCurrencyCode())

@@ -47,6 +47,7 @@ class RenameAccountCallbackHandler implements AbstractHandler {
         account.setName(request.getMessageText());
 
         request.editMessage(getMessageText(account), getMessageKeyboard(account), replyToMessage.messageId());
+        request.deleteMessage();
         return true;
     }
 }

@@ -11,6 +11,7 @@ import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.model.request.Keyboard;
 import com.pengrad.telegrambot.model.request.ParseMode;
+import com.pengrad.telegrambot.request.DeleteMessage;
 import com.pengrad.telegrambot.request.EditMessageReplyMarkup;
 import com.pengrad.telegrambot.request.EditMessageText;
 import com.pengrad.telegrambot.request.SendMessage;
@@ -109,6 +110,14 @@ public class Request {
 
     public void editMessage(InlineKeyboardMarkup keyboard) {
         editMessagePrivate(null, keyboard, getMessageId());
+    }
+
+    public void deleteMessage() {
+        var deleteRequest = new DeleteMessage(getChatId(), getMessageId());
+        var result = bot.execute(deleteRequest);
+
+        var resultVerbose = result.description() != null ? result.description() : "OK";
+        log.info("Delete message id={} by {} ({})", getMessageId(), getTelegramUser(), resultVerbose);
     }
 
     public String toString() {
