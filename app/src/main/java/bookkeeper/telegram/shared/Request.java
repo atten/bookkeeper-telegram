@@ -156,7 +156,7 @@ public class Request {
 
         if (keyboard != null) {
             if (keyboard instanceof InlineKeyboardMarkup kb) {
-                callbackMessageRegistry.prepareKeyboard(kb);
+                callbackMessageRegistry.prepareKeyboardBeforeSend(kb);
                 keyboardVerbose = getInlineKeyboardVerboseString(kb);
             }
             message = message.replyMarkup(keyboard);
@@ -175,7 +175,7 @@ public class Request {
         var keyboardVerbose = "";
 
         if (keyboard != null) {
-            callbackMessageRegistry.prepareKeyboard(keyboard);
+            callbackMessageRegistry.prepareKeyboardBeforeSend(keyboard);
             keyboardVerbose = getInlineKeyboardVerboseString(keyboard);
         }
 

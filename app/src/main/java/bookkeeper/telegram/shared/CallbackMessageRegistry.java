@@ -9,29 +9,26 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.io.*;
 import java.text.ParseException;
-import java.util.Base64;
-import java.util.Optional;
+import java.util.*;
 
 class CallbackMessageRegistry {
     private final StringShortener shortener;
+    private final Map<String, CallbackMessage> runtimeMessageCache;
 
     @Inject
     CallbackMessageRegistry(JedisPool jedisPool) {
         this.shortener = new StringShortener(55, jedisPool);
+        this.runtimeMessageCache = new HashMap<>();
     }
 
     static InlineKeyboardButton createButton(CallbackMessage message, String text) {
         return new InlineKeyboardButton(text).callbackData(serialize(message));
     }
 
-    private void prepareButton(InlineKeyboardButton button) {
-        button.callbackData(shortener.shrink(button.callbackData()));
-    }
-
-    void prepareKeyboard(InlineKeyboardMarkup keyboard) {
+    void prepareKeyboardBeforeSend(InlineKeyboardMarkup keyboard) {
         for (var row : keyboard.inlineKeyboard()) {
             for (var button : row) {
-                prepareButton(button);
+                prepareButtonBeforeSend(button);
             }
         }
     }
@@ -44,10 +41,16 @@ class CallbackMessageRegistry {
     }
 
     Optional<CallbackMessage> getCallbackMessage(String callbackData) {
-        callbackData = shortener.unshrink(callbackData);
+        if (runtimeMessageCache.containsKey(callbackData))
+            return Optional.of(runtimeMessageCache.get(callbackData));
+
+        var fullCallbackData = shortener.unshrink(callbackData);
 
         try {
-            return Optional.of(deserialize(callbackData));
+            var callbackMessage = deserialize(fullCallbackData);
+            compactMessageCache();
+            runtimeMessageCache.put(callbackData, callbackMessage);
+            return Optional.of(callbackMessage);
         } catch (ParseException e) {
             return Optional.empty();
         }
@@ -69,6 +72,17 @@ class CallbackMessageRegistry {
             return (CallbackMessage) new ObjectInputStream(input).readObject();
         } catch (IOException | ClassNotFoundException | IllegalArgumentException e) {
             throw new ParseException(callbackData, 0);
+        }
+    }
+
+    private void prepareButtonBeforeSend(InlineKeyboardButton button) {
+        button.callbackData(shortener.shrink(button.callbackData()));
+    }
+
+    private void compactMessageCache() {
+        var maxSize = 1000;
+        if (runtimeMessageCache.size() > maxSize) {
+            runtimeMessageCache.clear();
         }
     }
 }
