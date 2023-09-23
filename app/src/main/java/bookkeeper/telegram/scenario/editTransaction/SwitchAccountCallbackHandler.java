@@ -36,9 +36,17 @@ class SwitchAccountCallbackHandler implements AbstractHandler {
 
         var transaction = transactionRepository.get(cm.getTransactionId()).orElseThrow(() -> new AccountTransactionNotFound(cm.getTransactionId()));
         var account = accountRepository.get(cm.getAccountId()).orElseThrow(() -> new AccountNotFound(cm.getAccountId()));
+        var pendingTransactionsCount = cm.getPendingTransactionIds().size();
 
         transaction.setAccount(account);
-        request.editMessage(getResponseMessage(transaction), getResponseKeyboard(transaction));
+
+        if (pendingTransactionsCount == 0) {
+            request.editMessage(getResponseMessage(transaction), getResponseKeyboard(transaction));
+        }
+        else {
+            request.editMessage(getResponseMessage(transaction, pendingTransactionsCount), getResponseKeyboard(transaction, cm.getPendingTransactionIds()));
+        }
+
         return true;
     }
 }

@@ -11,6 +11,7 @@ import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 
 import javax.inject.Inject;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -36,11 +37,12 @@ class SelectAccountCallbackHandler implements AbstractHandler {
             return false;
 
         var transaction = transactionRepository.get(cm.getTransactionId()).orElseThrow(() -> new AccountTransactionNotFound(cm.getTransactionId()));
-        request.editMessage(getResponseKeyboard(transaction, request.getTelegramUser()));
+
+        request.editMessage(getResponseKeyboard(transaction, request.getTelegramUser(), cm.getPendingTransactionIds()));
         return true;
     }
 
-    private InlineKeyboardMarkup getResponseKeyboard(AccountTransaction transaction, TelegramUser user) {
+    private InlineKeyboardMarkup getResponseKeyboard(AccountTransaction transaction, TelegramUser user, List<Long> pendingTransactionIds) {
         var kb = new InlineKeyboardMarkup();
         var groupBy = 3;
         AtomicInteger index = new AtomicInteger(0);
@@ -49,7 +51,7 @@ class SelectAccountCallbackHandler implements AbstractHandler {
             .filter(account -> transaction.getAccount().getId() != account.getId())
             .map(account ->
                 // prepare buttons with expenditures selector
-                new SwitchAccountCallback(transaction.getId(), account.getId()).asButton(account.getName())
+                new SwitchAccountCallback(transaction.getId(), account.getId()).setPendingTransactionIds(pendingTransactionIds).asButton(account.getName())
             ).collect(
                 // split to N map items each contains a list of 3 buttons
                 Collectors.groupingBy(i -> index.getAndIncrement() / groupBy)

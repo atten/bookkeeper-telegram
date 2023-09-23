@@ -117,9 +117,10 @@ public class TransactionResponseFactory {
         var selectExpenditureButton = new SelectExpenditureCallback(transactionId).setPendingTransactionIds(pendingTransactionIds).asButton(ICON_EXPENDITURE + " Категория");
         var prevMonthButton = new ShiftTransactionMonthCallback(transactionId, -1).setPendingTransactionIds(pendingTransactionIds).asPrevMonthButton(transaction.date(), "В %s");
         var nextMonthButton = new ShiftTransactionMonthCallback(transactionId, +1).setPendingTransactionIds(pendingTransactionIds).asNextMonthButton(transaction.date(), "В %s");
+        var accountButton = new SelectAccountCallback(transactionId).setPendingTransactionIds(pendingTransactionIds).asButton(ICON_ACCOUNT + " Счёт");
 
         var kb = new InlineKeyboardMarkup()
-            .addRow(selectExpenditureButton, prevMonthButton, nextMonthButton);
+            .addRow(selectExpenditureButton, prevMonthButton, nextMonthButton, accountButton);
 
         if (transaction.isApproved() && pendingTransactionIds.isEmpty()) {
             var monthOffset = transaction.age().negated().toDays() / 30;
