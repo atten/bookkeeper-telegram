@@ -15,10 +15,16 @@ public class Account {
     @Getter
     private long id;
 
+    @Column(nullable = false)
     @Getter
     @Setter
     private String name;
 
+    @Getter
+    @Setter
+    private String notes;
+
+    @Column(nullable = false)
     private String currency;
 
     @ManyToOne(fetch = FetchType.LAZY)

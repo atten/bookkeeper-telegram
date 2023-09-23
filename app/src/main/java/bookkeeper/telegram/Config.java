@@ -58,10 +58,11 @@ abstract class Config {
     }
 
     private static void migrate(EntityManager entityManager) {
+        String sqlPath = "init_database.sql";
         String sql;
         try {
-            var path = Path.of(Objects.requireNonNull(Config.class.getResource("/init_database.sql")).toURI());
-            sql = Files.readString(path);
+            var resourcePath = Path.of(Objects.requireNonNull(Config.class.getResource("/" + sqlPath)).toURI());
+            sql = Files.readString(resourcePath);
         } catch (URISyntaxException | IOException e) {
             throw new RuntimeException(e);
         }
@@ -69,6 +70,7 @@ abstract class Config {
         if (sql.isEmpty())
             return;
 
+        log.info(String.format("Run %s...", sqlPath));
         var query = entityManager.createNativeQuery(sql);
         try {
             query.getSingleResult();

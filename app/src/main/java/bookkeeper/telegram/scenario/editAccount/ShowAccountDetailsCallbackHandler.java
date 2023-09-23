@@ -7,8 +7,8 @@ import bookkeeper.telegram.shared.exception.AccountNotFound;
 
 import javax.inject.Inject;
 
-import static bookkeeper.telegram.scenario.editAccount.AccountResponseRegistry.getMessageKeyboard;
-import static bookkeeper.telegram.scenario.editAccount.AccountResponseRegistry.getMessageText;
+import static bookkeeper.telegram.scenario.editAccount.AccountResponseFactory.getMessageKeyboard;
+import static bookkeeper.telegram.scenario.editAccount.AccountResponseFactory.getMessageText;
 
 /**
  * Scenario: User requests account details to change attributes.

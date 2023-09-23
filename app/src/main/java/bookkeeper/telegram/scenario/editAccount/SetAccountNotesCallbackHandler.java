@@ -12,42 +12,42 @@ import static bookkeeper.telegram.scenario.editAccount.AccountResponseFactory.ge
 import static bookkeeper.telegram.scenario.editAccount.AccountResponseFactory.getMessageText;
 
 /**
- * Scenario: User renames account.
+ * Scenario: User sets account notes.
  */
-class RenameAccountCallbackHandler implements AbstractHandler {
+class SetAccountNotesCallbackHandler implements AbstractHandler {
     private final AccountRepository accountRepository;
 
     @Inject
-    RenameAccountCallbackHandler(AccountRepository accountRepository) {
+    SetAccountNotesCallbackHandler(AccountRepository accountRepository) {
         this.accountRepository = accountRepository;
     }
 
     public Boolean handle(Request request) throws AccountNotFound {
-        return promptRename(request) || handleRename(request);
+        return promptEdit(request) || handleEdit(request);
     }
 
-    private Boolean promptRename(Request request) throws AccountNotFound {
-        if (!(request.getCallbackMessage().orElse(null) instanceof RenameAccountCallback cm))
+    private Boolean promptEdit(Request request) throws AccountNotFound {
+        if (!(request.getCallbackMessage().orElse(null) instanceof SetAccountNotesCallback cm))
             return false;
 
         var account = accountRepository.get(cm.getAccountId()).orElseThrow(() -> new AccountNotFound(cm.getAccountId()));
         var kb = new InlineKeyboardMarkup(new ShowAccountDetailsCallback(account.getId()).asButton("Назад"));
-        request.editMessage(String.format("Введите *в ответе* новое имя для %s:", account.getName()), kb);
+        request.editMessage(String.format("Введите *в ответе* заметки для %s:", account.getName()), kb);
 
         return true;
     }
 
-    private Boolean handleRename(Request request) throws AccountNotFound {
+    private Boolean handleEdit(Request request) throws AccountNotFound {
         if (!(request.getCallbackMessageFromReply(0).orElse(null) instanceof ShowAccountDetailsCallback cm))
             return false;
 
         var replyToMessage = request.getReplyToMessage().orElseThrow();
-        if (!replyToMessage.text().contains("новое имя"))
+        if (!replyToMessage.text().contains("заметки"))
             return false;
 
         var account = accountRepository.get(cm.getAccountId()).orElseThrow(() -> new AccountNotFound(cm.getAccountId()));
 
-        account.setName(request.getMessageText());
+        account.setNotes(request.getMessageText());
 
         request.editMessage(getMessageText(account), getMessageKeyboard(account), replyToMessage.messageId());
         request.deleteMessage();

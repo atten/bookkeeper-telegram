@@ -7,21 +7,25 @@ import java.util.StringJoiner;
 
 import static bookkeeper.telegram.shared.StringUtil.ICON_ACCOUNT;
 
-class AccountResponseRegistry {
+class AccountResponseFactory {
     static String getMessageText(Account account) {
         var lines = new StringJoiner("\n");
         lines
             .add(ICON_ACCOUNT + " Редактирование счёта\n")
             .add("Имя: " + account.getName())
-            .add("Валюта: " + account.getCurrency().getCurrencyCode());
+            .add("Валюта: " + account.getCurrency().getCurrencyCode())
+            .add(String.format("Заметки: %s", account.getNotes() != null ? "```\n" + account.getNotes() + "```" : "нет"));
 
         return lines.toString();
     }
 
     static InlineKeyboardMarkup getMessageKeyboard(Account account) {
-        return new InlineKeyboardMarkup(
-            new ListAccountsCallback().asButton("Назад"),
-            new RenameAccountCallback(account.getId()).asButton("Переименовать")
-        );
+        return new InlineKeyboardMarkup()
+            .addRow(
+                new RenameAccountCallback(account.getId()).asButton("Переименовать"),
+                new SetAccountNotesCallback(account.getId()).asButton("Заметки")
+            ).addRow(
+                new ListAccountsCallback().asButton("Назад")
+            );
     }
 }
