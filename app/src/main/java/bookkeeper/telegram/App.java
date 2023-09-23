@@ -7,9 +7,8 @@ public class App {
 
         var bot = container.bot();
 
-        var notify = Config.telegramUserIdToNotify();
-        notify.ifPresent(bot::notifyStartup);
-
+        bot.setup();
+        Config.telegramUserIdToNotify().ifPresent(bot::notifyStartup);
         bot.listen();
     }
 }

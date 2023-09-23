@@ -7,9 +7,11 @@ import bookkeeper.telegram.shared.Request;
 import bookkeeper.telegram.shared.exception.HandlerInterruptException;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
+import com.pengrad.telegrambot.model.BotCommand;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
+import com.pengrad.telegrambot.request.SetMyCommands;
 import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 import redis.clients.jedis.JedisPool;
@@ -55,6 +57,10 @@ class Bot {
         log.info("{} -> {} ({})", text, telegramUserId, resultVerbose);
     }
 
+    void setup() {
+        setupCommands();
+    }
+
     /**
      * Run the telegram bot in a long-polling mode.
      */
@@ -64,6 +70,20 @@ class Bot {
             return UpdatesListener.CONFIRMED_UPDATES_ALL;
         });
         log.info("Start listening...");
+    }
+
+    private void setupCommands() {
+        var commandsRequest = new SetMyCommands(
+            new BotCommand("assets", "Сводка активов"),
+            new BotCommand("expenses", "Расходы за месяц"),
+            new BotCommand("new_account", "Создать счёт"),
+            new BotCommand("new_transfer", "Создать перевод между счетами"),
+            new BotCommand("accounts", "Редактировать счета"),
+            new BotCommand("clear_associations", "Удалить сохранённые привязки категорий")
+        );
+        var result = bot.execute(commandsRequest);
+        var resultVerbose = result.description() != null ? result.description() : "OK";
+        log.info("Set commands... {}", resultVerbose);
     }
 
     /**
