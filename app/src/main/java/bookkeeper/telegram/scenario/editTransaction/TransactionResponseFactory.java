@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
-import static bookkeeper.telegram.shared.StringUtil.*;
+import static bookkeeper.telegram.shared.StringUtils.*;
 
 public class TransactionResponseFactory {
 

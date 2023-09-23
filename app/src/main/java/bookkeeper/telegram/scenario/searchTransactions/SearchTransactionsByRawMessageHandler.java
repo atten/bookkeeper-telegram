@@ -5,8 +5,8 @@ import bookkeeper.enums.HandlerPriority;
 import bookkeeper.service.repository.AccountTransactionRepository;
 import bookkeeper.telegram.shared.AbstractHandler;
 import bookkeeper.telegram.shared.Request;
-import bookkeeper.telegram.shared.StringUtil;
-import bookkeeper.telegram.shared.exception.HandlerInterruptException;
+import bookkeeper.telegram.shared.StringUtils;
+import bookkeeper.exception.HandlerInterruptException;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 
 import javax.inject.Inject;
@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
-import static bookkeeper.telegram.shared.StringUtil.*;
+import static bookkeeper.telegram.shared.StringUtils.*;
 
 
 /**
@@ -73,7 +73,7 @@ class SearchTransactionsByRawMessageHandler implements AbstractHandler {
         var amountByCurrencyVerbose = amountByCurrency.entrySet().stream().map(entry -> getAmount(entry.getValue(), entry.getKey())).collect(Collectors.joining(", "));
 
         var response = new StringJoiner("\n\n");
-        response.add("Найдено %s стоимостью %s за %s:".formatted(getItemsVerbose(searchResult.size()), amountByCurrencyVerbose, StringUtil.getMonthYearShort(monthOffset)));
+        response.add("Найдено %s стоимостью %s за %s:".formatted(getItemsVerbose(searchResult.size()), amountByCurrencyVerbose, StringUtils.getMonthYearShort(monthOffset)));
 
         int pageSize = Math.min(10, searchResult.size());
         for (int counter = 1; counter <= pageSize; counter++) {

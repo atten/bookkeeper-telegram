@@ -3,7 +3,7 @@ package bookkeeper.telegram.scenario.editAccount;
 import bookkeeper.service.repository.AccountRepository;
 import bookkeeper.telegram.shared.AbstractHandler;
 import bookkeeper.telegram.shared.Request;
-import bookkeeper.telegram.shared.exception.AccountNotFound;
+import bookkeeper.exception.AccountNotFound;
 
 import javax.inject.Inject;
 

@@ -4,8 +4,8 @@ import bookkeeper.service.repository.AccountRepository;
 import bookkeeper.service.repository.AccountTransferRepository;
 import bookkeeper.telegram.shared.AbstractHandler;
 import bookkeeper.telegram.shared.Request;
-import bookkeeper.telegram.shared.exception.AccountNotFound;
-import bookkeeper.telegram.shared.exception.HandlerInterruptException;
+import bookkeeper.exception.AccountNotFound;
+import bookkeeper.exception.HandlerInterruptException;
 
 import javax.inject.Inject;
 import java.math.BigDecimal;

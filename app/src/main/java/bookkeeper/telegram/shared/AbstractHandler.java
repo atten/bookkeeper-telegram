@@ -1,7 +1,7 @@
 package bookkeeper.telegram.shared;
 
 import bookkeeper.enums.HandlerPriority;
-import bookkeeper.telegram.shared.exception.HandlerInterruptException;
+import bookkeeper.exception.HandlerInterruptException;
 
 public interface AbstractHandler {
 

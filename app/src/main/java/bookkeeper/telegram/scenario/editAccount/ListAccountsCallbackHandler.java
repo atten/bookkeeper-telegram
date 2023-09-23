@@ -8,7 +8,7 @@ import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import javax.inject.Inject;
 import java.util.Objects;
 
-import static bookkeeper.telegram.shared.StringUtil.ICON_ACCOUNT;
+import static bookkeeper.telegram.shared.StringUtils.ICON_ACCOUNT;
 
 /**
  * Scenario: User requests accounts list to pick one and change attributes.

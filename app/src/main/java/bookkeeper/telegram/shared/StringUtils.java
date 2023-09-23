@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.Currency;
 import java.util.Locale;
 
-public class StringUtil {
+public class StringUtils {
     public static String ICON_ACCOUNT = "\uD83D\uDCD8";       // 📘
     public static String ICON_RATES = "\uD83D\uDCC8";         // 📈
     public static String ICON_ASSETS = "\uD83C\uDFDB";        // 🏛

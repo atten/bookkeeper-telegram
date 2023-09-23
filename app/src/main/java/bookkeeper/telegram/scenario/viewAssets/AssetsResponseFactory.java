@@ -16,7 +16,7 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static bookkeeper.telegram.shared.StringUtil.*;
+import static bookkeeper.telegram.shared.StringUtils.*;
 
 @Slf4j
 class AssetsResponseFactory {

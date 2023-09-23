@@ -20,10 +20,6 @@ import java.util.*;
 @Module
 @Slf4j
 abstract class Config {
-    private static String botToken() {
-        return System.getenv("BOT_TOKEN");
-    }
-
     @Provides
     @Singleton
     static TelegramBot telegramBot() {
@@ -77,6 +73,10 @@ abstract class Config {
         } catch (JDBCException e) {
             log.warn(e.getCause().toString());
         }
+    }
+
+    private static String botToken() {
+        return System.getenv("BOT_TOKEN");
     }
 
     /**

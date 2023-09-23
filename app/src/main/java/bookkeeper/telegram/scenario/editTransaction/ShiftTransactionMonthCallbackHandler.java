@@ -3,7 +3,7 @@ package bookkeeper.telegram.scenario.editTransaction;
 import bookkeeper.service.repository.AccountTransactionRepository;
 import bookkeeper.telegram.shared.AbstractHandler;
 import bookkeeper.telegram.shared.Request;
-import bookkeeper.telegram.shared.exception.AccountTransactionNotFound;
+import bookkeeper.exception.AccountTransactionNotFound;
 
 import javax.inject.Inject;
 import java.time.temporal.ChronoUnit;

@@ -10,8 +10,8 @@ import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static bookkeeper.telegram.shared.StringUtil.ICON_ACCOUNT;
-import static bookkeeper.telegram.shared.StringUtil.getMonthYearShort;
+import static bookkeeper.telegram.shared.StringUtils.ICON_ACCOUNT;
+import static bookkeeper.telegram.shared.StringUtils.getMonthYearShort;
 
 class MonthlyExpensesResponseFactory {
     private final AccountRepository accountRepository;

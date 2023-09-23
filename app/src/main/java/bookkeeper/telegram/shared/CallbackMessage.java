@@ -6,7 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-import static bookkeeper.telegram.shared.StringUtil.getMonthName;
+import static bookkeeper.telegram.shared.StringUtils.getMonthName;
 
 public abstract class CallbackMessage implements Serializable {
 

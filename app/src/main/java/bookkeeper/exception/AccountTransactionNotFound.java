@@ -1,4 +1,4 @@
-package bookkeeper.telegram.shared.exception;
+package bookkeeper.exception;
 
 public class AccountTransactionNotFound extends HandlerInterruptException {
     public AccountTransactionNotFound(long id) {

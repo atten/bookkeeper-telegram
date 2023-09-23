@@ -6,7 +6,6 @@ import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.User;
-import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.model.request.Keyboard;
 import com.pengrad.telegrambot.model.request.ParseMode;
@@ -21,10 +20,9 @@ import redis.clients.jedis.JedisPool;
 import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import static bookkeeper.telegram.shared.StringUtil.cleanString;
+import static bookkeeper.telegram.shared.KeyboardUtils.getInlineKeyboardVerboseString;
+import static bookkeeper.telegram.shared.StringUtils.cleanString;
 
 @Slf4j
 public class Request {
@@ -137,11 +135,6 @@ public class Request {
             return Optional.of(ParseMode.Markdown);
         // MarkdownV2 is impractical because requires escaping of non-pairing symbols like '|', '-' etc
         return Optional.empty();
-    }
-
-    private static String getInlineKeyboardVerboseString(InlineKeyboardMarkup keyboard) {
-        var buttonsVerbose = Arrays.stream(keyboard.inlineKeyboard()).flatMap(Stream::of).map(InlineKeyboardButton::callbackData).collect(Collectors.joining(", "));
-        return String.format("[%s]", buttonsVerbose);
     }
 
     private void sendMessage(String text, @Nullable Keyboard keyboard, Boolean reply) {

@@ -4,9 +4,9 @@ import bookkeeper.service.repository.AccountRepository;
 import bookkeeper.service.repository.AccountTransactionRepository;
 import bookkeeper.telegram.shared.AbstractHandler;
 import bookkeeper.telegram.shared.Request;
-import bookkeeper.telegram.shared.exception.AccountNotFound;
-import bookkeeper.telegram.shared.exception.AccountTransactionNotFound;
-import bookkeeper.telegram.shared.exception.HandlerInterruptException;
+import bookkeeper.exception.AccountNotFound;
+import bookkeeper.exception.AccountTransactionNotFound;
+import bookkeeper.exception.HandlerInterruptException;
 
 import javax.inject.Inject;
 

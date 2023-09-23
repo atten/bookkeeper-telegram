@@ -5,16 +5,14 @@ import bookkeeper.enums.Expenditure;
 import bookkeeper.service.repository.AccountTransactionRepository;
 import bookkeeper.telegram.scenario.editTransaction.EditTransactionBulkCallback;
 import bookkeeper.telegram.shared.AbstractHandler;
+import bookkeeper.telegram.shared.KeyboardUtils;
 import bookkeeper.telegram.shared.Request;
-import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 
 import javax.inject.Inject;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 
 /**
@@ -42,10 +40,6 @@ class SelectMonthlyExpendituresCallbackHandler implements AbstractHandler {
     }
 
     private InlineKeyboardMarkup getResponseKeyboard(int monthOffset, TelegramUser user) {
-        var kb = new InlineKeyboardMarkup();
-        var groupBy = 3;
-        AtomicInteger index = new AtomicInteger(0);
-
         Map<Expenditure, List<Long>> idsByExpenditure = new LinkedHashMap<>();
 
         Expenditure.enabledValues()
@@ -55,20 +49,13 @@ class SelectMonthlyExpendituresCallbackHandler implements AbstractHandler {
                     idsByExpenditure.put(expenditure, ids);
             });
 
-        idsByExpenditure.entrySet().stream()
-            .map(entry ->
-                // prepare buttons with expenditures selector
-                new EditTransactionBulkCallback(entry.getValue()).asButton(entry.getKey().getVerboseName())
-            ).collect(
-                // split to N map items each contains a list of 3 buttons
-                Collectors.groupingBy(i -> index.getAndIncrement() / groupBy)
-            ).values().forEach ((inlineKeyboardButtons) ->
-                // append keyboard rows
-                kb.addRow(inlineKeyboardButtons.toArray(InlineKeyboardButton[]::new))
-            );
+        // prepare buttons with expenditures selector
+        var buttons = idsByExpenditure.entrySet().stream()
+            .map(entry -> new EditTransactionBulkCallback(entry.getValue()).asButton(entry.getKey().getVerboseName()))
+            .toList();
 
-        // button which returns to monthly expenses menu
-        kb.addRow(new ViewMonthlyExpensesWithOffsetCallback(monthOffset).asButton("Назад"));
-        return kb;
+        return KeyboardUtils.createMarkupWithFixedColumns(buttons, 3)
+            // button which returns to monthly expenses menu
+            .addRow(new ViewMonthlyExpensesWithOffsetCallback(monthOffset).asButton("Назад"));
     }
 }
