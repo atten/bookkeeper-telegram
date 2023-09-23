@@ -1,7 +1,6 @@
 package bookkeeper.telegram.shared;
 
 import bookkeeper.entity.TelegramUser;
-import bookkeeper.service.registry.CallbackMessageRegistry;
 import bookkeeper.service.repository.TelegramUserRepository;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Message;
@@ -17,6 +16,7 @@ import com.pengrad.telegrambot.request.EditMessageText;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.BaseResponse;
 import lombok.extern.slf4j.Slf4j;
+import redis.clients.jedis.JedisPool;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -31,11 +31,13 @@ public class Request {
     private final Update update;
     private final TelegramBot bot;
     private final TelegramUserRepository telegramUserRepository;
+    private final CallbackMessageRegistry callbackMessageRegistry;
 
-    public Request(Update update, TelegramBot bot, TelegramUserRepository telegramUserRepository) {
+    public Request(Update update, TelegramBot bot, TelegramUserRepository telegramUserRepository, JedisPool jedisPool) {
         this.update = update;
         this.bot = bot;
         this.telegramUserRepository = telegramUserRepository;
+        this.callbackMessageRegistry = new CallbackMessageRegistry(jedisPool);
     }
 
     public TelegramUser getTelegramUser() {
@@ -59,7 +61,7 @@ public class Request {
     }
 
     public Optional<CallbackMessage> getCallbackMessage() {
-        return CallbackMessageRegistry.getCallbackMessage(update.callbackQuery());
+        return callbackMessageRegistry.getCallbackMessage(update.callbackQuery());
     }
 
     /**
@@ -75,7 +77,7 @@ public class Request {
             .flatMap(Arrays::stream)
             .toList()
             .get(index);
-        return CallbackMessageRegistry.getCallbackMessage(button.callbackData());
+        return callbackMessageRegistry.getCallbackMessage(button.callbackData());
     }
 
     public Optional<Message> getReplyToMessage() {
@@ -153,10 +155,11 @@ public class Request {
             message = message.parseMode(parseMode.get());
 
         if (keyboard != null) {
-            message = message.replyMarkup(keyboard);
-
-            if (keyboard instanceof InlineKeyboardMarkup kb)
+            if (keyboard instanceof InlineKeyboardMarkup kb) {
+                callbackMessageRegistry.prepareKeyboard(kb);
                 keyboardVerbose = getInlineKeyboardVerboseString(kb);
+            }
+            message = message.replyMarkup(keyboard);
         }
 
         if (reply)
@@ -170,6 +173,11 @@ public class Request {
 
     private void editMessagePrivate(@Nullable String text, @Nullable InlineKeyboardMarkup keyboard, int messageId) {
         var keyboardVerbose = "";
+
+        if (keyboard != null) {
+            callbackMessageRegistry.prepareKeyboard(keyboard);
+            keyboardVerbose = getInlineKeyboardVerboseString(keyboard);
+        }
 
         BaseResponse result;
         if (text == null && keyboard != null) {
@@ -185,7 +193,6 @@ public class Request {
 
             if (keyboard != null) {
                 message = message.replyMarkup(keyboard);
-                keyboardVerbose = getInlineKeyboardVerboseString(keyboard);
             }
 
             result = bot.execute(message);

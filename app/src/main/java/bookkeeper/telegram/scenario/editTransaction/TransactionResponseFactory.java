@@ -1,8 +1,7 @@
-package bookkeeper.telegram.shared;
+package bookkeeper.telegram.scenario.editTransaction;
 
 import bookkeeper.entity.AccountTransaction;
 import bookkeeper.enums.Expenditure;
-import bookkeeper.telegram.scenario.editTransaction.*;
 import bookkeeper.telegram.scenario.viewMonthlyExpenses.ViewMonthlyExpensesWithOffsetCallback;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 

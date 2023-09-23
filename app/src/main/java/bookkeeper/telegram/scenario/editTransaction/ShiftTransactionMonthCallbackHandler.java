@@ -8,8 +8,8 @@ import bookkeeper.telegram.shared.exception.AccountTransactionNotFound;
 import javax.inject.Inject;
 import java.time.temporal.ChronoUnit;
 
-import static bookkeeper.telegram.shared.TransactionResponseFactory.getResponseKeyboard;
-import static bookkeeper.telegram.shared.TransactionResponseFactory.getResponseMessage;
+import static bookkeeper.telegram.scenario.editTransaction.TransactionResponseFactory.getResponseKeyboard;
+import static bookkeeper.telegram.scenario.editTransaction.TransactionResponseFactory.getResponseMessage;
 
 
 /**

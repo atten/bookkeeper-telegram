@@ -12,6 +12,7 @@ import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
 import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
+import redis.clients.jedis.JedisPool;
 
 import javax.inject.Inject;
 import java.util.Comparator;
@@ -24,15 +25,19 @@ class Bot {
     private final EntityManager entityManager;
     private final List<AbstractHandler> handlers;
     private final TelegramUserRepository userRepository;
+    private final JedisPool jedisPool;
 
     @Inject
     Bot(
         TelegramBot telegramBot,
         EntityManager entityManager,
         Set<AbstractHandler> handlers,
-        TelegramUserRepository userRepository) {
+        TelegramUserRepository userRepository,
+        JedisPool jedisPool
+    ) {
         this.bot = telegramBot;
         this.entityManager = entityManager;
+        this.jedisPool = jedisPool;
         this.handlers = handlers
             .stream()
             .sorted(Comparator.comparing(AbstractHandler::getPriority))
@@ -68,7 +73,7 @@ class Bot {
     private void processUpdate(Update update) {
         entityManager.getTransaction().begin();
 
-        var request = new Request(update, bot, userRepository);
+        var request = new Request(update, bot, userRepository, jedisPool);
         Boolean processed = false;
 
         for (AbstractHandler handler : handlers) {

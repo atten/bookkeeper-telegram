@@ -10,8 +10,8 @@ import bookkeeper.telegram.shared.Request;
 import java.text.ParseException;
 import java.util.List;
 
-import static bookkeeper.telegram.shared.TransactionResponseFactory.getResponseKeyboard;
-import static bookkeeper.telegram.shared.TransactionResponseFactory.getResponseMessage;
+import static bookkeeper.telegram.scenario.editTransaction.TransactionResponseFactory.getResponseKeyboard;
+import static bookkeeper.telegram.scenario.editTransaction.TransactionResponseFactory.getResponseMessage;
 
 
 /**

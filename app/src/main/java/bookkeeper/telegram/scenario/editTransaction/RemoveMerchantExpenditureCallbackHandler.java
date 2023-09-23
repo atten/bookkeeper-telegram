@@ -7,7 +7,7 @@ import bookkeeper.telegram.shared.Request;
 
 import javax.inject.Inject;
 
-import static bookkeeper.telegram.shared.TransactionResponseFactory.getResponseMessage;
+import static bookkeeper.telegram.scenario.editTransaction.TransactionResponseFactory.getResponseMessage;
 
 
 class RemoveMerchantExpenditureCallbackHandler implements AbstractHandler {

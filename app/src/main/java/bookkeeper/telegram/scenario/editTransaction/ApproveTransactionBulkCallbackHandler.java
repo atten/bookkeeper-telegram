@@ -6,7 +6,7 @@ import bookkeeper.telegram.shared.Request;
 
 import javax.inject.Inject;
 
-import static bookkeeper.telegram.shared.TransactionResponseFactory.getResponseKeyboard;
+import static bookkeeper.telegram.scenario.editTransaction.TransactionResponseFactory.getResponseKeyboard;
 
 
 /**

@@ -16,8 +16,8 @@ public class StringUtil {
     public static String ICON_ACCOUNT = "\uD83D\uDCD8";       // 📘
     public static String ICON_RATES = "\uD83D\uDCC8";         // 📈
     public static String ICON_ASSETS = "\uD83C\uDFDB";        // 🏛
-    static String ICON_EXPENDITURE = "\uD83D\uDCDD";          // 📝
-    static String ICON_DELETE = "\uD83D\uDDD1";               // 🗑
+    public static String ICON_EXPENDITURE = "\uD83D\uDCDD";   // 📝
+    public static String ICON_DELETE = "\uD83D\uDDD1";        // 🗑
 
     public static String getNumberIcon(int number) {
         switch (number) {
@@ -39,7 +39,7 @@ public class StringUtil {
         return getAmount(transaction.getAmount(), transaction.currency());
     }
 
-    static String getAmount(BigDecimal amount, Account account) {
+    public static String getAmount(BigDecimal amount, Account account) {
         return getAmount(amount, account.getCurrency());
     }
 

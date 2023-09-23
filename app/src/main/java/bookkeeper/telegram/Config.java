@@ -19,7 +19,7 @@ import java.util.*;
 
 @Module
 @Slf4j
-public abstract class Config {
+abstract class Config {
     private static String botToken() {
         return System.getenv("BOT_TOKEN");
     }
@@ -43,7 +43,7 @@ public abstract class Config {
 
     @Provides
     @Singleton
-    public static JedisPool redisPool() {
+    static JedisPool redisPool() {
         var path = applicationProperties().getProperty("jedis.redis.path");
         return new JedisPool(path);
     }

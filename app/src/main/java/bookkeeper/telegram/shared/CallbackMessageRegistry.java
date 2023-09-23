@@ -1,31 +1,49 @@
-package bookkeeper.service.registry;
+package bookkeeper.telegram.shared;
 
-import bookkeeper.telegram.Config;
-import bookkeeper.telegram.shared.CallbackMessage;
 import com.pengrad.telegrambot.model.CallbackQuery;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
+import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
+import redis.clients.jedis.JedisPool;
 
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import java.io.*;
 import java.text.ParseException;
 import java.util.Base64;
 import java.util.Optional;
 
-public class CallbackMessageRegistry {
-    private static final StringShortener shortener = new StringShortener(55, Config.redisPool());
+class CallbackMessageRegistry {
+    private final StringShortener shortener;
 
-    public static InlineKeyboardButton createButton(CallbackMessage message, String text) {
-        return new InlineKeyboardButton(text).callbackData(shortener.shrink(serialize(message)));
+    @Inject
+    CallbackMessageRegistry(JedisPool jedisPool) {
+        this.shortener = new StringShortener(55, jedisPool);
     }
 
-    public static Optional<CallbackMessage> getCallbackMessage(@Nullable CallbackQuery callbackQuery) {
+    static InlineKeyboardButton createButton(CallbackMessage message, String text) {
+        return new InlineKeyboardButton(text).callbackData(serialize(message));
+    }
+
+    private void prepareButton(InlineKeyboardButton button) {
+        button.callbackData(shortener.shrink(button.callbackData()));
+    }
+
+    void prepareKeyboard(InlineKeyboardMarkup keyboard) {
+        for (var row : keyboard.inlineKeyboard()) {
+            for (var button : row) {
+                prepareButton(button);
+            }
+        }
+    }
+
+    Optional<CallbackMessage> getCallbackMessage(@Nullable CallbackQuery callbackQuery) {
         if (callbackQuery == null)
             return Optional.empty();
 
         return getCallbackMessage(callbackQuery.data());
     }
 
-    public static Optional<CallbackMessage> getCallbackMessage(String callbackData) {
+    Optional<CallbackMessage> getCallbackMessage(String callbackData) {
         callbackData = shortener.unshrink(callbackData);
 
         try {

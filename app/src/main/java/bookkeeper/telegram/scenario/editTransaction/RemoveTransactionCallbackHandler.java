@@ -8,7 +8,7 @@ import bookkeeper.telegram.shared.exception.AccountTransactionNotFound;
 import javax.inject.Inject;
 
 import static bookkeeper.telegram.shared.StringUtil.strikeoutMessage;
-import static bookkeeper.telegram.shared.TransactionResponseFactory.getResponseMessage;
+import static bookkeeper.telegram.scenario.editTransaction.TransactionResponseFactory.getResponseMessage;
 
 
 /**

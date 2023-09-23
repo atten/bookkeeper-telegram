@@ -1,6 +1,5 @@
 package bookkeeper.telegram.shared;
 
-import bookkeeper.service.registry.CallbackMessageRegistry;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import org.apache.commons.lang3.StringUtils;
 
