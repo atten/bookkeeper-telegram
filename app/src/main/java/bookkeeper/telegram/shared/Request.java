@@ -47,6 +47,8 @@ public class Request {
     public String getMessageText() {
         if (update.message() == null)
             return "";
+        if (update.message().text() == null)
+            return "";
         return cleanString(update.message().text());
     }
 
