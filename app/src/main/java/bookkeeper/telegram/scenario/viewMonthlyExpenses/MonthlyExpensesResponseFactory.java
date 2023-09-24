@@ -7,11 +7,12 @@ import bookkeeper.service.repository.AccountTransactionRepository;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 
 import java.math.BigDecimal;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Currency;
+import java.util.HashMap;
 
-import static bookkeeper.telegram.shared.StringUtils.ICON_ACCOUNT;
-import static bookkeeper.telegram.shared.StringUtils.getMonthYearShort;
+import static bookkeeper.telegram.shared.StringUtils.*;
 
 class MonthlyExpensesResponseFactory {
     private final AccountRepository accountRepository;
@@ -42,7 +43,7 @@ class MonthlyExpensesResponseFactory {
             debitByCurrency.putIfAbsent(currency, BigDecimal.ZERO);
             allByCurrency.putIfAbsent(currency, BigDecimal.ZERO);
 
-            lines.add(String.format("%s *%s*", ICON_ACCOUNT, account.getName()));
+            lines.add("*" + getAccountDisplayName(account) + "*");
             lines.add("```");
 
             for (var expenditure : amountByExpenditure.keySet()) {
@@ -67,9 +68,9 @@ class MonthlyExpensesResponseFactory {
 
         lines.add(String.format("*\uD83D\uDCDA Всего за %s*", getMonthYearShort(monthOffset)));
         lines.add("```");
-        lines.add(String.format("%-7s %s", "Расходы", amountByCurrencyString(creditByCurrency)));
-        lines.add(String.format("%-7s %s", "Доходы", amountByCurrencyString(debitByCurrency)));
-        lines.add(String.format("%-7s %s", "Баланс", amountByCurrencyString(allByCurrency)));
+        lines.add(String.format("%-7s %s", "Расходы", getRoundedAmountMulti(creditByCurrency)));
+        lines.add(String.format("%-7s %s", "Доходы", getRoundedAmountMulti(debitByCurrency)));
+        lines.add(String.format("%-7s %s", "Баланс", getRoundedAmountMulti(allByCurrency)));
         lines.add("```");
 
         return String.join("\n", lines);
@@ -82,13 +83,6 @@ class MonthlyExpensesResponseFactory {
         var prevMonthButton = new ViewMonthlyExpensesWithOffsetCallback(monthOffset - 1).asPrevMonthButton(monthOffset - 1);
         var nextMonthButton = new ViewMonthlyExpensesWithOffsetCallback(monthOffset + 1).asNextMonthButton(monthOffset + 1);
         return keyboard.addRow(prevMonthButton, nextMonthButton);
-    }
-
-    private String amountByCurrencyString(Map<Currency, BigDecimal> values) {
-        return values
-            .entrySet().stream()
-            .map(i -> roundedAmountString(i.getValue()) + " " + i.getKey().getSymbol())
-            .collect(Collectors.joining(", "));
     }
 
     private String roundedAmountString(BigDecimal value) {

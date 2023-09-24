@@ -87,8 +87,8 @@ class AssetsResponseFactory {
             .limit(pageSize)
             .map(asset ->
                 String.format(
-                    "<u>%s</u>\n%s | %5.5s",
-                    asset.account().getName(),
+                    "<b>%s</b>\n%s | %5.5s",
+                    getAccountDisplayName(asset.account()),
                     String.format("%,.2f %s", asset.balance(), asset.account().getCurrency().getSymbol()),
                     String.format("%.1f%%", asset.getExchangeBalance().floatValue() / netAssets * 100)
                 )

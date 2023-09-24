@@ -45,8 +45,8 @@ class SelectAccountCallbackHandler implements AbstractHandler {
             .filter(user, transaction.currency())
             .stream()
             .filter(account -> transaction.getAccount().getId() != account.getId())
-            // prepare buttons with expenditures selector
-            .map(account -> new SwitchAccountCallback(transaction.getId(), account.getId()).setPendingTransactionIds(pendingTransactionIds).asButton(account.getName()))
+            // prepare buttons with account selector
+            .map(account -> new SwitchAccountCallback(transaction.getId(), account.getId()).setPendingTransactionIds(pendingTransactionIds).asAccountButton(account))
             .toList();
         return KeyboardUtils.createMarkupWithFixedColumns(buttons, 3);
     }

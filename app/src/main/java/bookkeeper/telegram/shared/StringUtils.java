@@ -4,6 +4,7 @@ import bookkeeper.entity.Account;
 import bookkeeper.entity.AccountTransaction;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -11,6 +12,8 @@ import java.time.format.TextStyle;
 import java.util.Arrays;
 import java.util.Currency;
 import java.util.Locale;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class StringUtils {
     public static String ICON_ACCOUNT = "\uD83D\uDCD8";       // 📘
@@ -44,7 +47,7 @@ public class StringUtils {
     }
 
     /**
-     * 100 ₽ (credit) | +100 ₽ (debit)
+     * 100.55 ₽ (credit) | +100.55 ₽ (debit)
      */
     public static String getAmount(BigDecimal amount, Currency currency) {
         return String.format(
@@ -52,6 +55,41 @@ public class StringUtils {
             amount.negate().toString().replace("-", "+"),
             currency.getSymbol()
         );
+    }
+
+    /**
+     * 101 ₽ (credit) | +101 ₽ (debit)
+     */
+    private static String getRoundedAmount(BigDecimal amount, Currency currency) {
+        return getAmount(amount.setScale(0, RoundingMode.HALF_UP), currency);
+    }
+
+    /**
+     * 25 542 ₽, 10 $
+     */
+    public static String getRoundedAmountMulti(Map<Currency, BigDecimal> values) {
+        return values
+            .entrySet()
+            .stream()
+            .filter(entry -> !entry.getValue().stripTrailingZeros().equals(BigDecimal.ZERO))
+            .map(i -> getRoundedAmount(i.getValue(), i.getKey()))
+            .collect(Collectors.joining(", "));
+    }
+
+    /**
+     * 📘Копилка (RUB)
+     */
+    public static String getAccountDisplayName(Account account) {
+        var currency = account.getCurrency().getCurrencyCode();
+        var name = account.getName();
+
+        if (!name.contains(currency))
+            name = String.format("%s (%s)", name, currency);
+
+        if (Character.isLetterOrDigit(name.charAt(0)))
+            name = ICON_ACCOUNT + name;
+
+        return name;
     }
 
     /**

@@ -47,7 +47,7 @@ class ListAccountsCallbackHandler implements AbstractHandler {
         var buttons = accountRepository
             .filter(request.getTelegramUser())
             .stream()
-            .map(account -> new ShowAccountDetailsCallback(account.getId()).asButton(account.getName()))
+            .map(account -> new ShowAccountDetailsCallback(account.getId()).asAccountButton(account))
             .toList();
 
         var keyboard = KeyboardUtils.createMarkupWithFixedColumns(buttons, 2);

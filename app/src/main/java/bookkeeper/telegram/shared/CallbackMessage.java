@@ -1,17 +1,23 @@
 package bookkeeper.telegram.shared;
 
+import bookkeeper.entity.Account;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 
+import static bookkeeper.telegram.shared.StringUtils.getAccountDisplayName;
 import static bookkeeper.telegram.shared.StringUtils.getMonthName;
 
 public abstract class CallbackMessage implements Serializable {
 
     public InlineKeyboardButton asButton(String text) {
         return CallbackMessageRegistry.createButton(this, text);
+    }
+
+    public InlineKeyboardButton asAccountButton(Account account) {
+        return asButton(getAccountDisplayName(account));
     }
 
     public InlineKeyboardButton asNextMonthButton(int offset) {

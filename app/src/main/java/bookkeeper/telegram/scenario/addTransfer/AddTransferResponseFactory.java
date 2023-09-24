@@ -35,7 +35,7 @@ class AddTransferResponseFactory {
         accountRepository.filter(user, memory.getWithdrawCurrency())
                 .stream()
                 .filter(account -> account.getId() != memory.getDepositAccountId())
-                .map(account -> memory.setWithdrawAccountId(account.getId()).asButton(ICON_ACCOUNT + " " + account.getName()))
+                .map(account -> memory.setWithdrawAccountId(account.getId()).asAccountButton(account))
                 .forEach(kb::addRow);
         return kb;
     }
@@ -45,7 +45,7 @@ class AddTransferResponseFactory {
         accountRepository.filter(user, memory.getDepositCurrency())
                 .stream()
                 .filter(account -> account.getId() != memory.getWithdrawAccountId())
-                .map(account -> memory.setDepositAccountId(account.getId()).asButton(ICON_ACCOUNT + " " + account.getName()))
+                .map(account -> memory.setDepositAccountId(account.getId()).asAccountButton(account))
                 .forEach(kb::addRow);
         return kb;
     }
