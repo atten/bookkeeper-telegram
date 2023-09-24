@@ -1,16 +1,16 @@
-package bookkeeper.telegram.scenario.viewAssets;
+package bookkeeper.service.query;
 
 import bookkeeper.entity.Account;
 
 import java.math.BigDecimal;
 import java.util.Currency;
 
-record Asset(Account account, BigDecimal balance, BigDecimal exchangeRate, Currency exchangeCurrency) {
-    BigDecimal getExchangeBalance() {
+public record Asset(Account account, BigDecimal balance, BigDecimal exchangeRate, Currency exchangeCurrency) {
+    public BigDecimal getExchangeBalance() {
         return balance.multiply(exchangeRate);
     }
 
-    boolean isEmpty() {
+    public boolean isEmpty() {
         return balance.stripTrailingZeros().equals(BigDecimal.ZERO);
     }
 }

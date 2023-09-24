@@ -93,13 +93,15 @@ public class StringUtils {
     }
 
     /**
-     * Январь
+     * январь
      */
     public static String getMonthName(int monthOffset) {
-        var date = LocalDate.now().plusMonths(monthOffset);
-        return getMonthName(date.plusMonths(monthOffset));
+        return getMonthName(LocalDate.now().plusMonths(monthOffset));
     }
 
+    /**
+     * январь
+     */
     static String getMonthName(LocalDate date) {
         return date.getMonth().getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault());
     }
