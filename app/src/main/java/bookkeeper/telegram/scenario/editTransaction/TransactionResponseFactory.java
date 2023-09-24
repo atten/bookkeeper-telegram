@@ -28,32 +28,31 @@ public class TransactionResponseFactory {
             counterMap.get(transaction.getExpenditure()).incrementAndGet();
         });
 
-        var totalItemsVerbose = pluralizeTemplate(transactions.size(), "Добавлена", "Добавлены %s записи", "Добавлено %s записей");
-
-        String statsVerbose;
+        var totalItemsVerbose = pluralizeTemplate(transactions.size(), "Добавлена запись", "Добавлены %s записи", "Добавлено %s записей");
+        var items = new StringJoiner("\n");
 
         if (counterMap.size() == 1) {
             var transaction = transactions.get(0);
-            statsVerbose = String.format("в *%s*", transaction.getExpenditure().getVerboseName());
+            var item = String.format("в *%s*", transaction.getExpenditure().getVerboseName());
             if (!isTransactionRecent(transaction)) {
                 // add date (e.g. 10.01.23) if transaction was added earlier than 12h ago
-                statsVerbose += " " + getDateShort(transaction.date());
+                item += " " + getDateShort(transaction.date());
             }
+            items.add(item);
         } else {
-            totalItemsVerbose = totalItemsVerbose + ": ";
-            statsVerbose = counterMap
-                    .entrySet()
-                    .stream()
-                    .map(entry -> String.format("%s в *%s*", entry.getValue(), entry.getKey().getVerboseName()))
-                    .reduce((s, s2) -> s + ", " + s2).orElse("");
+            counterMap
+                .entrySet()
+                .stream()
+                .map(entry -> String.format("• %s в *%s*", entry.getValue(), entry.getKey().getVerboseName()))
+                .forEach(items::add);
         }
 
         var totalAmount = transactions.stream().map(AccountTransaction::getAmount).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
         var account = transactions.get(0).getAccount();
-        var accountVerbose = String.format("на счет %s", account.getName());
+        var accountVerbose = String.format("на счёт %s", account.getName());
         var totalAccountVerbose = getAmount(totalAmount, account);
 
-        return totalItemsVerbose + " " + statsVerbose + " " + accountVerbose + " стоимостью " + totalAccountVerbose + ".";
+        return totalItemsVerbose + " " + accountVerbose + ":\n" + items + "\n" + "на сумму " + totalAccountVerbose;
     }
 
     public static String getResponseMessage(AccountTransaction transaction) {
