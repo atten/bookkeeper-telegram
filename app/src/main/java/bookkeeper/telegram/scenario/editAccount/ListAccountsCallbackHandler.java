@@ -1,9 +1,10 @@
 package bookkeeper.telegram.scenario.editAccount;
 
 import bookkeeper.service.repository.AccountRepository;
+import bookkeeper.telegram.scenario.viewAssets.ViewAssetsCallback;
 import bookkeeper.telegram.shared.AbstractHandler;
+import bookkeeper.telegram.shared.KeyboardUtils;
 import bookkeeper.telegram.shared.Request;
-import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 
 import javax.inject.Inject;
 import java.util.Objects;
@@ -43,17 +44,20 @@ class ListAccountsCallbackHandler implements AbstractHandler {
 
     private void sendMessageWithAccounts(Request request, boolean edit) {
         var text = ICON_ACCOUNT + " Выберите счёт для редактирования:";
-        var kb = new InlineKeyboardMarkup();
-        accountRepository
+        var buttons = accountRepository
             .filter(request.getTelegramUser())
             .stream()
             .map(account -> new ShowAccountDetailsCallback(account.getId()).asButton(account.getName()))
-            .forEach(kb::addRow);
+            .toList();
+
+        var keyboard = KeyboardUtils.createMarkupWithFixedColumns(buttons, 2);
+
+        keyboard.addRow(ViewAssetsCallback.firstPage().asButton("Активы"));
 
         if (edit) {
-            request.editMessage(text, kb);
+            request.editMessage(text, keyboard);
         } else {
-            request.sendMessage(text, kb);
+            request.sendMessage(text, keyboard);
         }
     }
 }

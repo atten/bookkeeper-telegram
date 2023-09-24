@@ -4,7 +4,7 @@ import bookkeeper.telegram.shared.CallbackMessage;
 import lombok.Getter;
 
 
-class ViewAssetsWithOffsetCallback extends CallbackMessage {
+public class ViewAssetsCallback extends CallbackMessage {
     @Getter
     private final int monthOffset;
     @Getter
@@ -12,9 +12,13 @@ class ViewAssetsWithOffsetCallback extends CallbackMessage {
     @Getter
     private final int pageSize;
 
-    ViewAssetsWithOffsetCallback(int monthOffset, int page, int pageSize) {
+    ViewAssetsCallback(int monthOffset, int page, int pageSize) {
         this.monthOffset = monthOffset;
         this.page = page;
         this.pageSize = pageSize;
+    }
+
+    public static ViewAssetsCallback firstPage() {
+        return new ViewAssetsCallback(0, 0, 5);
     }
 }
