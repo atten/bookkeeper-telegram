@@ -74,7 +74,8 @@ class Bot {
 
     private void setupCommands() {
         var commandsRequest = new SetMyCommands(
-            new BotCommand("assets", "Сводка активов"),
+            new BotCommand("annual", "Готовой отчёт"),
+            new BotCommand("assets", "Баланс счетов"),
             new BotCommand("expenses", "Расходы за месяц"),
             new BotCommand("new_account", "Создать счёт"),
             new BotCommand("new_transfer", "Создать перевод между счетами"),
