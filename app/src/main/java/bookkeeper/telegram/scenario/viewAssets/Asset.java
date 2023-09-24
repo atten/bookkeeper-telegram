@@ -11,6 +11,6 @@ record Asset(Account account, BigDecimal balance, BigDecimal exchangeRate, Curre
     }
 
     boolean isEmpty() {
-        return balance.equals(BigDecimal.ZERO);
+        return balance.stripTrailingZeros().equals(BigDecimal.ZERO);
     }
 }

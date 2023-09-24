@@ -99,6 +99,7 @@ class AssetsResponseFactory {
         result
             .add(String.format(ICON_ACCOUNT + " Сводка по непустым счетам на конец <b>%s</b>:", getMonthYearRelative(monthOffset)))
             .add(content.toString())
+            .add("________________________________")
             .add(String.format(ICON_RATES + " <b>Курс на %s</b>:\n%s", getDateShort(exchangeDate), exchangeRatesVerbose(exchangeRates)))
             .add(String.format(ICON_ASSETS + " <b>Итог за %s</b>: %,.2f %s", getMonthName(monthOffset), netAssets, exchangeCurrency.getSymbol()));
 
