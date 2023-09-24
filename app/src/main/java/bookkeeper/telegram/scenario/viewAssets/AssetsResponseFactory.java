@@ -84,6 +84,7 @@ class AssetsResponseFactory {
         assets
             .stream()
             .skip((long) page * pageSize)
+            .limit(pageSize)
             .map(asset ->
                 String.format(
                     "<u>%s</u>\n%s | %5.5s",
