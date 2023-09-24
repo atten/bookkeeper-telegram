@@ -7,8 +7,14 @@ import lombok.Getter;
 class ViewAssetsWithOffsetCallback extends CallbackMessage {
     @Getter
     private final int monthOffset;
+    @Getter
+    private final int page;
+    @Getter
+    private final int pageSize;
 
-    ViewAssetsWithOffsetCallback(int monthOffset) {
+    ViewAssetsWithOffsetCallback(int monthOffset, int page, int pageSize) {
         this.monthOffset = monthOffset;
+        this.page = page;
+        this.pageSize = pageSize;
     }
 }

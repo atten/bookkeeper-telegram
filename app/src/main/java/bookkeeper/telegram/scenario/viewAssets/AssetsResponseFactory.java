@@ -35,7 +35,7 @@ class AssetsResponseFactory {
         this.apiClient = apiClient;
     }
 
-    String getTotalAssets(TelegramUser user, int monthOffset) {
+    String getTotalAssets(TelegramUser user, int monthOffset, int page, int pageSize) {
         var exchangeDate = monthOffset >= 0 ?
                 LocalDate.now() :
                 // last day of month = first day of next month - 1 day
@@ -73,15 +73,17 @@ class AssetsResponseFactory {
                     exchangeRates.getOrDefault(account.getCurrency(), BigDecimal.ZERO),
                     exchangeCurrency
                 )
-            ).toList();
+            )
+            .filter(asset -> !asset.isEmpty())
+            .sorted(Comparator.comparing(i -> i.getExchangeBalance().negate())) // descending order
+            .toList();
 
         var netAssets = assets.stream().map(Asset::getExchangeBalance).reduce(BigDecimal.ZERO, BigDecimal::add).floatValue();
 
         var content = new StringJoiner("\n\n");
         assets
             .stream()
-            .filter(asset -> !asset.isEmpty())
-            .sorted(Comparator.comparing(i -> i.getExchangeBalance().negate())) // descending order
+            .skip((long) page * pageSize)
             .map(asset ->
                 String.format(
                     "<u>%s</u>\n%s | %5.5s",
@@ -98,6 +100,10 @@ class AssetsResponseFactory {
             .add(content.toString())
             .add(String.format(ICON_RATES + " <b>Курс на %s</b>:\n%s", getDateShort(exchangeDate), exchangeRatesVerbose(exchangeRates)))
             .add(String.format(ICON_ASSETS + " <b>Итог за %s</b>: %,.2f %s", getMonthName(monthOffset), netAssets, exchangeCurrency.getSymbol()));
+
+        var pagesCount = (int) Math.ceil((double) assets.size() / pageSize);
+        result.add(String.format("Страница %s / %s", page + 1, pagesCount));
+
         return result.toString();
     }
 
