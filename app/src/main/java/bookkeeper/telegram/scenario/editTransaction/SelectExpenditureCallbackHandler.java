@@ -8,6 +8,7 @@ import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.stream.Stream;
 
 
 /**
@@ -30,12 +31,18 @@ class SelectExpenditureCallbackHandler implements AbstractHandler {
     }
 
     private InlineKeyboardMarkup getResponseKeyboard(long transactionId, List<Long> pendingTransactionIds) {
-        // prepare buttons with expenditures selector
+        // buttons with expenditures selector
         var buttons = Expenditure
             .enabledValues()
             .stream()
             .map(expenditure -> new AssignExpenditureCallback(transactionId, expenditure).setPendingTransactionIds(pendingTransactionIds).asButton(expenditure.getVerboseName()))
             .toList();
-        return KeyboardUtils.createMarkupWithFixedColumns(buttons, 3);
+
+        // button which returns to transaction edit message
+        var allTransactionIds = Stream.concat(Stream.of(transactionId), pendingTransactionIds.stream()).toList();
+        var backButton = new EditTransactionBulkCallback(allTransactionIds).asButton("Назад");
+
+        return KeyboardUtils.createMarkupWithFixedColumns(buttons, 3)
+            .addRow(backButton);
     }
 }

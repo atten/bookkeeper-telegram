@@ -26,11 +26,7 @@ class CallbackMessageRegistry {
     }
 
     void prepareKeyboardBeforeSend(InlineKeyboardMarkup keyboard) {
-        for (var row : keyboard.inlineKeyboard()) {
-            for (var button : row) {
-                prepareButtonBeforeSend(button);
-            }
-        }
+        KeyboardUtils.getButtons(keyboard).forEach(this::prepareButtonBeforeSend);
     }
 
     Optional<CallbackMessage> getCallbackMessage(@Nullable CallbackQuery callbackQuery) {

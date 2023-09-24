@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class KeyboardUtils {
-    private static List<InlineKeyboardButton> getButtons(InlineKeyboardMarkup keyboard) {
+    static List<InlineKeyboardButton> getButtons(InlineKeyboardMarkup keyboard) {
         return Arrays.stream(keyboard.inlineKeyboard()).flatMap(Stream::of).toList();
     }
 

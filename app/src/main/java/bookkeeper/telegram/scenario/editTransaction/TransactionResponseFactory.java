@@ -3,12 +3,12 @@ package bookkeeper.telegram.scenario.editTransaction;
 import bookkeeper.entity.AccountTransaction;
 import bookkeeper.enums.Expenditure;
 import bookkeeper.telegram.scenario.viewMonthlyExpenses.ViewMonthlyExpensesWithOffsetCallback;
+import bookkeeper.telegram.shared.KeyboardUtils;
+import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
@@ -107,32 +107,35 @@ public class TransactionResponseFactory {
         if (transaction.isApproved())
             return kb.addRow(selectExpenditureButton);
 
-        return kb.addRow(selectExpenditureButton, prevMonthButton, nextMonthButton)
-                .addRow(accountButton, removeButton, approveButton);
+        var buttons = List.of(selectExpenditureButton, prevMonthButton, nextMonthButton, accountButton, removeButton, approveButton);
+        return KeyboardUtils.createMarkupWithFixedColumns(buttons, 3);
     }
 
     public static InlineKeyboardMarkup getResponseKeyboard(AccountTransaction transaction, List<Long> pendingTransactionIds) {
         var transactionId = transaction.getId();
+        var monthOffset = transaction.age().negated().toDays() / 30;
+        var buttons = new ArrayList<InlineKeyboardButton>();
 
         var selectExpenditureButton = new SelectExpenditureCallback(transactionId).setPendingTransactionIds(pendingTransactionIds).asButton(ICON_EXPENDITURE + " Категория");
         var prevMonthButton = new ShiftTransactionMonthCallback(transactionId, -1).setPendingTransactionIds(pendingTransactionIds).asPrevMonthButton(transaction.date(), "В %s");
         var nextMonthButton = new ShiftTransactionMonthCallback(transactionId, +1).setPendingTransactionIds(pendingTransactionIds).asNextMonthButton(transaction.date(), "В %s");
         var accountButton = new SelectAccountCallback(transactionId).setPendingTransactionIds(pendingTransactionIds).asButton(ICON_ACCOUNT + " Счёт");
+        var showExpensesButton = new ViewMonthlyExpensesWithOffsetCallback((int) monthOffset).asButton("Готово");
 
-        var kb = new InlineKeyboardMarkup()
-            .addRow(selectExpenditureButton, prevMonthButton, nextMonthButton, accountButton);
+        buttons.add(selectExpenditureButton);
+        buttons.add(prevMonthButton);
+        buttons.add(nextMonthButton);
+        buttons.add(accountButton);
 
-        if (transaction.isApproved() && pendingTransactionIds.isEmpty()) {
-            var monthOffset = transaction.age().negated().toDays() / 30;
-            var showExpensesButton = new ViewMonthlyExpensesWithOffsetCallback((int) monthOffset).asButton("Готово");
-            kb.addRow(showExpensesButton);
-        } else {
+        var showApproveButton = !transaction.isApproved() || pendingTransactionIds.size() > 0;
+        if (showApproveButton) {
             var approveButtonText = transaction.isApproved() ? "Далее" : "✅ Подтвердить";
             var approveButton = new ApproveTransactionCallback(transactionId).setPendingTransactionIds(pendingTransactionIds).asButton(approveButtonText);
-            kb.addRow(approveButton);
+            buttons.add(approveButton);
         }
 
-        return kb;
+        buttons.add(showExpensesButton);
+        return KeyboardUtils.createMarkupWithFixedColumns(buttons, 3);
     }
 
     private static boolean isTransactionRecent(AccountTransaction transaction) {
