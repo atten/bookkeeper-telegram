@@ -20,16 +20,30 @@ class AnnualWorthResponseFactory {
 
     String getAnnualWorth(TelegramUser user) {
         var rows = new StringJoiner("\n");
-
         var currentMonth = LocalDate.now().getMonth().getValue();
-        for (int month = 1; month <= currentMonth; month++) {
+        float prevNetAssets = 0;
+
+        // start from 0 month (0 = Dec of previous year, Jan = 1)
+        for (int month = 0; month <= currentMonth; month++) {
             var monthOffset = month - currentMonth;
             var assets = assetQuery.getMonthlyAssets(user, monthOffset);
-            var netAssetMillions = String.format("%.2f", AssetQuery.getNetAssetsValue(assets) / 1000 / 1000);
+            var netAssets = AssetQuery.getNetAssetsValue(assets);
+            var netAssetsDelta = netAssets - prevNetAssets;
+            var netAssetMillions = String.format("%.2f", netAssets / 1000 / 1000);
+            var netAssetsDeltaKilos = String.format("+%.2f", netAssetsDelta / 1000);
             var monthStr = StringUtils.capitalize(getMonthName(monthOffset));
 
-            rows.add(String.format("`%3.3s %5.5sM`", monthStr, netAssetMillions));
+            // don't include Dec of previous year
+            if (month > 0)
+                rows.add(
+                    String.format("`%3.3s %5.5sM (%5.5sK)`", monthStr, netAssetMillions, netAssetsDeltaKilos)
+                        // if delta does not fully fit into 5 characters, remove redundant comma
+                        .replace(",K", " K")
+                        // if delta has empty fraction part, remove extra precision
+                        .replace(",00K", "K")
+                );
 
+            prevNetAssets = netAssets;
         }
 
         return rows.toString();
