@@ -31,11 +31,10 @@ public class AccountTransactionRepository {
         return query.getResultList();
     }
 
-    public List<AccountTransaction> findRecent(TelegramUser user, Currency currency, int count) {
-        var sql = "SELECT i FROM AccountTransaction i WHERE account.telegramUser=:user AND account.currency=:currency ORDER BY createdAt DESC LIMIT :count";
+    public List<AccountTransaction> findRecent(Account account, int count) {
+        var sql = "SELECT i FROM AccountTransaction i WHERE account=:account ORDER BY createdAt DESC LIMIT :count";
         var query = manager.createQuery(sql, AccountTransaction.class)
-            .setParameter("user", user)
-            .setParameter("currency", currency.getCurrencyCode())
+            .setParameter("account", account)
             .setParameter("count", count);
         return query.getResultList();
     }

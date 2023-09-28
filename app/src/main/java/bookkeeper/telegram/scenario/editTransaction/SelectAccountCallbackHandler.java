@@ -41,10 +41,9 @@ class SelectAccountCallbackHandler implements AbstractHandler {
     }
 
     private InlineKeyboardMarkup getResponseKeyboard(AccountTransaction transaction, TelegramUser user, List<Long> pendingTransactionIds) {
-        var buttons = accountRepository
-            .filter(user, transaction.currency())
+        var accounts = accountRepository.filter(user, transaction.currency());
+        var buttons = accounts
             .stream()
-            .filter(account -> transaction.getAccount().getId() != account.getId())
             // prepare buttons with account selector
             .map(account -> new SwitchAccountCallback(transaction.getId(), account.getId()).setPendingTransactionIds(pendingTransactionIds).asAccountButton(account))
             .toList();

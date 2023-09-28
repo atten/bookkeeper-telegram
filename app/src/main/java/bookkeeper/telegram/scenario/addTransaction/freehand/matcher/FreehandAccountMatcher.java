@@ -10,6 +10,7 @@ import bookkeeper.service.repository.AccountTransactionRepository;
 import bookkeeper.telegram.scenario.addTransaction.freehand.parser.FreehandRecord;
 import bookkeeper.telegram.scenario.addTransaction.freehand.parser.FreehandRecordWithCurrency;
 
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.Currency;
 import java.util.Optional;
@@ -23,52 +24,45 @@ public class FreehandAccountMatcher implements AccountMatcher {
         this.transactionRepository = transactionRepository;
     }
 
+    /**
+     * Find most recent user account or create one as a fallback.
+     */
     @Override
     public Optional<Account> match(Spending spending, TelegramUser user) {
         if (spending instanceof FreehandRecordWithCurrency obj) {
-            return Optional.of(getLastUsedAccount(user, obj.currency));
+            var accounts = repository.filter(user, obj.getCurrency());
+            var account = getLastUsedAccount(accounts)
+                .orElseGet(() -> getOrCreateAccount(user, obj.getCurrency()));
+            return Optional.of(account);
         }
         if (spending instanceof FreehandRecord) {
-            return Optional.of(getLastUsedAccount(user));
+            var accounts = repository.filter(user);
+            var account = getLastUsedAccount(accounts)
+                .orElseGet(() -> getOrCreateAccount(user, Currency.getInstance("RUB")));
+            return Optional.of(account);
         }
         return Optional.empty();
     }
 
     /**
-     * Find account of most recent user transaction. Create RUB account as a fallback.
+     * Find account among provided with most recent added transaction.
      */
-    private Account getLastUsedAccount(TelegramUser user) {
-        var accounts = repository.filter(user);
+    private Optional<Account> getLastUsedAccount(Collection<Account> accounts) {
+        var recentTransactions = accounts.stream()
+            .map(account -> transactionRepository.findRecent(account, 1))
+            .flatMap(Collection::stream)
+            .sorted(Comparator.comparing(AccountTransaction::getCreatedAt).reversed());
 
-        return accounts.stream()
-            .map(account -> transactionRepository.findRecent(user, account.getCurrency(), 1))
-            .filter(transactions -> !transactions.isEmpty())
-            .map(transactions -> transactions.get(0))
-            .max(Comparator.comparing(AccountTransaction::getTimestamp))
+        return recentTransactions
             .map(AccountTransaction::getAccount)
-            .orElseGet(() -> repository.getMatchOrCreate(
-                "Счёт RUB",
-                Currency.getInstance("RUB"),
-                user
-            ));
+            .findFirst();
     }
 
-    /**
-     * Find account of most recent user transaction of specified currency. Create one as a fallback.
-     */
-    private Account getLastUsedAccount(TelegramUser user, Currency currency) {
-        var recentTransactions = transactionRepository.findRecent(user, currency, 1);
-        if (!recentTransactions.isEmpty())
-            return recentTransactions.get(0).getAccount();
-
-        var accounts = repository.filter(user);
-        return accounts.stream()
-            .filter(account -> account.getCurrency() == currency)
-            .findFirst()
-            .orElseGet(() -> repository.getMatchOrCreate(
-                String.format("Счёт %s", currency.getCurrencyCode()),
-                currency,
-                user
-        ));
+    private Account getOrCreateAccount(TelegramUser user, Currency currency) {
+        return repository.getMatchOrCreate(
+            String.format("Счёт %s", currency.getCurrencyCode()),
+            currency,
+            user
+        );
     }
 }

@@ -34,7 +34,7 @@ class AnnualWorthResponseFactory {
             var monthStr = StringUtils.capitalize(getMonthName(monthOffset));
 
             // don't include Dec of previous year
-            if (month > 0)
+            if (month > 0) {
                 rows.add(
                     String.format("`%3.3s %5.5sM (%5.5sK)`", monthStr, netAssetMillions, netAssetsDeltaKilos)
                         // if delta does not fully fit into 5 characters, remove redundant comma
@@ -42,6 +42,7 @@ class AnnualWorthResponseFactory {
                         // if delta has empty fraction part, remove extra precision
                         .replace(",00K", "K")
                 );
+            }
 
             prevNetAssets = netAssets;
         }
