@@ -4,15 +4,11 @@ import bookkeeper.entity.Account;
 import bookkeeper.entity.AccountTransaction;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.time.format.TextStyle;
-import java.util.Arrays;
-import java.util.Currency;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class StringUtils {
@@ -58,10 +54,14 @@ public class StringUtils {
     }
 
     /**
-     * 101 ₽ (credit) | +101 ₽ (debit)
+     * -10 101 ₽ (credit) | +10 101 ₽ (debit)
      */
-    private static String getRoundedAmount(BigDecimal amount, Currency currency) {
-        return getAmount(amount.setScale(0, RoundingMode.HALF_UP), currency);
+    private static String getRoundedAmountSigned(BigDecimal amount, Currency currency) {
+        return String.format(
+            "%+,.0f %s",
+            amount,
+            currency.getSymbol()
+        );
     }
 
     /**
@@ -72,7 +72,8 @@ public class StringUtils {
             .entrySet()
             .stream()
             .filter(entry -> !entry.getValue().stripTrailingZeros().equals(BigDecimal.ZERO))
-            .map(i -> getRoundedAmount(i.getValue(), i.getKey()))
+            .sorted(Comparator.comparing(entry -> entry.getValue().abs().negate()))
+            .map(i -> getRoundedAmountSigned(i.getValue(), i.getKey()))
             .collect(Collectors.joining(", "));
     }
 

@@ -37,12 +37,12 @@ public class AccountTransaction {
     @Setter
     private Expenditure expenditure;
 
-    @Column
+    @Column(nullable = false)
     @Getter
     @Setter
     private String raw;
 
-    @Column(name = "created_at", updatable = false)
+    @Column(name = "created_at", updatable = false, nullable = false)
     @Getter
     @Setter
     private Instant createdAt;  // the moment when record added

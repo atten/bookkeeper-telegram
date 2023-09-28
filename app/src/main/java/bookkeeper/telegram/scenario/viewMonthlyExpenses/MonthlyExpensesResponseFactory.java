@@ -7,10 +7,7 @@ import bookkeeper.service.repository.AccountTransactionRepository;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Currency;
-import java.util.HashMap;
+import java.util.*;
 
 import static bookkeeper.telegram.shared.StringUtils.*;
 
@@ -24,7 +21,7 @@ class MonthlyExpensesResponseFactory {
     }
 
     String getMonthlyExpenses(TelegramUser user, int monthOffset) {
-        var lines = new ArrayList<String>();
+        var lines = new StringJoiner("\n");
         var creditByCurrency = new HashMap<Currency, BigDecimal>();
         var debitByCurrency = new HashMap<Currency, BigDecimal>();
         var allByCurrency = new HashMap<Currency, BigDecimal>();
@@ -73,7 +70,7 @@ class MonthlyExpensesResponseFactory {
         lines.add(String.format("%-7s %s", "Баланс", getRoundedAmountMulti(allByCurrency)));
         lines.add("```");
 
-        return String.join("\n", lines);
+        return lines.toString();
     }
 
     static InlineKeyboardMarkup getMonthlyExpensesKeyboard(int monthOffset) {
