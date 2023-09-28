@@ -26,3 +26,12 @@ db_restore:
 	docker-compose -f docker-compose.dev.yml up -d postgres_dev
 	sleep 3
 	docker exec -i bookkeeper-postgres-dev psql -U bookkeeper -d bookkeeper < dump_dev.sql
+
+
+# ========================= TESTS ============================
+
+up_test_env:
+	docker-compose -f docker-compose.test.yml up -d
+
+down_test_env:
+	docker-compose -f docker-compose.test.yml stop

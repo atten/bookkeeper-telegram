@@ -19,10 +19,10 @@ import java.util.*;
 
 @Module
 @Slf4j
-abstract class Config {
+class Config {
     @Provides
     @Singleton
-    static TelegramBot telegramBot() {
+    TelegramBot telegramBot() {
         return new TelegramBot(botToken());
     }
 
@@ -31,7 +31,7 @@ abstract class Config {
      */
     @Provides
     @Singleton
-    static EntityManager entityManager() {
+    EntityManager entityManager() {
         var em = Persistence.createEntityManagerFactory("default", dataSourceConfig()).createEntityManager();
         migrate(em);
         return em;
@@ -39,7 +39,7 @@ abstract class Config {
 
     @Provides
     @Singleton
-    static JedisPool redisPool() {
+    JedisPool redisPool() {
         var path = applicationProperties().getProperty("jedis.redis.path");
         return new JedisPool(path);
     }
@@ -53,7 +53,7 @@ abstract class Config {
         return Optional.of(Integer.parseInt(userId));
     }
 
-    private static void migrate(EntityManager entityManager) {
+    private void migrate(EntityManager entityManager) {
         String sqlPath = "init_database.sql";
         String sql;
         try {
@@ -75,14 +75,14 @@ abstract class Config {
         }
     }
 
-    private static String botToken() {
+    private String botToken() {
         return System.getenv("BOT_TOKEN");
     }
 
     /**
      * Build JDBC config from env variables (if not set, defaults will be taken from META-INF/persistence.xml).
      */
-    private static Map<String, String> dataSourceConfig() {
+    private Map<String, String> dataSourceConfig() {
         Map<String, String> result = new HashMap<>();
 
         List.of(
@@ -98,7 +98,7 @@ abstract class Config {
         return result;
     }
 
-    private static Properties applicationProperties() {
+    private Properties applicationProperties() {
         var p = new Properties();
         var resource = Config.class.getResource("/application.properties");
         Objects.requireNonNull(resource);

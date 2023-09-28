@@ -91,7 +91,7 @@ class Bot {
      * Process a single incoming request through chain of handlers.
      * Whole procedure is wrapped into transaction.
      */
-    private void processUpdate(Update update) {
+    public void processUpdate(Update update) {
         entityManager.getTransaction().begin();
 
         var request = new Request(update, bot, userRepository, jedisPool);

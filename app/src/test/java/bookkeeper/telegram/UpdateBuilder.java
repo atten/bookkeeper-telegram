@@ -1,0 +1,45 @@
+package bookkeeper.telegram;
+
+import com.google.gson.Gson;
+import com.pengrad.telegrambot.BotUtils;
+import com.pengrad.telegrambot.model.Message;
+import com.pengrad.telegrambot.model.Update;
+import com.pengrad.telegrambot.model.User;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+class UpdateBuilder {
+    private User user;
+    private Message message;
+    private static final Gson gson = new Gson();
+
+    UpdateBuilder setUser(User user) {
+        this.user = user;
+        return this;
+    }
+
+    UpdateBuilder setMessage(String text) {
+        var map = createMap();
+        map.put("message_id", 100);
+        map.put("from", user);
+        map.put("text", text);
+        this.message = fromMap(map, Message.class);
+        return this;
+    }
+
+    Update build() {
+        var map = createMap();
+        map.put("message", message);
+        return fromMap(map, Update.class);
+    }
+
+    private static Map<String, Object> createMap() {
+        return new LinkedHashMap<>();
+    }
+
+    private static <R> R fromMap(Map<String, Object> map, Class<R> resClass) {
+        var json = gson.toJson(map);
+        return BotUtils.fromJson(json, resClass);
+    }
+}

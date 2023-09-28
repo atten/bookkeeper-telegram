@@ -31,6 +31,10 @@ build:
 run-tests:
   stage: test
   image: amazoncorretto:17-alpine
+  services:
+    - redis:alpine
+  variables:
+    "jedis.redis.path": "redis://redis:6379"
   only:
     variables:
       # run for protected branches only
