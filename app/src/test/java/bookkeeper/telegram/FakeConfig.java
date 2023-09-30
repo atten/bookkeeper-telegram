@@ -12,6 +12,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.stream.Stream;
 
 @Module
 class FakeConfig {
@@ -53,11 +54,17 @@ class FakeConfig {
         }
 
         // update values from env variables
+        // consider both 'a.b.c' and "A_B_C" keys
         for (var key : p.keySet()) {
             var strKey = (String) key;
-            var value = System.getenv(strKey);
-            if (value != null && !value.isEmpty())
-                p.setProperty(strKey, value);
+            var alternateKey = strKey.replace(".", "_").toUpperCase();
+            Stream
+                .of(strKey, alternateKey)
+                .map(System::getenv)
+                .filter(Objects::nonNull)
+                .filter(s -> !s.isEmpty())
+                .findFirst()
+                .ifPresent(value -> p.setProperty(strKey, value));
         }
 
         return p;
