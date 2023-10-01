@@ -1,9 +1,9 @@
 package bookkeeper.service.client;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
-import lombok.Data;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
@@ -37,14 +37,10 @@ public class CbrApiClient {
         }
     }
 
-    @Data
+    @JsonIgnoreProperties(ignoreUnknown = true)
     static
     class Valute {
-        @JsonProperty("NumCode") String numCode;
-        @JsonProperty("ID") String id;
         @JsonProperty("CharCode") String charCode;
-        @JsonProperty("Name") String name;
-        @JsonProperty("Nominal") int nominal;
         @JsonProperty("Value") String value;
 
         BigDecimal getExchangeRate() {
@@ -56,11 +52,9 @@ public class CbrApiClient {
         }
     }
 
-    @Data
+    @JsonIgnoreProperties(ignoreUnknown = true)
     static
     class Body {
-        @JsonProperty("Date") String date;
-        String name;
         @JsonProperty("Valute")
         @JacksonXmlElementWrapper(useWrapping = false) List<Valute> items;
     }
