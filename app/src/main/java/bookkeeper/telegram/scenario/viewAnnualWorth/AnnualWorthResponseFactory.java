@@ -30,7 +30,7 @@ class AnnualWorthResponseFactory {
             var netAssets = AssetQuery.getNetAssetsValue(assets);
             var netAssetsDelta = netAssets - prevNetAssets;
             var netAssetMillions = String.format("%.2f", netAssets / 1000 / 1000);
-            var netAssetsDeltaKilos = String.format("+%.2f", netAssetsDelta / 1000);
+            var netAssetsDeltaKilos = String.format("%+.2f", netAssetsDelta / 1000);
             var monthStr = StringUtils.capitalize(getMonthName(monthOffset));
 
             // don't include Dec of previous year
