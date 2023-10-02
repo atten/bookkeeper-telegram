@@ -131,7 +131,7 @@ public class Request {
     }
 
     private static Optional<ParseMode> detectParseMode(String message) {
-        if (message.contains("<") && message.contains(">"))
+        if (message.contains("</") && message.contains(">"))
             return Optional.of(ParseMode.HTML);
         if (message.contains("`") || message.contains("*"))
             return Optional.of(ParseMode.Markdown);

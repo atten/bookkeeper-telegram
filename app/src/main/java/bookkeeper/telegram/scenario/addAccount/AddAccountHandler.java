@@ -34,7 +34,7 @@ class AddAccountHandler implements AbstractHandler {
 
         if (arguments.isEmpty()) {
             var lines = List.of(
-                String.format("Синтаксис: `%s <account name> <currency>`", cmd),
+                String.format("Синтаксис: `%s <account_name> <currency>`", cmd),
                 String.format("Пример: `%s копилка USD`", cmd)
             );
 
