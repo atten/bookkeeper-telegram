@@ -37,7 +37,7 @@ class SearchTransactionsByRawMessageHandler implements AbstractHandler {
 
         var searchQuery = inputCallback.getSearchQuery();
         var monthOffset = inputCallback.getMonthOffset();
-        var isCallback = request.getMessageText().isEmpty();
+        var isText = !request.getMessageText().isEmpty();  // determine whether text was actually provided
 
         if (searchQuery.isEmpty()) {
             return false;
@@ -47,10 +47,10 @@ class SearchTransactionsByRawMessageHandler implements AbstractHandler {
             // skip handling in case of empty search output
             return false;
         }
-        if (isCallback) {
-            request.editMessage(response, getKeyboard(searchQuery, monthOffset));
-        } else {
+        if (isText) {
             request.replyMessage(response, getKeyboard(searchQuery, monthOffset));
+        } else {
+            request.editMessage(response, getKeyboard(searchQuery, monthOffset));
         }
         return true;
     }
@@ -109,6 +109,10 @@ class SearchTransactionsByRawMessageHandler implements AbstractHandler {
         );
     }
 
+    /**
+     * Use finder in the last place among other handlers
+     * because it is very tolerant to text input and handles almost all of it.
+     */
     @Override
     public HandlerPriority getPriority() {
         return HandlerPriority.LOWEST_MESSAGE;
