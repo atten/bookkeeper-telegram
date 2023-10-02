@@ -1,5 +1,7 @@
 package bookkeeper.telegram;
 
+import bookkeeper.service.repository.ExchangeRateRepository;
+import bookkeeper.service.repository.MockedExchangeRateRepository;
 import com.pengrad.telegrambot.TelegramBot;
 import dagger.Module;
 import dagger.Provides;
@@ -29,6 +31,12 @@ class FakeConfig {
     JedisPool redisPool() {
         var path = testApplicationProperties().getProperty("jedis.redis.path");
         return new JedisPool(path);
+    }
+
+    @Provides
+    @Singleton
+    ExchangeRateRepository mockedExchangeRateRepository(EntityManager manager) {
+        return new MockedExchangeRateRepository(manager);
     }
 
     @Provides

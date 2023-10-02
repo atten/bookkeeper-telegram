@@ -8,7 +8,9 @@
         <class>bookkeeper.entity.TelegramUser</class>
         <class>bookkeeper.entity.Account</class>
         <class>bookkeeper.entity.AccountTransaction</class>
+        <class>bookkeeper.entity.AccountTransfer</class>
         <class>bookkeeper.entity.MerchantExpenditure</class>
+        <class>bookkeeper.entity.ExchangeRate</class>
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect" />
             <property name="hibernate.hbm2ddl.auto" value="create-drop" />
