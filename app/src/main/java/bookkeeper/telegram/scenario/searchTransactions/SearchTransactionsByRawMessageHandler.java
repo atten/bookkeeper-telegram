@@ -73,7 +73,7 @@ class SearchTransactionsByRawMessageHandler implements AbstractHandler {
         var amountByCurrencyVerbose = amountByCurrency.entrySet().stream().map(entry -> getAmount(entry.getValue(), entry.getKey())).collect(Collectors.joining(", "));
 
         var response = new StringJoiner("\n\n");
-        response.add("Найдено %s стоимостью %s за %s:".formatted(getItemsVerbose(searchResult.size()), amountByCurrencyVerbose, StringUtils.getMonthYearShort(monthOffset)));
+        response.add("%s стоимостью %s за %s:".formatted(getItemsVerbose(searchResult.size()), amountByCurrencyVerbose, StringUtils.getMonthYearShort(monthOffset)));
 
         int pageSize = Math.min(10, searchResult.size());
         for (int counter = 1; counter <= pageSize; counter++) {
@@ -99,7 +99,7 @@ class SearchTransactionsByRawMessageHandler implements AbstractHandler {
     }
 
     private String getItemsVerbose(int count) {
-        return pluralizeTemplate(count,"%s запись","%s записи","%s записей");
+        return pluralizeTemplate(count,"Найдена %s запись","Найдены %s записи","Найдено %s записей");
     }
 
     private InlineKeyboardMarkup getKeyboard(String searchQuery, int monthOffset) {
