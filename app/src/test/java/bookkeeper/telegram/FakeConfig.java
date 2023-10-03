@@ -1,8 +1,8 @@
 package bookkeeper.telegram;
 
 import bookkeeper.service.ApplicationConfiguration;
-import bookkeeper.service.repository.ExchangeRateRepository;
-import bookkeeper.service.repository.MockedExchangeRateRepository;
+import bookkeeper.service.client.CbrApiClient;
+import bookkeeper.service.client.MockedCbrApiClient;
 import com.pengrad.telegrambot.TelegramBot;
 import dagger.Module;
 import dagger.Provides;
@@ -40,8 +40,8 @@ class FakeConfig {
 
     @Provides
     @Singleton
-    ExchangeRateRepository mockedExchangeRateRepository(EntityManager manager) {
-        return new MockedExchangeRateRepository(manager);
+    CbrApiClient mockedCbrApiClient() {
+        return new MockedCbrApiClient();
     }
 
     @Provides

@@ -39,14 +39,17 @@ public class FakeSession {
         return this;
     }
 
+    private String getLastResponseText() {
+        var messages = fakeTelegramBot.getSentMessages();
+        var lastMessage = messages.get(messages.size() - 1);
+        return (String) lastMessage.getParameters().getOrDefault("text", "");
+    }
+
     /**
      * Compare most recent bot answer with expected text
      */
     public FakeSession expect(String responseText) {
-        var messages = fakeTelegramBot.getSentMessages();
-        var lastMessage = messages.get(messages.size() - 1);
-        var lastMessageText = (String) lastMessage.getParameters().getOrDefault("text", "");
-        assertEquals(responseText, lastMessageText);
+        assertEquals(responseText, getLastResponseText());
         return this;
     }
 
@@ -54,10 +57,17 @@ public class FakeSession {
      * Compare most recent bot answer with expected text
      */
     public FakeSession expectStartsWith(String responseText) {
-        var messages = fakeTelegramBot.getSentMessages();
-        var lastMessage = messages.get(messages.size() - 1);
-        var lastMessageText = (String) lastMessage.getParameters().getOrDefault("text", "");
+        var lastMessageText = getLastResponseText();
         assertTrue(lastMessageText.startsWith(responseText), String.format("Expected message to start with: '%s': %s", responseText, lastMessageText));
+        return this;
+    }
+
+    /**
+     * Compare most recent bot answer with expected text
+     */
+    public FakeSession expectContains(String responseText) {
+        var lastMessageText = getLastResponseText();
+        assertTrue(lastMessageText.contains(responseText), String.format("Expected message contains: '%s': %s", responseText, lastMessageText));
         return this;
     }
 

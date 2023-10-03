@@ -24,9 +24,15 @@ public class TinkoffPurchaseSmsWithDateParser implements SpendingParser<TinkoffP
         var smsWithoutDate = new TinkoffPurchaseSmsParser().parse(smsWithoutDateText);
         var sms = new TinkoffPurchaseSmsWithDate();
 
-        try {
-            sms.purchaseDate = LocalDate.parse(datePart, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-        } catch (DateTimeParseException e) {
+        var datePatterns = new String[]{"dd.MM.yyyy", "d.MM.yyyy"};
+        for (var datePattern : datePatterns) {
+            try {
+                sms.purchaseDate = LocalDate.parse(datePart, DateTimeFormatter.ofPattern(datePattern));
+            } catch (DateTimeParseException ignored) {}
+        }
+
+        if (sms.purchaseDate == null) {
+            // no patterns matched
             throw new ParseException(rawMessage, 0);
         }
         sms.cardIdentifier = smsWithoutDate.cardIdentifier;
