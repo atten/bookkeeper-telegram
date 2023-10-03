@@ -12,12 +12,13 @@
         <class>bookkeeper.entity.MerchantExpenditure</class>
         <class>bookkeeper.entity.ExchangeRate</class>
         <properties>
-            <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect" />
-            <property name="hibernate.hbm2ddl.auto" value="create-drop" />
-            <property name="jakarta.persistence.jdbc.driver" value="org.h2.Driver" />
-            <property name="jakarta.persistence.jdbc.url" value="jdbc:h2:mem:test" />
-            <property name="jakarta.persistence.jdbc.user" value="bookkeeper" />
-            <property name="jakarta.persistence.jdbc.password" value="" />
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
+            <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
+            <property name="hibernate.connection.pool_size" value="1"/>
+            <property name="jakarta.persistence.jdbc.driver" value="org.postgresql.Driver"/>
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:postgresql://localhost:5434/bookkeeper_test"/>
+            <property name="jakarta.persistence.jdbc.user" value="bookkeeper"/>
+            <property name="jakarta.persistence.jdbc.password" value="bookkeeper"/>
         </properties>
     </persistence-unit>
 </persistence>

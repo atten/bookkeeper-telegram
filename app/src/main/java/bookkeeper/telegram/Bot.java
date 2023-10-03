@@ -115,5 +115,6 @@ class Bot {
         }
 
         entityManager.getTransaction().commit();
+        entityManager.clear();
     }
 }

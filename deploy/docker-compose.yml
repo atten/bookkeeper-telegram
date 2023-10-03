@@ -11,10 +11,10 @@ services:
     environment:
       - NOTIFY_TELEGRAM_USER_ID=${NOTIFY_TELEGRAM_USER_ID}
       - BOT_TOKEN=${BOT_TOKEN}
-      - jedis.redis.path=redis://redis:6379
-      - jakarta.persistence.jdbc.url=${JDBC_URL}
-      - jakarta.persistence.jdbc.user=${POSTGRES_USER}
-      - jakarta.persistence.jdbc.password=${POSTGRES_PASSWORD}
+      - JEDIS_REDIS_PATH=redis://redis:6379
+      - JAKARTA_PERSISTENCE_JDBC_URL=${JDBC_URL}
+      - JAKARTA_PERSISTENCE_JDBC_USER=${POSTGRES_USER}
+      - JAKARTA_PERSISTENCE_JDBC_PASSWORD=${POSTGRES_PASSWORD}
 
   postgres:
     container_name: bookkeeper-postgres

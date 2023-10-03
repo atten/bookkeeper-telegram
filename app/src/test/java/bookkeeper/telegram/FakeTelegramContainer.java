@@ -1,6 +1,7 @@
 package bookkeeper.telegram;
 
 import dagger.Component;
+import jakarta.persistence.EntityManager;
 
 import javax.inject.Singleton;
 
@@ -12,4 +13,5 @@ import javax.inject.Singleton;
 interface FakeTelegramContainer {
     Bot bot();
     FakeTelegramBot fakeTelegramBot();
+    EntityManager entityManager();
 }

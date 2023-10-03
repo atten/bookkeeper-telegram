@@ -1,5 +1,6 @@
 package bookkeeper.telegram;
 
+import bookkeeper.service.ApplicationConfiguration;
 import com.pengrad.telegrambot.TelegramBot;
 import dagger.Provides;
 import dagger.Module;
@@ -10,7 +11,6 @@ import org.hibernate.JDBCException;
 import redis.clients.jedis.JedisPool;
 
 import javax.inject.Singleton;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
@@ -20,6 +20,13 @@ import java.util.*;
 @Module
 @Slf4j
 class Config {
+    private final Properties properties = ApplicationConfiguration.getApplicationProperties("/application.properties");
+    private final Map<String, String> dataSourceConfig = ApplicationConfiguration.getConfigMap(
+        "jakarta.persistence.jdbc.url",
+        "jakarta.persistence.jdbc.user",
+        "jakarta.persistence.jdbc.password"
+    );
+
     @Provides
     @Singleton
     TelegramBot telegramBot() {
@@ -28,11 +35,12 @@ class Config {
 
     /**
      There's only one instance of database writer (the bot itself), so we can use a single persistence context throughout runtime.
+     JDBC config is taken from META-INF/persistence.xml and can be override if env variables are set (provided by dataSourceConfig).
      */
     @Provides
     @Singleton
     EntityManager entityManager() {
-        var em = Persistence.createEntityManagerFactory("default", dataSourceConfig()).createEntityManager();
+        var em = Persistence.createEntityManagerFactory("default", dataSourceConfig).createEntityManager();
         migrate(em);
         return em;
     }
@@ -40,7 +48,7 @@ class Config {
     @Provides
     @Singleton
     JedisPool redisPool() {
-        var path = applicationProperties().getProperty("jedis.redis.path");
+        var path = properties.getProperty("jedis.redis.path");
         return new JedisPool(path);
     }
 
@@ -77,45 +85,5 @@ class Config {
 
     private String botToken() {
         return System.getenv("BOT_TOKEN");
-    }
-
-    /**
-     * Build JDBC config from env variables (if not set, defaults will be taken from META-INF/persistence.xml).
-     */
-    private Map<String, String> dataSourceConfig() {
-        Map<String, String> result = new HashMap<>();
-
-        List.of(
-            "jakarta.persistence.jdbc.url",
-            "jakarta.persistence.jdbc.user",
-            "jakarta.persistence.jdbc.password"
-        ).forEach(s -> {
-            var value = System.getenv(s);
-            if (value != null && !value.isEmpty())
-                result.put(s, value);
-        } );
-
-        return result;
-    }
-
-    private Properties applicationProperties() {
-        var p = new Properties();
-        var resource = Config.class.getResource("/application.properties");
-        Objects.requireNonNull(resource);
-        try {
-            p.load(new FileInputStream(resource.getPath()));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        // update values from env variables
-        for (var key : p.keySet()) {
-            var strKey = (String) key;
-            var value = System.getenv(strKey);
-            if (value != null && !value.isEmpty())
-                p.setProperty(strKey, value);
-        }
-
-        return p;
     }
 }

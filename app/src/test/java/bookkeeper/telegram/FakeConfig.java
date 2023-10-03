@@ -1,5 +1,6 @@
 package bookkeeper.telegram;
 
+import bookkeeper.service.ApplicationConfiguration;
 import bookkeeper.service.repository.ExchangeRateRepository;
 import bookkeeper.service.repository.MockedExchangeRateRepository;
 import com.pengrad.telegrambot.TelegramBot;
@@ -10,26 +11,30 @@ import jakarta.persistence.Persistence;
 import redis.clients.jedis.JedisPool;
 
 import javax.inject.Singleton;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Objects;
+import java.util.Map;
 import java.util.Properties;
-import java.util.stream.Stream;
 
 @Module
 class FakeConfig {
+    private final Properties properties = ApplicationConfiguration.getApplicationProperties("/test.properties");
+    private final Map<String, String> dataSourceConfig = ApplicationConfiguration.getConfigMap(
+        "jakarta.persistence.jdbc.url",
+        "jakarta.persistence.jdbc.user",
+        "jakarta.persistence.jdbc.password"
+    );
+
     private final FakeTelegramBot fakeTelegramBot = new FakeTelegramBot();
 
     @Provides
     @Singleton
     EntityManager entityManager() {
-        return Persistence.createEntityManagerFactory("test").createEntityManager();
+        return Persistence.createEntityManagerFactory("test", dataSourceConfig).createEntityManager();
     }
 
     @Provides
     @Singleton
     JedisPool redisPool() {
-        var path = testApplicationProperties().getProperty("jedis.redis.path");
+        var path = properties.getProperty("jedis.redis.path");
         return new JedisPool(path);
     }
 
@@ -49,32 +54,5 @@ class FakeConfig {
     @Singleton
     TelegramBot telegramBot() {
         return fakeTelegramBot;
-    }
-
-    private Properties testApplicationProperties() {
-        var p = new Properties();
-        var resource = Config.class.getResource("/test.properties");
-        Objects.requireNonNull(resource);
-        try {
-            p.load(new FileInputStream(resource.getPath()));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        // update values from env variables
-        // consider both 'a.b.c' and "A_B_C" keys
-        for (var key : p.keySet()) {
-            var strKey = (String) key;
-            var alternateKey = strKey.replace(".", "_").toUpperCase();
-            Stream
-                .of(strKey, alternateKey)
-                .map(System::getenv)
-                .filter(Objects::nonNull)
-                .filter(s -> !s.isEmpty())
-                .findFirst()
-                .ifPresent(value -> p.setProperty(strKey, value));
-        }
-
-        return p;
     }
 }

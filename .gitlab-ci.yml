@@ -33,8 +33,16 @@ run-tests:
   image: amazoncorretto:17-alpine
   services:
     - redis:alpine
+    - postgres:15-alpine
   variables:
+    # test container
     JEDIS_REDIS_PATH: "redis://redis:6379"
+    JAKARTA_PERSISTENCE_JDBC_URL: "jdbc:postgresql://postgres/bookkeeper_test"
+
+    # postgres container
+    POSTGRES_DATABASE: bookkeeper_test
+    POSTGRES_USER: bookkeeper
+    POSTGRES_PASSWORD: bookkeeper
   only:
     variables:
       # run for protected branches only

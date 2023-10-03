@@ -31,7 +31,5 @@ db_restore:
 # ========================= TESTS ============================
 
 up_test_env:
-	docker-compose -f docker-compose.test.yml up -d
-
-down_test_env:
-	docker-compose -f docker-compose.test.yml stop
+	docker-compose -f docker-compose.dev.yml up -d
+	docker exec -i bookkeeper-postgres-dev psql -U bookkeeper -d postgres -c "CREATE DATABASE bookkeeper_test"
