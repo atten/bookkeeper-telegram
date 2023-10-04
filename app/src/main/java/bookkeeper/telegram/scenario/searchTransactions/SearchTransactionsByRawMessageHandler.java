@@ -43,10 +43,6 @@ class SearchTransactionsByRawMessageHandler implements AbstractHandler {
             return false;
         }
         var response = getResponse(searchQuery, monthOffset, request.getTelegramUser());
-        if (response.isEmpty()) {
-            // skip handling in case of empty search output
-            return false;
-        }
         if (isText) {
             request.replyMessage(response, getKeyboard(searchQuery, monthOffset));
         } else {

@@ -1,10 +1,10 @@
 package bookkeeper.telegram;
 
-import com.pengrad.telegrambot.model.Update;
+import bookkeeper.service.telegram.KeyboardUtils;
 import com.pengrad.telegrambot.model.User;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
+import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 
-import java.util.LinkedList;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -15,8 +15,6 @@ public class FakeSession {
     private final User user;
     private final Bot bot;
     private final FakeTelegramBot fakeTelegramBot;
-    private final LinkedList<Update> updates = new LinkedList<>();
-    private final LinkedList<InlineKeyboardButton> buttons = new LinkedList<>();
 
     FakeSession(User user, Bot bot, FakeTelegramBot fakeTelegramBot) {
         this.user = user;
@@ -26,23 +24,15 @@ public class FakeSession {
 
     public FakeSession sendText(String input) {
         var update = new UpdateBuilder().setUser(user).setMessage(input).build();
-        updates.add(update);
         bot.processUpdate(update);
         return this;
     }
 
     public FakeSession pressButton(String identifier) throws NoSuchElementException {
         var button = findButton(identifier).orElseThrow();
-        var update = new UpdateBuilder().setUser(user).build();
-        updates.add(update);
+        var update = new UpdateBuilder().setUser(user).setCallbackQuery(button.callbackData()).build();
         bot.processUpdate(update);
         return this;
-    }
-
-    private String getLastResponseText() {
-        var messages = fakeTelegramBot.getSentMessages();
-        var lastMessage = messages.get(messages.size() - 1);
-        return (String) lastMessage.getParameters().getOrDefault("text", "");
     }
 
     /**
@@ -71,13 +61,29 @@ public class FakeSession {
         return this;
     }
 
+    private String getLastResponseText() {
+        var messages = fakeTelegramBot.getSentMessages();
+        var lastMessage = messages.get(messages.size() - 1);
+        return (String) lastMessage.getParameters().getOrDefault("text", "");
+    }
+
     private Optional<InlineKeyboardButton> findButton(String identifier) {
         // iterate in reverse order (from latest to oldest)
-        for (var iterator = buttons.descendingIterator(); iterator.hasNext(); ) {
-            var button = iterator.next();
-            if (button.text().contains(identifier)) {
-                return Optional.of(button);
+        for (var iterator = fakeTelegramBot.getSentMessages().descendingIterator(); iterator.hasNext(); ) {
+            var message = iterator.next();
+
+            if (!message.getParameters().containsKey("reply_markup")) {
+                continue;
             }
+
+            var keyboard = (InlineKeyboardMarkup) message.getParameters().get("reply_markup");
+            var button = KeyboardUtils.getButtons(keyboard)
+                .stream()
+                .filter(b -> b.text().contains(identifier))
+                .findFirst();
+
+            if (button.isPresent())
+                return button;
         }
         return Optional.empty();
     }

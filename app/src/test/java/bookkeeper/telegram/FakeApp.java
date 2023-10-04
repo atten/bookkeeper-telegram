@@ -11,11 +11,11 @@ import java.util.Objects;
 
 public class FakeApp {
     private static final FakeTelegramContainer container = DaggerFakeTelegramContainer.builder().build();
+    private static final User defaultUser = new User(123L);
 
     public static FakeSession session() {
         clearDatabase();
-        var telegramUser = new User(123L);
-        return new FakeSession(telegramUser, container.bot(), container.fakeTelegramBot());
+        return new FakeSession(defaultUser, container.bot(), container.fakeTelegramBot());
     }
 
     private static void clearDatabase() {

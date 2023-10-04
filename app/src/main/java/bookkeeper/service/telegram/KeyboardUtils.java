@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class KeyboardUtils {
-    static List<InlineKeyboardButton> getButtons(InlineKeyboardMarkup keyboard) {
+    public static List<InlineKeyboardButton> getButtons(InlineKeyboardMarkup keyboard) {
         return Arrays.stream(keyboard.inlineKeyboard()).flatMap(Stream::of).toList();
     }
 
@@ -32,7 +32,7 @@ public class KeyboardUtils {
 
     static String getInlineKeyboardVerboseString(InlineKeyboardMarkup keyboard) {
         var joiner = new StringJoiner(", ");
-        getButtons(keyboard).stream().map(InlineKeyboardButton::callbackData).forEach(joiner::add);
+        getButtons(keyboard).stream().map(InlineKeyboardButton::text).forEach(joiner::add);
         return String.format("[%s]", joiner);
     }
 }
