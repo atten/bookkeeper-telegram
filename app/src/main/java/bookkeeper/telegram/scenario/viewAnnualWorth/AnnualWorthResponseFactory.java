@@ -8,7 +8,7 @@ import javax.inject.Inject;
 import java.time.LocalDate;
 import java.util.StringJoiner;
 
-import static bookkeeper.telegram.shared.StringUtils.getMonthName;
+import static bookkeeper.service.telegram.StringUtils.getMonthName;
 
 class AnnualWorthResponseFactory {
     private final AssetQuery assetQuery;

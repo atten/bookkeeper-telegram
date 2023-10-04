@@ -2,8 +2,8 @@ package bookkeeper.telegram;
 
 
 import bookkeeper.service.repository.TelegramUserRepository;
-import bookkeeper.telegram.shared.AbstractHandler;
-import bookkeeper.telegram.shared.Request;
+import bookkeeper.service.telegram.AbstractHandler;
+import bookkeeper.service.telegram.Request;
 import bookkeeper.exception.HandlerInterruptException;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;

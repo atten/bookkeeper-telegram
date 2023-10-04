@@ -1,6 +1,6 @@
 package bookkeeper.telegram.scenario.viewAssets;
 
-import bookkeeper.telegram.shared.CallbackMessage;
+import bookkeeper.service.telegram.CallbackMessage;
 import lombok.Getter;
 
 

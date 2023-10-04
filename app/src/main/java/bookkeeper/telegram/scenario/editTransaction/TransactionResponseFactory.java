@@ -3,7 +3,7 @@ package bookkeeper.telegram.scenario.editTransaction;
 import bookkeeper.entity.AccountTransaction;
 import bookkeeper.enums.Expenditure;
 import bookkeeper.telegram.scenario.viewMonthlyExpenses.ViewMonthlyExpensesWithOffsetCallback;
-import bookkeeper.telegram.shared.KeyboardUtils;
+import bookkeeper.service.telegram.KeyboardUtils;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 
@@ -12,7 +12,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
-import static bookkeeper.telegram.shared.StringUtils.*;
+import static bookkeeper.service.telegram.StringUtils.*;
 
 public class TransactionResponseFactory {
 

@@ -1,13 +1,13 @@
 package bookkeeper.telegram.scenario.editTransaction;
 
 import bookkeeper.service.repository.MerchantExpenditureRepository;
-import bookkeeper.telegram.shared.AbstractHandler;
-import bookkeeper.telegram.shared.Request;
+import bookkeeper.service.telegram.AbstractHandler;
+import bookkeeper.service.telegram.Request;
 
 import javax.inject.Inject;
 import java.util.Objects;
 
-import static bookkeeper.telegram.shared.StringUtils.pluralizeTemplate;
+import static bookkeeper.service.telegram.StringUtils.pluralizeTemplate;
 
 /**
  * Scenario: User clears merchant-expenditure associations.

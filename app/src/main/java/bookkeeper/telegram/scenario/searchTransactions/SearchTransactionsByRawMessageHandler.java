@@ -3,9 +3,9 @@ package bookkeeper.telegram.scenario.searchTransactions;
 import bookkeeper.entity.TelegramUser;
 import bookkeeper.enums.HandlerPriority;
 import bookkeeper.service.repository.AccountTransactionRepository;
-import bookkeeper.telegram.shared.AbstractHandler;
-import bookkeeper.telegram.shared.Request;
-import bookkeeper.telegram.shared.StringUtils;
+import bookkeeper.service.telegram.AbstractHandler;
+import bookkeeper.service.telegram.Request;
+import bookkeeper.service.telegram.StringUtils;
 import bookkeeper.exception.HandlerInterruptException;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 
@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
-import static bookkeeper.telegram.shared.StringUtils.*;
+import static bookkeeper.service.telegram.StringUtils.*;
 
 
 /**

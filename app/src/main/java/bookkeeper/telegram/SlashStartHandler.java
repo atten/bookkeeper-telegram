@@ -1,7 +1,7 @@
 package bookkeeper.telegram;
 
-import bookkeeper.telegram.shared.AbstractHandler;
-import bookkeeper.telegram.shared.Request;
+import bookkeeper.service.telegram.AbstractHandler;
+import bookkeeper.service.telegram.Request;
 
 import javax.inject.Inject;
 import java.util.Objects;

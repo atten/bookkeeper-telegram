@@ -1,4 +1,4 @@
-package bookkeeper.telegram.shared;
+package bookkeeper.service.telegram;
 
 import bookkeeper.enums.HandlerPriority;
 import bookkeeper.exception.HandlerInterruptException;

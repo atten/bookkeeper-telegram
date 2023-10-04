@@ -1,4 +1,4 @@
-package bookkeeper.telegram.shared;
+package bookkeeper.service.telegram;
 
 import bookkeeper.entity.Account;
 import bookkeeper.entity.AccountTransaction;

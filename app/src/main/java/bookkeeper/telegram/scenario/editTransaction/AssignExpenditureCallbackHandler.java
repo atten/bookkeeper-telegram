@@ -6,8 +6,8 @@ import bookkeeper.service.parser.Spending;
 import bookkeeper.service.parser.SpendingParserRegistry;
 import bookkeeper.service.repository.AccountTransactionRepository;
 import bookkeeper.service.repository.MerchantExpenditureRepository;
-import bookkeeper.telegram.shared.AbstractHandler;
-import bookkeeper.telegram.shared.Request;
+import bookkeeper.service.telegram.AbstractHandler;
+import bookkeeper.service.telegram.Request;
 import bookkeeper.exception.AccountTransactionNotFound;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 

@@ -5,9 +5,9 @@ import bookkeeper.entity.TelegramUser;
 import bookkeeper.exception.AccountTransactionNotFound;
 import bookkeeper.service.repository.AccountRepository;
 import bookkeeper.service.repository.AccountTransactionRepository;
-import bookkeeper.telegram.shared.AbstractHandler;
-import bookkeeper.telegram.shared.KeyboardUtils;
-import bookkeeper.telegram.shared.Request;
+import bookkeeper.service.telegram.AbstractHandler;
+import bookkeeper.service.telegram.KeyboardUtils;
+import bookkeeper.service.telegram.Request;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 
 import javax.inject.Inject;

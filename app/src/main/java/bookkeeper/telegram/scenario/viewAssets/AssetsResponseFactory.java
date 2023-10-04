@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static bookkeeper.telegram.shared.StringUtils.*;
+import static bookkeeper.service.telegram.StringUtils.*;
 
 @Slf4j
 class AssetsResponseFactory {

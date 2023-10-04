@@ -2,14 +2,14 @@ package bookkeeper.telegram.scenario.editAccount;
 
 import bookkeeper.service.repository.AccountRepository;
 import bookkeeper.telegram.scenario.viewAssets.ViewAssetsCallback;
-import bookkeeper.telegram.shared.AbstractHandler;
-import bookkeeper.telegram.shared.KeyboardUtils;
-import bookkeeper.telegram.shared.Request;
+import bookkeeper.service.telegram.AbstractHandler;
+import bookkeeper.service.telegram.KeyboardUtils;
+import bookkeeper.service.telegram.Request;
 
 import javax.inject.Inject;
 import java.util.Objects;
 
-import static bookkeeper.telegram.shared.StringUtils.ICON_ACCOUNT;
+import static bookkeeper.service.telegram.StringUtils.ICON_ACCOUNT;
 
 /**
  * Scenario: User requests accounts list to pick one and change attributes.

@@ -1,4 +1,4 @@
-package bookkeeper.telegram.shared;
+package bookkeeper.service.telegram;
 
 import bookkeeper.entity.Account;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
@@ -7,8 +7,8 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-import static bookkeeper.telegram.shared.StringUtils.getAccountDisplayName;
-import static bookkeeper.telegram.shared.StringUtils.getMonthName;
+import static bookkeeper.service.telegram.StringUtils.getAccountDisplayName;
+import static bookkeeper.service.telegram.StringUtils.getMonthName;
 
 public abstract class CallbackMessage implements Serializable {
 

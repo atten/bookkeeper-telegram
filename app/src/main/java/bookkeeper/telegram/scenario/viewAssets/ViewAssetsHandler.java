@@ -1,10 +1,10 @@
 package bookkeeper.telegram.scenario.viewAssets;
 
 import bookkeeper.telegram.scenario.editAccount.ListAccountsCallback;
-import bookkeeper.telegram.shared.AbstractHandler;
-import bookkeeper.telegram.shared.KeyboardUtils;
-import bookkeeper.telegram.shared.Request;
-import bookkeeper.telegram.shared.StringUtils;
+import bookkeeper.service.telegram.AbstractHandler;
+import bookkeeper.service.telegram.KeyboardUtils;
+import bookkeeper.service.telegram.Request;
+import bookkeeper.service.telegram.StringUtils;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 
 import javax.inject.Inject;

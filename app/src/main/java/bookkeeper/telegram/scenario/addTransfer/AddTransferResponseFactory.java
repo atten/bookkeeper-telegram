@@ -5,7 +5,7 @@ import bookkeeper.entity.TelegramUser;
 import bookkeeper.service.repository.AccountRepository;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 
-import static bookkeeper.telegram.shared.StringUtils.*;
+import static bookkeeper.service.telegram.StringUtils.*;
 
 class AddTransferResponseFactory {
     private final AccountRepository accountRepository;

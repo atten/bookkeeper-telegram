@@ -9,7 +9,7 @@ import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import java.math.BigDecimal;
 import java.util.*;
 
-import static bookkeeper.telegram.shared.StringUtils.*;
+import static bookkeeper.service.telegram.StringUtils.*;
 
 class MonthlyExpensesResponseFactory {
     private final AccountRepository accountRepository;

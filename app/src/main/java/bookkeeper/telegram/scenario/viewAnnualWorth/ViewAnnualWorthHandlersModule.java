@@ -1,6 +1,6 @@
 package bookkeeper.telegram.scenario.viewAnnualWorth;
 
-import bookkeeper.telegram.shared.AbstractHandler;
+import bookkeeper.service.telegram.AbstractHandler;
 import dagger.Binds;
 import dagger.Module;
 import dagger.multibindings.IntoSet;

@@ -5,7 +5,7 @@ import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 
 import java.util.StringJoiner;
 
-import static bookkeeper.telegram.shared.StringUtils.ICON_ACCOUNT;
+import static bookkeeper.service.telegram.StringUtils.ICON_ACCOUNT;
 
 class AccountResponseFactory {
     static String getMessageText(Account account) {

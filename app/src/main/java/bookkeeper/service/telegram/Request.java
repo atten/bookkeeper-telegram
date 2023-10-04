@@ -1,4 +1,4 @@
-package bookkeeper.telegram.shared;
+package bookkeeper.service.telegram;
 
 import bookkeeper.entity.TelegramUser;
 import bookkeeper.service.repository.TelegramUserRepository;
@@ -21,8 +21,7 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Optional;
 
-import static bookkeeper.telegram.shared.KeyboardUtils.getInlineKeyboardVerboseString;
-import static bookkeeper.telegram.shared.StringUtils.cleanString;
+import static bookkeeper.service.telegram.StringUtils.cleanString;
 
 @Slf4j
 public class Request {
@@ -152,7 +151,7 @@ public class Request {
         if (keyboard != null) {
             if (keyboard instanceof InlineKeyboardMarkup kb) {
                 callbackMessageRegistry.prepareKeyboardBeforeSend(kb);
-                keyboardVerbose = getInlineKeyboardVerboseString(kb);
+                keyboardVerbose = KeyboardUtils.getInlineKeyboardVerboseString(kb);
             }
             message = message.replyMarkup(keyboard);
         }
@@ -171,7 +170,7 @@ public class Request {
 
         if (keyboard != null) {
             callbackMessageRegistry.prepareKeyboardBeforeSend(keyboard);
-            keyboardVerbose = getInlineKeyboardVerboseString(keyboard);
+            keyboardVerbose = KeyboardUtils.getInlineKeyboardVerboseString(keyboard);
         }
 
         BaseResponse result;

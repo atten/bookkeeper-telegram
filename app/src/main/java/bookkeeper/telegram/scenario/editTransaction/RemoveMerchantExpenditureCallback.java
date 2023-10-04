@@ -1,7 +1,7 @@
 package bookkeeper.telegram.scenario.editTransaction;
 
 import bookkeeper.enums.Expenditure;
-import bookkeeper.telegram.shared.CallbackMessage;
+import bookkeeper.service.telegram.CallbackMessage;
 import lombok.Getter;
 
 

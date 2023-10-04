@@ -1,8 +1,8 @@
 package bookkeeper.telegram;
 
 import bookkeeper.enums.HandlerPriority;
-import bookkeeper.telegram.shared.AbstractHandler;
-import bookkeeper.telegram.shared.Request;
+import bookkeeper.service.telegram.AbstractHandler;
+import bookkeeper.service.telegram.Request;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.inject.Inject;

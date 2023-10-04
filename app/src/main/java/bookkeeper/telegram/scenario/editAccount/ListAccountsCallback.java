@@ -1,5 +1,5 @@
 package bookkeeper.telegram.scenario.editAccount;
 
-import bookkeeper.telegram.shared.CallbackMessage;
+import bookkeeper.service.telegram.CallbackMessage;
 
 public class ListAccountsCallback extends CallbackMessage {}

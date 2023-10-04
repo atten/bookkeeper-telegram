@@ -4,8 +4,8 @@ import bookkeeper.entity.AccountTransaction;
 import bookkeeper.enums.HandlerPriority;
 import bookkeeper.service.registry.TransactionParserRegistry;
 import bookkeeper.service.repository.AccountTransactionRepository;
-import bookkeeper.telegram.shared.AbstractHandler;
-import bookkeeper.telegram.shared.Request;
+import bookkeeper.service.telegram.AbstractHandler;
+import bookkeeper.service.telegram.Request;
 
 import java.text.ParseException;
 import java.util.List;

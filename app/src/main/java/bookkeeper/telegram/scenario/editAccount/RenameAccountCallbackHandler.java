@@ -1,8 +1,8 @@
 package bookkeeper.telegram.scenario.editAccount;
 
 import bookkeeper.service.repository.AccountRepository;
-import bookkeeper.telegram.shared.AbstractHandler;
-import bookkeeper.telegram.shared.Request;
+import bookkeeper.service.telegram.AbstractHandler;
+import bookkeeper.service.telegram.Request;
 import bookkeeper.exception.AccountNotFound;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 

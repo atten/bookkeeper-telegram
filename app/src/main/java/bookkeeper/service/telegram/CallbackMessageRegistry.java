@@ -1,4 +1,4 @@
-package bookkeeper.telegram.shared;
+package bookkeeper.service.telegram;
 
 import com.pengrad.telegrambot.model.CallbackQuery;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;

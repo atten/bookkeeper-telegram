@@ -1,6 +1,6 @@
 package bookkeeper.telegram.scenario.viewMonthlyExpenses;
 
-import bookkeeper.telegram.shared.CallbackMessage;
+import bookkeeper.service.telegram.CallbackMessage;
 import lombok.Getter;
 
 class SelectMonthlyExpendituresCallback extends CallbackMessage {

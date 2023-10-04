@@ -1,6 +1,6 @@
 package bookkeeper.telegram.scenario.addTransfer;
 
-import bookkeeper.telegram.shared.CallbackMessage;
+import bookkeeper.service.telegram.CallbackMessage;
 import lombok.Getter;
 
 import java.math.BigDecimal;

@@ -2,8 +2,8 @@ package bookkeeper.telegram.scenario.editTransaction;
 
 import bookkeeper.enums.Expenditure;
 import bookkeeper.service.repository.MerchantExpenditureRepository;
-import bookkeeper.telegram.shared.AbstractHandler;
-import bookkeeper.telegram.shared.Request;
+import bookkeeper.service.telegram.AbstractHandler;
+import bookkeeper.service.telegram.Request;
 
 import javax.inject.Inject;
 
