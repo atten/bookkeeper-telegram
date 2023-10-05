@@ -18,8 +18,8 @@ class TinkoffDepositInterestSmsParserTest {
 
         var referenceSms = new TinkoffDepositInterestSms();
 
-        referenceSms.interestSum = new BigDecimal("1872.95");
-        referenceSms.interestCurrency = Currency.getInstance("RUB");
+        referenceSms.setInterestSum(new BigDecimal("1872.95"));
+        referenceSms.setInterestCurrency(Currency.getInstance("RUB"));
 
         assertEquals(referenceSms, sms);
 

@@ -19,12 +19,12 @@ public class TinkoffDepositInterestSmsParser implements SpendingParser<TinkoffDe
 
         var sms = new TinkoffDepositInterestSms();
         try {
-            sms.interestCurrency = Currency.getInstance(parts[parts.length - 1]);
+            sms.setInterestCurrency(Currency.getInstance(parts[parts.length - 1]));
         } catch (IllegalArgumentException e) {
             throw new ParseException(String.format("Cannot parse currency: %s", e), 0);
         }
 
-        sms.interestSum = new BigDecimal(String.join("", Arrays.copyOfRange(parts, 4, parts.length - 1)));
+        sms.setInterestSum(new BigDecimal(String.join("", Arrays.copyOfRange(parts, 4, parts.length - 1))));
         return sms;
     }
 }

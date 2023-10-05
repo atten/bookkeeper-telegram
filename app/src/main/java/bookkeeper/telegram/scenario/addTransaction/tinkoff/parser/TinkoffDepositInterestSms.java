@@ -2,7 +2,6 @@ package bookkeeper.telegram.scenario.addTransaction.tinkoff.parser;
 
 import bookkeeper.service.parser.Spending;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import java.math.BigDecimal;
 import java.util.Currency;
@@ -13,8 +12,8 @@ import java.util.Currency;
  */
 @Data
 public class TinkoffDepositInterestSms implements Spending {
-    public BigDecimal interestSum;  // 1872.95
-    public Currency interestCurrency;  // RUB
+    private BigDecimal interestSum;  // 1872.95
+    private Currency interestCurrency;  // RUB
 
     @Override
     public String getMerchant() {
