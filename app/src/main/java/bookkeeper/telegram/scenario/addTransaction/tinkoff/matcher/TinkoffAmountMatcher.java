@@ -30,6 +30,9 @@ public class TinkoffAmountMatcher implements AmountMatcher {
         if (spending instanceof TinkoffReplenishSms obj) {
             return Optional.of(obj.replenishSum);
         }
+        if (spending instanceof TinkoffDepositInterestSms obj) {
+            return Optional.of(obj.interestSum);
+        }
         if (spending instanceof TinkoffIgnoreSms) {
             return Optional.of(BigDecimal.ZERO);
         }
