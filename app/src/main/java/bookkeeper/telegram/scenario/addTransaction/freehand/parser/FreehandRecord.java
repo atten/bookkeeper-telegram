@@ -11,8 +11,8 @@ import java.math.BigDecimal;
  */
 @Data
 public class FreehandRecord implements Spending {
-    public String description;  // Еда
-    public BigDecimal amount;  // 220
+    private String description;  // Еда
+    private BigDecimal amount;  // 220
 
     @Override
     public String getMerchant() {

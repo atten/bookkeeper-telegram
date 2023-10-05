@@ -21,11 +21,11 @@ public class FreehandRecordWithCurrencyParser implements SpendingParser<Freehand
 
         var record = new FreehandRecordWithCurrency();
 
-        record.amount = recordWithoutCurrency.amount;
-        record.description = recordWithoutCurrency.description;
+        record.setAmount(recordWithoutCurrency.getAmount());
+        record.setDescription(recordWithoutCurrency.getDescription());
 
         try {
-            record.currency = Currency.getInstance(parts[parts.length - 1].toUpperCase());
+            record.setCurrency(Currency.getInstance(parts[parts.length - 1].toUpperCase()));
         } catch (IllegalArgumentException e) {
             throw new ParseException(String.format("Cannot parse currency: %s", e), 0);
         }

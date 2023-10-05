@@ -12,5 +12,5 @@ import java.util.Currency;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class FreehandRecordWithCurrency extends FreehandRecord {
-    public Currency currency;
+    private Currency currency;
 }

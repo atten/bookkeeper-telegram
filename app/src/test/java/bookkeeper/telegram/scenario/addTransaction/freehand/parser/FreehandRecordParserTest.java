@@ -16,8 +16,8 @@ class FreehandRecordParserTest {
 
         var referenceRecord = new FreehandRecord();
 
-        referenceRecord.description = "еда";
-        referenceRecord.amount = new BigDecimal("220");
+        referenceRecord.setDescription("еда");
+        referenceRecord.setAmount(new BigDecimal("220"));
 
         assertEquals(referenceRecord, record);
     }
@@ -28,8 +28,8 @@ class FreehandRecordParserTest {
 
         var referenceRecord = new FreehandRecord();
 
-        referenceRecord.description = "пополнение";
-        referenceRecord.amount = new BigDecimal("-220");  // negated expense = profit
+        referenceRecord.setDescription("пополнение");
+        referenceRecord.setAmount(new BigDecimal("-220"));  // negated expense = profit
 
         assertEquals(referenceRecord, record);
     }

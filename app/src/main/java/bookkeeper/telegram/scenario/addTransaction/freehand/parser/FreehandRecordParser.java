@@ -17,9 +17,9 @@ public class FreehandRecordParser implements SpendingParser<FreehandRecord> {
 
         var strAmount = parts[parts.length - 1].replace("+", "-");
         var record = new FreehandRecord();
-        record.description = rawMessage.substring(0, rawMessage.lastIndexOf(' '));
+        record.setDescription(rawMessage.substring(0, rawMessage.lastIndexOf(' ')));
         try {
-            record.amount = new BigDecimal(strAmount);
+            record.setAmount(new BigDecimal(strAmount));
         } catch (NumberFormatException e) {
             throw new ParseException(rawMessage, 0);
         }

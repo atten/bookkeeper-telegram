@@ -11,7 +11,7 @@ public class FreehandAmountMatcher implements AmountMatcher {
     @Override
     public Optional<BigDecimal> match(Spending spending) {
         if (spending instanceof FreehandRecord obj) {
-            return Optional.of(obj.amount.negate());
+            return Optional.of(obj.getAmount().negate());
         }
         return Optional.empty();
     }

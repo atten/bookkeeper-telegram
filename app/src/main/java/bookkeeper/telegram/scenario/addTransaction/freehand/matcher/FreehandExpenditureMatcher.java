@@ -12,7 +12,7 @@ public class FreehandExpenditureMatcher implements ExpenditureMatcher {
     public Expenditure match(Spending spending, TelegramUser telegramUser) {
         if (spending instanceof FreehandRecord obj) {
             for (var expenditure : Expenditure.enabledValues()) {
-                if (expenditure.getVerboseName().toLowerCase().contains(obj.description.toLowerCase()))
+                if (expenditure.getVerboseName().toLowerCase().contains(obj.getDescription().toLowerCase()))
                     return expenditure;
             }
         }

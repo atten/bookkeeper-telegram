@@ -17,9 +17,9 @@ class FreehandRecordWithCurrencyParserTest {
 
         var referenceRecord = new FreehandRecordWithCurrency();
 
-        referenceRecord.description = "еда";
-        referenceRecord.amount = new BigDecimal("220");
-        referenceRecord.currency = Currency.getInstance("USD");
+        referenceRecord.setDescription("еда");
+        referenceRecord.setAmount(new BigDecimal("220"));
+        referenceRecord.setCurrency(Currency.getInstance("USD"));
 
         assertEquals(referenceRecord, record);
     }
