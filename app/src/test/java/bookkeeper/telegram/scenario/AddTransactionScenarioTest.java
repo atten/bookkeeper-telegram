@@ -2,6 +2,7 @@ package bookkeeper.telegram.scenario;
 
 import bookkeeper.telegram.BookkeeperParameterResolver;
 import bookkeeper.telegram.FakeSession;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -58,6 +59,14 @@ class AddTransactionScenarioTest {
     @MethodSource({"validFreehandInputs", "validTinkoffInputs"})
     void addSingleTransaction(String input, FakeSession session) {
         session.sendText(input).expectStartsWith("Добавлена запись на счёт");
+    }
+
+    @Test
+    void addMultipleFreehandTransactions(FakeSession session) {
+        session
+            .sendText("еда 220\nтранспорт 1000")
+            .expectContains("Добавлены 2 записи")
+            .expectContains("на сумму 1220 RUB");
     }
 
     @ParameterizedTest

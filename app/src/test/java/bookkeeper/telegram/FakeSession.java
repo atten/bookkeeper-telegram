@@ -65,6 +65,7 @@ public class FakeSession {
     private String getLastResponseText() {
         var messages = fakeTelegramBot.getSentMessages();
         var lastMessage = messages.get(messages.size() - 1);
+        //noinspection unchecked
         return (String) lastMessage.getParameters().getOrDefault("text", "");
     }
 

@@ -68,6 +68,10 @@ public class StringUtils {
      * 25 542 ₽, 10 $
      */
     public static String getRoundedAmountMulti(Map<Currency, BigDecimal> values) {
+        if (values.isEmpty()) {
+            return "0";
+        }
+
         return values
             .entrySet()
             .stream()

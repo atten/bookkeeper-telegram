@@ -13,7 +13,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 class ViewMonthlyExpensesScenarioTest {
     @Test
     void emptyExpenses(FakeSession session) {
-        session.sendText("/expenses").expectContains("Всего");
+        session
+            .sendText("/expenses")
+            .expectContains("Баланс  0");
     }
 
     @SuppressWarnings("unused")

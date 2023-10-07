@@ -23,7 +23,7 @@ import java.util.*;
 
 public class BookkeeperParameterResolver implements ParameterResolver, BeforeEachCallback {
     private final Random random = new Random();
-    private final List<Class<?>> supportedClasses = List.of(User.class, TelegramUser.class, Account.class, AccountTransaction.class, FakeSession.class);
+    private final List<Class<?>> supportedClasses = List.of(User.class, TelegramUser.class, Account.class, AccountTransaction.class, FakeSession.class, EntityManager.class);
 
     private final ArrayList<User> userCache = new ArrayList<>();
     private final ArrayList<TelegramUser> telegramUserCache = new ArrayList<>();
@@ -62,13 +62,19 @@ public class BookkeeperParameterResolver implements ParameterResolver, BeforeEac
 
     private Account accountFactory(Parameter parameter) {
         var obj = new Account();
-        obj.setName("Account %s".formatted(accountCache.size()));
 
         if (parameter.isAnnotationPresent(bookkeeper.resolverAnnotations.Currency.class)) {
             var currency = Currency.getInstance(parameter.getAnnotation(bookkeeper.resolverAnnotations.Currency.class).currency());
             obj.setCurrency(currency);
         } else {
             obj.setCurrency(Currency.getInstance("RUB"));
+        }
+
+        if (parameter.isAnnotationPresent(bookkeeper.resolverAnnotations.Name.class)) {
+            var name = parameter.getAnnotation(bookkeeper.resolverAnnotations.Name.class).name();
+            obj.setName(name);
+        } else {
+            obj.setName("Account %s".formatted(accountCache.size()));
         }
 
         obj.setTelegramUser(telegramUserCache.stream().findAny().orElseGet(this::telegramUserFactory));
@@ -148,14 +154,30 @@ public class BookkeeperParameterResolver implements ParameterResolver, BeforeEac
 
     @Override
     public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        var type = parameterContext.getParameter().getType();
+        var parameter = parameterContext.getParameter();
+        var type = parameter.getType();
+        var hasAnnotations = parameter.getAnnotations().length > 0;
+
+        if (type.equals(Account.class)) {
+            if (!hasAnnotations)
+                return accountCache.stream().findAny().orElseGet(this::accountFactory);
+            return accountFactory(parameter);
+        }
+
         if (type.equals(AccountTransaction.class)) {
-            if (parameterContext.getParameter().getAnnotations().length == 0)
+            if (!hasAnnotations)
                 return accountTransactionCache.stream().findAny().orElseGet(this::accountTransactionFactory);
-            return accountTransactionFactory(parameterContext.getParameter());
-        } else if (type.equals(FakeSession.class)) {
+            return accountTransactionFactory(parameter);
+        }
+
+        if (type.equals(FakeSession.class)) {
             return fakeSessionFactory();
         }
+
+        if (type.equals(EntityManager.class)) {
+            return FakeApp.container.entityManager();
+        }
+
         throw new ParameterResolutionException(type.toString());
     }
 
