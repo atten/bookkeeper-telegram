@@ -153,7 +153,7 @@ public class StringUtils {
     /**
      * Strip and replace non-breaking spaces with regular one.
      */
-    static String cleanString(String input) {
+    public static String cleanString(String input) {
         return input.replaceAll(Arrays.toString(Character.toChars(160)), " ").strip();
     }
 

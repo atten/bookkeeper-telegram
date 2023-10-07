@@ -1,12 +1,15 @@
 package bookkeeper.telegram.scenario;
 
-import bookkeeper.telegram.FakeApp;
+import bookkeeper.telegram.BookkeeperParameterResolver;
+import bookkeeper.telegram.FakeSession;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.Collection;
 import java.util.List;
 
+@ExtendWith(BookkeeperParameterResolver.class)
 class AddTransactionScenarioTest {
     private static Collection<String> validFreehandInputs() {
         return List.of(
@@ -53,13 +56,13 @@ class AddTransactionScenarioTest {
 
     @ParameterizedTest
     @MethodSource({"validFreehandInputs", "validTinkoffInputs"})
-    void addSingleTransaction(String input) {
-        FakeApp.session().sendText(input).expectStartsWith("Добавлена запись на счёт");
+    void addSingleTransaction(String input, FakeSession session) {
+        session.sendText(input).expectStartsWith("Добавлена запись на счёт");
     }
 
     @ParameterizedTest
     @MethodSource({"emptyFreehandInputs", "emptyTinkoffInputs"})
-    void skipEmptyTransaction(String input) {
-        FakeApp.session().sendText(input).expect("Не добавлено ни одной записи");
+    void skipEmptyTransaction(String input, FakeSession session) {
+        session.sendText(input).expect("Не добавлено ни одной записи");
     }
 }

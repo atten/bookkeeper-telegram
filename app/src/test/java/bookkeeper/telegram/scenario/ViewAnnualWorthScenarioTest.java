@@ -1,23 +1,28 @@
 package bookkeeper.telegram.scenario;
 
-import bookkeeper.telegram.FakeApp;
+import bookkeeper.entity.AccountTransaction;
+import bookkeeper.resolverAnnotations.Amount;
+import bookkeeper.resolverAnnotations.Month;
+import bookkeeper.telegram.BookkeeperParameterResolver;
+import bookkeeper.telegram.FakeSession;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-import java.time.LocalDate;
-
+@ExtendWith(BookkeeperParameterResolver.class)
 class ViewAnnualWorthScenarioTest {
     @Test
-    void emptyWorth() {
-        FakeApp.session().sendText("/annual").expectStartsWith("`Jan  0.00M (+0.00K)");
+    void emptyWorth(FakeSession session) {
+        session.sendText("/annual").expectStartsWith("`Jan  0.00M (+0.00K)");
     }
 
     @Test
-    void nonEmptyWorth() {
-        var januaryTransactionInput = "Покупка 01.01.%s. Карта *0964. 123456 RUB. MOS.TRANSP. Доступно 499.28 RUB".formatted(LocalDate.now().getYear());
-        FakeApp
-            .session()
-            .sendText(januaryTransactionInput)
+    void nonEmptyWorth(@SuppressWarnings("unused")
+                       @Month(month = java.time.Month.JANUARY)
+                       @Amount(amount = -123456)
+                       AccountTransaction transaction,
+                       FakeSession session) {
+        session
             .sendText("/annual")
-            .expectStartsWith("`Jan -0.12M (-123.K)");
+            .expectStartsWith("`Янв -0,12M (-123 K)");
     }
 }

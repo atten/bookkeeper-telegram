@@ -1,6 +1,7 @@
 package bookkeeper.telegram;
 
 import bookkeeper.service.telegram.KeyboardUtils;
+import bookkeeper.service.telegram.StringUtils;
 import com.pengrad.telegrambot.model.User;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
@@ -29,7 +30,7 @@ public class FakeSession {
     }
 
     public FakeSession pressButton(String identifier) throws NoSuchElementException {
-        var button = findButton(identifier).orElseThrow();
+        var button = findButton(identifier).orElseThrow(() -> new NoSuchElementException("Button '%s' not found".formatted(identifier)));
         var update = new UpdateBuilder().setUser(user).setCallbackQuery(button.callbackData()).build();
         bot.processUpdate(update);
         return this;
@@ -56,7 +57,7 @@ public class FakeSession {
      * Compare most recent bot answer with expected text
      */
     public FakeSession expectContains(String responseText) {
-        var lastMessageText = getLastResponseText();
+        var lastMessageText = StringUtils.cleanString(getLastResponseText());
         assertTrue(lastMessageText.contains(responseText), String.format("Expected message contains: '%s': %s", responseText, lastMessageText));
         return this;
     }

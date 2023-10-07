@@ -1,28 +1,51 @@
 package bookkeeper.telegram.scenario;
 
-import bookkeeper.telegram.FakeApp;
+import bookkeeper.entity.AccountTransaction;
+import bookkeeper.resolverAnnotations.Amount;
+import bookkeeper.resolverAnnotations.Currency;
+import bookkeeper.resolverAnnotations.PreviousMonth;
+import bookkeeper.telegram.BookkeeperParameterResolver;
+import bookkeeper.telegram.FakeSession;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
+@ExtendWith(BookkeeperParameterResolver.class)
 class ViewAssetsScenarioTest {
     @Test
-    void emptyAssets() {
-        FakeApp
-            .session()
+    void emptyAssets(FakeSession session) {
+        session
             .sendText("/assets")
             .expectContains("Сводка по непустым счетам на конец")
             .expectContains("Курс")
             .expectContains("Итог");
     }
 
+    @SuppressWarnings("unused")
     @Test
-    void nonEmptyAssets() {
-        FakeApp
-            .session()
-            .sendText("еда 30000")
-            .sendText("путешествия 105.9 USD")
+    void nonEmptyAssets(
+        @Amount(amount = -30000)
+        AccountTransaction transaction,
+        @Amount(amount = -105.9)
+        @Currency(currency = "USD")
+        AccountTransaction transaction2,
+        FakeSession session) {
+        session
             .sendText("/assets")
-            .expectContains("-105.90 $")
-            .expectContains("-30,000.00 RUB")
-            .expectContains("-33,177.00 RUB");
+            .expectContains("-105,90 $")
+            .expectContains("-30 000,00 ₽")
+            .expectContains("-33 177,00 ₽");
+    }
+
+    @Test
+    void prevMonthAssets(
+        @SuppressWarnings("unused")
+        @PreviousMonth
+        @Amount(amount = 1000)
+        AccountTransaction transaction,
+        FakeSession session) {
+        session
+            .sendText("/assets")
+            .pressButton("◀")
+            .expectContains("1 000,00 ₽ | 100,0%");
     }
 }
