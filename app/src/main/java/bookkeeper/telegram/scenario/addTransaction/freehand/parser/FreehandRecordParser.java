@@ -15,7 +15,12 @@ public class FreehandRecordParser implements SpendingParser<FreehandRecord> {
         if (parts.length < 2)
             throw new ParseException(rawMessage, 0);
 
-        var strAmount = parts[parts.length - 1].replace("+", "-");
+        // Treat '+100' amount as negative spending (double inversion means refill).
+        // Replace comma (localized amount format) with dot (normal BigDecimal format).
+        var strAmount = parts[parts.length - 1]
+            .replace("+", "-")
+            .replace(",", ".");
+
         var record = new FreehandRecord();
         record.setDescription(rawMessage.substring(0, rawMessage.lastIndexOf(' ')));
         try {
