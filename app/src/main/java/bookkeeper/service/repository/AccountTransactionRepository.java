@@ -115,6 +115,10 @@ public class AccountTransactionRepository {
         transaction.setApprovedAt(Instant.now());
     }
 
+    public void unapprove(AccountTransaction transaction) {
+        transaction.setApprovedAt(null);
+    }
+
     public void save(AccountTransaction transaction) {
         manager.persist(transaction);
     }

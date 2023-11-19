@@ -51,4 +51,8 @@ public abstract class EditTransactionHandlersModule {
     @Binds
     @IntoSet
     abstract AbstractHandler slashClearAssociationsHandler(SlashClearAssociationsHandler handler);
+
+    @Binds
+    @IntoSet
+    abstract AbstractHandler unapproveTransactionCallbackHandler(UnapproveTransactionCallbackHandler handler);
 }

@@ -94,17 +94,19 @@ public class TransactionResponseFactory {
 
     public static InlineKeyboardMarkup getResponseKeyboard(AccountTransaction transaction) {
         var transactionId = transaction.getId();
-
         var kb = new InlineKeyboardMarkup();
+
+        if (transaction.isApproved()) {
+            var unapproveButton = new UnapproveTransactionCallback(transactionId).asButton(ICON_UNAPPROVE + "Изменить");
+            return kb.addRow(unapproveButton);
+        }
+
         var selectExpenditureButton = new SelectExpenditureCallback(transactionId).asButton(ICON_EXPENDITURE + " Категория");
         var prevMonthButton = new ShiftTransactionMonthCallback(transactionId, -1).asPrevMonthButton(transaction.date(), "В %s");
         var nextMonthButton = new ShiftTransactionMonthCallback(transactionId, +1).asNextMonthButton(transaction.date(), "В %s");
         var accountButton = new SelectAccountCallback(transactionId).asButton(ICON_ACCOUNT + " Счёт");
         var removeButton = new RemoveTransactionCallback(transactionId).asButton(ICON_DELETE + " Отмена");
         var approveButton = new ApproveTransactionCallback(transactionId).asButton("✅ Подтвердить");
-
-        if (transaction.isApproved())
-            return kb.addRow(selectExpenditureButton);
 
         var buttons = List.of(selectExpenditureButton, prevMonthButton, nextMonthButton, accountButton, removeButton, approveButton);
         return KeyboardUtils.createMarkupWithFixedColumns(buttons, 3);
