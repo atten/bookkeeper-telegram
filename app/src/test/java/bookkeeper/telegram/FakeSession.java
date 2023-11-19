@@ -1,11 +1,11 @@
 package bookkeeper.telegram;
 
 import bookkeeper.service.telegram.KeyboardUtils;
-import bookkeeper.service.telegram.StringUtils;
 import com.pengrad.telegrambot.model.User;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 
+import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -57,7 +57,7 @@ public class FakeSession {
      * Compare most recent bot answer with expected text
      */
     public FakeSession expectContains(String responseText) {
-        var lastMessageText = StringUtils.cleanString(getLastResponseText());
+        var lastMessageText = getLastResponseTextNormalized();
         assertTrue(lastMessageText.contains(responseText), String.format("Expected message contains: '%s': %s", responseText, lastMessageText));
         return this;
     }
@@ -67,6 +67,13 @@ public class FakeSession {
         var lastMessage = messages.get(messages.size() - 1);
         //noinspection unchecked
         return (String) lastMessage.getParameters().getOrDefault("text", "");
+    }
+
+    /**
+     * replace non-breaking spaces with regular ones in bot response
+     */
+    private String getLastResponseTextNormalized() {
+        return getLastResponseText().replaceAll(Arrays.toString(Character.toChars(160)), " ");
     }
 
     private Optional<InlineKeyboardButton> findButton(String identifier) {
