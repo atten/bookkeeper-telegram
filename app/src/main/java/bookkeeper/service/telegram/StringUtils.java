@@ -155,10 +155,15 @@ public class StringUtils {
     }
 
     /**
-     * Strip and replace non-breaking spaces with regular one.
+     * Prepare raw input string for parsers:
+     * - replace non-breaking spaces, double spaces with regular one
+     * - strip spaces
      */
     public static String cleanString(String input) {
-        return input.replaceAll(Arrays.toString(Character.toChars(160)), " ").strip();
+        return input
+            .replaceAll(Arrays.toString(Character.toChars(160)), " ")
+            .replace("  ", " ")
+            .strip();
     }
 
     public static String strikeoutMessage(String message) {
