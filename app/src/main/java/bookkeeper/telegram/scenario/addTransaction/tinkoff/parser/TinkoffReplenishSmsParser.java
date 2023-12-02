@@ -12,10 +12,13 @@ public class TinkoffReplenishSmsParser implements SpendingParser<TinkoffReplenis
 
     @Override
     public TinkoffReplenishSms parse(String rawMessage) throws ParseException {
-        rawMessage = rawMessage.replace("Возврат. Счет", "Пополнение, счет");
+        var start = "Пополнение, счет";
+
+        rawMessage = rawMessage.replace("Возврат. Счет", start);
+        rawMessage = rawMessage.replace("Возврат СБП, счет", start);
 
         String[] parts = rawMessage.split(" ");
-        if (!rawMessage.startsWith("Пополнение, счет") || parts.length != 8)
+        if (!rawMessage.startsWith(start) || parts.length != 8)
             throw new ParseException(rawMessage, 0);
 
         var sms = new TinkoffReplenishSms();
