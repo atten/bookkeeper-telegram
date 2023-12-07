@@ -12,7 +12,7 @@ public class TinkoffReplenishWithSenderSmsParser implements SpendingParser<Tinko
     @Override
     public TinkoffReplenishWithSenderSms parse(String rawMessage) throws ParseException {
         String[] parts = rawMessage.split(" ");
-        if (!rawMessage.startsWith("Пополнение, счет") || parts.length < 9)
+        if (!rawMessage.startsWith("Пополнение") || parts.length < 9)
             throw new ParseException(rawMessage, 0);
 
         var senderPart = String.join(" ", Arrays.copyOfRange(parts, 5, parts.length - 3));

@@ -14,6 +14,7 @@ public class TinkoffReplenishSmsParser implements SpendingParser<TinkoffReplenis
     public TinkoffReplenishSms parse(String rawMessage) throws ParseException {
         var start = "Пополнение, счет";
 
+        rawMessage = rawMessage.replace("Пополнение. Счет", start);
         rawMessage = rawMessage.replace("Возврат. Счет", start);
         rawMessage = rawMessage.replace("Возврат СБП, счет", start);
 
