@@ -75,6 +75,13 @@ class AddTransactionScenarioTest {
             .expectContains("на сумму 1220 RUB");
     }
 
+    @Test
+    void showErrorMessageOnPartialSuccess(FakeSession session) {
+        session
+            .sendText("еда 220\nblahblah")
+            .expectContains("Ошибка");
+    }
+
     @ParameterizedTest
     @MethodSource({"emptyFreehandInputs", "emptyTinkoffInputs"})
     void skipEmptyTransaction(String input, FakeSession session) {

@@ -38,8 +38,7 @@ public class CbrApiClient {
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    static
-    class Valute {
+    static class Valute {
         @JsonProperty("CharCode") String charCode;
         @JsonProperty("Value") String value;
 
@@ -53,8 +52,7 @@ public class CbrApiClient {
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    static
-    class Body {
+    static class Body {
         @JsonProperty("Valute")
         @JacksonXmlElementWrapper(useWrapping = false) List<Valute> items;
     }

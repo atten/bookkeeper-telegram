@@ -25,6 +25,8 @@ public class TransactionParserRegistry {
     private final ArrayList<ExpenditureMatcher> expenditureMatchers = new ArrayList<>();
     private final ArrayList<TimestampMatcher> timestampMatchers = new ArrayList<>();
 
+    public record TransactionParseResult(Optional<AccountTransaction> transaction, Optional<ParseException> error, String rawMessage) {}
+
     public TransactionParserRegistry addAccountMatcher(AccountMatcher matcher) {
         accountMatchers.add(matcher);
         return this;
@@ -64,19 +66,26 @@ public class TransactionParserRegistry {
         return transaction;
     }
 
-    public List<AccountTransaction> parseMultiple(String[] rawMessages, TelegramUser user) throws ParseException {
-        List<AccountTransaction> results = new ArrayList<>();
-        // transactions within same batch must have same creation timestamp for further filtering
+    public List<TransactionParseResult> parseMultiple(String[] rawMessages, TelegramUser user) {
+        List<TransactionParseResult> results = new ArrayList<>();
         var now = Instant.now();
 
         for (var message : rawMessages ) {
-            var transaction = parse(message, user);
-            transaction.setCreatedAt(now);
+            AccountTransaction transaction = null;
+            ParseException error = null;
+            try {
+                transaction = parse(message, user);
+            } catch (ParseException e) {
+                error = e;
+            }
 
-            if (transaction.isEmpty())
-                continue;
+            if (transaction != null) {
+                // transactions within same batch must have same creation timestamp for further filtering
+                transaction.setCreatedAt(now);
+            }
 
-            results.add(transaction);
+            var result = new TransactionParseResult(Optional.ofNullable(transaction), Optional.ofNullable(error), message);
+            results.add(result);
         }
 
         return results;
@@ -109,7 +118,7 @@ public class TransactionParserRegistry {
     }
 
     /**
-     * The first expenditureMatcher which returns any category different from "Other" is preferred.
+     * First expenditureMatcher which returns any category different from "Other" is preferred.
      */
     private Expenditure matchExpenditure(Spending spending, TelegramUser user) {
         return expenditureMatchers

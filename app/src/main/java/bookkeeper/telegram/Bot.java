@@ -5,6 +5,7 @@ import bookkeeper.service.repository.TelegramUserRepository;
 import bookkeeper.service.telegram.AbstractHandler;
 import bookkeeper.service.telegram.Request;
 import bookkeeper.exception.HandlerInterruptException;
+import bookkeeper.service.telegram.StringUtils;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.BotCommand;
@@ -103,7 +104,7 @@ class Bot {
             } catch (HandlerInterruptException e) {
                 processed = true;
                 log.warn(e.toString());
-                request.sendMessage(String.format("Ошибка: `%s`", e.getLocalizedMessage()));
+                request.sendMessage(String.format("%s Ошибка: `%s`", StringUtils.ICON_ERROR, e.getLocalizedMessage()));
                 break;
             }
             if (processed)

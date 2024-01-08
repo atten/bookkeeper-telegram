@@ -18,6 +18,7 @@ public class StringUtils {
     public static String ICON_EXPENDITURE = "\uD83D\uDCDD";   // 📝
     public static String ICON_UNAPPROVE = "\uD83D\uDCDD";     // 📝
     public static String ICON_DELETE = "\uD83D\uDDD1";        // 🗑
+    public static String ICON_ERROR = "\uD83D\uDEAB";         // 🚫
 
     public static String getNumberIcon(int number) {
         switch (number) {
