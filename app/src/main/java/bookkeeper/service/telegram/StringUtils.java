@@ -161,7 +161,7 @@ public class StringUtils {
      * - replace non-breaking spaces, double spaces with regular one
      * - strip spaces
      */
-    public static String cleanString(String input) {
+    static String cleanString(String input) {
         return input
             .replaceAll(Arrays.toString(Character.toChars(160)), " ")
             .replace("  ", " ")
