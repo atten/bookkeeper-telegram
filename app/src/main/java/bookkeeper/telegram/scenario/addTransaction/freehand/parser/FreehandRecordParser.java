@@ -3,8 +3,9 @@ package bookkeeper.telegram.scenario.addTransaction.freehand.parser;
 import bookkeeper.service.parser.MarkSpendingParser;
 import bookkeeper.service.parser.SpendingParser;
 
-import java.math.BigDecimal;
 import java.text.ParseException;
+
+import static bookkeeper.service.telegram.StringUtils.parseAmount;
 
 @MarkSpendingParser(provider = "freehand")
 public class FreehandRecordParser implements SpendingParser<FreehandRecord> {
@@ -16,15 +17,13 @@ public class FreehandRecordParser implements SpendingParser<FreehandRecord> {
             throw new ParseException(rawMessage, 0);
 
         // Treat '+100' amount as negative spending (double inversion means refill).
-        // Replace comma (localized amount format) with dot (normal BigDecimal format).
         var strAmount = parts[parts.length - 1]
-            .replace("+", "-")
-            .replace(",", ".");
+            .replace("+", "-");
 
         var record = new FreehandRecord();
         record.setDescription(rawMessage.substring(0, rawMessage.lastIndexOf(' ')));
         try {
-            record.setAmount(new BigDecimal(strAmount));
+            record.setAmount(parseAmount(strAmount));
         } catch (NumberFormatException e) {
             throw new ParseException(rawMessage, 0);
         }

@@ -1,11 +1,12 @@
 package bookkeeper.telegram.scenario.addTransaction.tinkoff.parser;
 
-import bookkeeper.service.parser.SpendingParser;
 import bookkeeper.service.parser.MarkSpendingParser;
+import bookkeeper.service.parser.SpendingParser;
 
-import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.Currency;
+
+import static bookkeeper.service.telegram.StringUtils.parseAmount;
 
 @MarkSpendingParser(provider = "tinkoff")
 public class TinkoffRecurringChargeSmsParser implements SpendingParser<TinkoffRecurringChargeSms> {
@@ -27,7 +28,7 @@ public class TinkoffRecurringChargeSmsParser implements SpendingParser<TinkoffRe
             throw new ParseException(String.format("Cannot parse currency: %s", e), 0);
         }
 
-        sms.chargeSum = new BigDecimal(chargeSumPart);
+        sms.chargeSum = parseAmount(chargeSumPart);
         sms.chargeCurrency = currency;
         sms.destination = rawMessage.substring(rawMessage.indexOf('"') + 1, rawMessage.lastIndexOf('"'));
         return sms;

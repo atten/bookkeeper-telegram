@@ -3,9 +3,10 @@ package bookkeeper.telegram.scenario.addTransaction.tinkoff.parser;
 import bookkeeper.service.parser.MarkSpendingParser;
 import bookkeeper.service.parser.SpendingParser;
 
-import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.Currency;
+
+import static bookkeeper.service.telegram.StringUtils.parseAmount;
 
 @MarkSpendingParser(provider = "tinkoff")
 public class TinkoffReplenishSmsParser implements SpendingParser<TinkoffReplenishSms> {
@@ -32,8 +33,8 @@ public class TinkoffReplenishSmsParser implements SpendingParser<TinkoffReplenis
         }
 
         sms.replenishCurrency = replenishCurrency;
-        sms.replenishSum = new BigDecimal(parts[3]);
-        sms.accountBalance = new BigDecimal(parts[parts.length - 2]);
+        sms.replenishSum = parseAmount(parts[3]);
+        sms.accountBalance = parseAmount(parts[parts.length - 2]);
         sms.accountCurrency = Currency.getInstance(parts[parts.length - 1]);
         return sms;
     }

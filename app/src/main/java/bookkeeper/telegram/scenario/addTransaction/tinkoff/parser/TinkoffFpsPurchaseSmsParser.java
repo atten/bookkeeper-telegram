@@ -1,12 +1,13 @@
 package bookkeeper.telegram.scenario.addTransaction.tinkoff.parser;
 
-import bookkeeper.service.parser.SpendingParser;
 import bookkeeper.service.parser.MarkSpendingParser;
+import bookkeeper.service.parser.SpendingParser;
 
-import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Currency;
+
+import static bookkeeper.service.telegram.StringUtils.parseAmount;
 
 @MarkSpendingParser(provider = "tinkoff")
 public class TinkoffFpsPurchaseSmsParser implements SpendingParser<TinkoffFpsPurchaseSms> {
@@ -26,10 +27,10 @@ public class TinkoffFpsPurchaseSmsParser implements SpendingParser<TinkoffFpsPur
             throw new ParseException(String.format("Cannot parse currency: %s", e), 0);
         }
 
-        sms.purchaseSum = new BigDecimal(parts[4]);
+        sms.purchaseSum = parseAmount(parts[4]);
         sms.purchaseCurrency = currency;
         sms.merchant = String.join(" ", Arrays.copyOfRange(parts, 6, parts.length - 3));
-        sms.accountBalance = new BigDecimal(parts[parts.length - 2]);
+        sms.accountBalance = parseAmount(parts[parts.length - 2]);
         sms.accountCurrency = Currency.getInstance(parts[parts.length - 1]);
 
         // remove trailing dot

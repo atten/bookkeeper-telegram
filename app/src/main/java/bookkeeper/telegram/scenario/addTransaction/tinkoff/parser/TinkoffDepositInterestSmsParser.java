@@ -3,10 +3,11 @@ package bookkeeper.telegram.scenario.addTransaction.tinkoff.parser;
 import bookkeeper.service.parser.MarkSpendingParser;
 import bookkeeper.service.parser.SpendingParser;
 
-import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Currency;
+
+import static bookkeeper.service.telegram.StringUtils.parseAmount;
 
 @MarkSpendingParser(provider = "tinkoff")
 public class TinkoffDepositInterestSmsParser implements SpendingParser<TinkoffDepositInterestSms> {
@@ -24,7 +25,7 @@ public class TinkoffDepositInterestSmsParser implements SpendingParser<TinkoffDe
             throw new ParseException(String.format("Cannot parse currency: %s", e), 0);
         }
 
-        sms.setInterestSum(new BigDecimal(String.join("", Arrays.copyOfRange(parts, 4, parts.length - 1))));
+        sms.setInterestSum(parseAmount(String.join("", Arrays.copyOfRange(parts, 4, parts.length - 1))));
         return sms;
     }
 }

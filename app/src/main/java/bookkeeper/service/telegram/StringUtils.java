@@ -171,4 +171,9 @@ public class StringUtils {
     public static String strikeoutMessage(String message) {
         return String.format("<del>%s</del>", message);
     }
+
+    public static BigDecimal parseAmount(String amount) {
+        // Replace comma (localized amount format) with dot (normal BigDecimal format).
+        return new BigDecimal(amount.replace(",", "."));
+    }
 }
