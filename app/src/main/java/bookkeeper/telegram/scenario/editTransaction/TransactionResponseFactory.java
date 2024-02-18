@@ -17,7 +17,7 @@ import static bookkeeper.service.telegram.StringUtils.*;
 public class TransactionResponseFactory {
 
     public static String getResponseMessage(List<AccountTransaction> transactions) {
-        if (transactions.size() == 0) {
+        if (transactions.isEmpty()) {
             return "Не добавлено ни одной записи";
         }
 
@@ -65,7 +65,12 @@ public class TransactionResponseFactory {
             remaining = "Это последняя запись.";
         else
             remaining = String.format("Осталось: %s", remainingCount);
-        return String.format("`%s`\n\n%s\n\n%s", transaction.getRaw(), getResponseMessage(transaction), remaining);
+
+        var response = new StringJoiner("\n\n");
+        response.add("`%s`".formatted(transaction.getRaw()));
+        response.add(getResponseMessage(transaction));
+        response.add(remaining);
+        return response.toString();
     }
 
     public static String getResponseMessage(String merchant, Expenditure expenditure) {
@@ -73,7 +78,7 @@ public class TransactionResponseFactory {
     }
 
     public static InlineKeyboardMarkup getResponseKeyboard(List<AccountTransaction> transactions) {
-        if (transactions.size() == 0) {
+        if (transactions.isEmpty()) {
             return new InlineKeyboardMarkup();
         } else if (transactions.size() == 1) {
             var transaction = transactions.get(0);
@@ -128,7 +133,7 @@ public class TransactionResponseFactory {
         buttons.add(nextMonthButton);
         buttons.add(accountButton);
 
-        var showApproveButton = !transaction.isApproved() || pendingTransactionIds.size() > 0;
+        var showApproveButton = !transaction.isApproved() || !pendingTransactionIds.isEmpty();
         if (showApproveButton) {
             var approveButtonText = transaction.isApproved() ? "Далее" : "✅ Подтвердить";
             var approveButton = new ApproveTransactionCallback(transactionId).setPendingTransactionIds(pendingTransactionIds).asButton(approveButtonText);

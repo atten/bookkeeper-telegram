@@ -80,7 +80,8 @@ class AddTransactionScenarioTest {
     void showErrorMessageOnPartialSuccess(FakeSession session) {
         session
             .sendText("еда 220\nblahblah")
-            .expectContains("Ошибка");
+            .expectContains("Ошибка")
+            .expectContains("1 / 2 строк не распознано");
     }
 
     @ParameterizedTest

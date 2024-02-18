@@ -8,6 +8,7 @@ import bookkeeper.service.telegram.AbstractHandler;
 import bookkeeper.service.telegram.Request;
 import bookkeeper.service.telegram.StringUtils;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.StringJoiner;
 
@@ -65,27 +66,33 @@ public class AbstractTransactionRecordHandler implements AbstractHandler {
         // handle errors
         if (!errors.isEmpty()) {
             if (transactions.isEmpty())
-                // failed to parse all messages
+                // failed to parse all messages -> skip handling
                 return false;
 
-            // partial success: display error message
-            var summary = new StringJoiner("\n");
-            var counter = 1;
-
-            summary.add(String.format("%s / %s строк не распознано:", errors.size(), rawMessages.length));
-
-            for (var result : results) {
-                if (result.error().isPresent()) {
-                    summary.add(String.format("%s %s: %s", StringUtils.getNumberIcon(counter), result.rawMessage(), result.error().get().getLocalizedMessage()));
-                }
-                counter++;
-            }
-
-            throw new AccountTransactionNotParsed(summary.toString());
+            // partial success -> display error message
+            var summary = getErrorMessage(results);
+            throw new AccountTransactionNotParsed(summary);
         }
 
         transactions.forEach(transactionRepository::save);
         request.replyMessage(getResponseMessage(transactions), getResponseKeyboard(transactions));
         return true;
+    }
+
+    private static String getErrorMessage(List<TransactionParserRegistry.TransactionParseResult> results) {
+        var errorStrings = new StringJoiner("\n");
+        var errorsCount = 0;
+        var messageCount = 1;
+
+        for (var result : results) {
+            if (result.error().isPresent()) {
+                errorStrings.add(String.format("%s %s: %s", StringUtils.getNumberIcon(messageCount), result.rawMessage(), result.error().get().getLocalizedMessage()));
+                errorsCount++;
+            }
+            messageCount++;
+        }
+
+        var summary = String.format("%s / %s строк не распознано:", errorsCount, results.size());
+        return summary + "\n" + errorStrings;
     }
 }
