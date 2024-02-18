@@ -84,6 +84,14 @@ class AddTransactionScenarioTest {
             .expectContains("1 / 2 строк не распознано");
     }
 
+    @Test
+    void showWarningMessageOnDuplicates(FakeSession session) {
+        session
+            .sendText("еда 220")
+            .sendText("еда 220")
+            .expectContains("1 дубль");
+    }
+
     @ParameterizedTest
     @MethodSource({"emptyFreehandInputs", "emptyTinkoffInputs"})
     void skipEmptyTransaction(String input, FakeSession session) {

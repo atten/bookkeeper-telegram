@@ -93,6 +93,10 @@ public class Request {
         sendMessage(text, null, false);
     }
 
+    public void replyMessage(String text) {
+        sendMessage(text, null, true);
+    }
+
     public void replyMessage(String text, Keyboard keyboard) {
         sendMessage(text, keyboard, true);
     }
