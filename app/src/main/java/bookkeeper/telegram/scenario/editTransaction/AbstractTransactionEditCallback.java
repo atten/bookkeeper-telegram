@@ -5,10 +5,9 @@ import lombok.Getter;
 
 import java.util.List;
 
+@Getter
 class AbstractTransactionEditCallback extends CallbackMessage {
-    @Getter
     private final long transactionId;
-    @Getter
     private List<Long> pendingTransactionIds = List.of();
 
     AbstractTransactionEditCallback(long transactionId) {

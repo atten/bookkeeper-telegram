@@ -5,10 +5,9 @@ import bookkeeper.service.telegram.CallbackMessage;
 import lombok.Getter;
 
 
+@Getter
 class RemoveMerchantExpenditureCallback extends CallbackMessage {
-    @Getter
     private final String merchant;
-    @Getter
     private final Expenditure expenditure;
 
     RemoveMerchantExpenditureCallback(String merchant, Expenditure expenditure) {

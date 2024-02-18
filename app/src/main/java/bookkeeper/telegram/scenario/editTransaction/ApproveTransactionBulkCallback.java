@@ -5,8 +5,8 @@ import lombok.Getter;
 
 import java.util.List;
 
+@Getter
 class ApproveTransactionBulkCallback extends CallbackMessage {
-    @Getter
     private final List<Long> transactionIds;
 
     ApproveTransactionBulkCallback(List<Long> transactionIds) {

@@ -6,10 +6,10 @@ import lombok.Getter;
 import java.util.List;
 
 @Getter
-public class EditTransactionBulkCallback extends CallbackMessage {
+class RemoveTransactionBulkCallback extends CallbackMessage {
     private final List<Long> transactionIds;
 
-    public EditTransactionBulkCallback(List<Long> transactionIds) {
+    RemoveTransactionBulkCallback(List<Long> transactionIds) {
         this.transactionIds = transactionIds;
     }
 }

@@ -34,6 +34,10 @@ public abstract class EditTransactionHandlersModule {
 
     @Binds
     @IntoSet
+    abstract AbstractHandler removeTransactionBulkCallbackHandler(RemoveTransactionBulkCallbackHandler handler);
+
+    @Binds
+    @IntoSet
     abstract AbstractHandler selectExpenditureCallbackHandler(SelectExpenditureCallbackHandler handler);
 
     @Binds

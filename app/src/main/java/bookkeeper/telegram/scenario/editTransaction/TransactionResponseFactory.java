@@ -90,11 +90,12 @@ public class TransactionResponseFactory {
 
         var button1 = new EditTransactionBulkCallback(transactionIds).asButton("Разобрать");
         var button2 = new ApproveTransactionBulkCallback(transactionIds).asButton("Подтвердить все");
+        var button3 = new RemoveTransactionBulkCallback(transactionIds).asButton("Отменить все");
 
         if (approvedCount == transactionIds.size())
             return kb.addRow(button1);
 
-        return kb.addRow(button1, button2);
+        return kb.addRow(button1, button2, button3);
     }
 
     public static InlineKeyboardMarkup getResponseKeyboard(AccountTransaction transaction) {
