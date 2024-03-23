@@ -56,7 +56,11 @@ public class Request {
             return update.message().from();
         if (update.callbackQuery() != null)
             return update.callbackQuery().from();
-        return update.editedMessage().from();
+        if (update.editedMessage() != null)
+            return update.editedMessage().from();
+        if (update.myChatMember() != null)
+            return update.myChatMember().from();
+        throw new RuntimeException("Failed to extract user from Update with unknown type!");
     }
 
     public Optional<CallbackMessage> getCallbackMessage() {
@@ -130,7 +134,9 @@ public class Request {
             return update.message().text();
         if (update.callbackQuery() != null)
             return String.format("(callback): %s", update.callbackQuery().data());
-        return String.format("(edited): %s", update.editedMessage().text());
+        if (update.editedMessage() != null)
+            return String.format("(edited): %s", update.editedMessage().text());
+        return update.toString();
     }
 
     private static Optional<ParseMode> detectParseMode(String message) {
@@ -147,7 +153,7 @@ public class Request {
         var parseMode = detectParseMode(text);
         var keyboardVerbose = "";
 
-        var message = new SendMessage(telegramUser.getTelegramId(), text);
+        var message = new SendMessage(getChatId(), text);
 
         if (parseMode.isPresent())
             message = message.parseMode(parseMode.get());
