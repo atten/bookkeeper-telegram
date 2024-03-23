@@ -24,7 +24,12 @@ class UpdateBuilder {
 
     UpdateBuilder setMessage(String text) {
         var map = createMap();
+        var chatMap = createMap();
+
+        chatMap.put("id", 1);
+
         map.put("message_id", 100);
+        map.put("chat", chatMap);
         map.put("from", user);
         map.put("text", text);
         this.message = fromMap(map, Message.class);
