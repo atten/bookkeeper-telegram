@@ -214,7 +214,9 @@ public class Request {
             return update.message().chat().id();
         if (update.callbackQuery() != null)
             return update.callbackQuery().message().chat().id();
-        return update.editedMessage().chat().id();
+        if (update.editedMessage() != null)
+            return update.editedMessage().chat().id();
+        return update.myChatMember().chat().id();
     }
 
     private int getMessageId() {
