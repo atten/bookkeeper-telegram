@@ -36,4 +36,17 @@ class TinkoffRecurringChargeSmsParserTest {
 
         assertEquals(referenceSms, sms);
     }
+
+    @Test
+    void parseOk_3() throws ParseException {
+        var sms = parser.parse("Выполнен автоплатеж «на мегафон» на 360 р.");
+
+        var referenceSms = new TinkoffRecurringChargeSms();
+
+        referenceSms.chargeSum = new BigDecimal("360");
+        referenceSms.chargeCurrency = Currency.getInstance("RUB");
+        referenceSms.destination = "на мегафон";
+
+        assertEquals(referenceSms, sms);
+    }
 }
