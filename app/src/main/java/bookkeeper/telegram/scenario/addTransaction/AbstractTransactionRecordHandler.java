@@ -1,6 +1,5 @@
 package bookkeeper.telegram.scenario.addTransaction;
 
-import bookkeeper.enums.HandlerPriority;
 import bookkeeper.exception.AccountTransactionNotParsed;
 import bookkeeper.service.registry.TransactionParserRegistry;
 import bookkeeper.service.repository.AccountTransactionRepository;
@@ -26,11 +25,6 @@ public class AbstractTransactionRecordHandler implements AbstractHandler {
     public AbstractTransactionRecordHandler(AccountTransactionRepository transactionRepository, TransactionParserRegistry transactionParserRegistry) {
         this.transactionParserRegistry = transactionParserRegistry;
         this.transactionRepository = transactionRepository;
-    }
-
-    @Override
-    public HandlerPriority getPriority() {
-        return HandlerPriority.LOW_MESSAGE;
     }
 
     /**
