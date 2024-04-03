@@ -11,6 +11,7 @@ public class TinkoffIgnoreSmsParser implements SpendingParser<TinkoffIgnoreSms> 
     private final List<String> ignore = List.of(
         "Никому не говорите код",
         "Завтра выполним регулярный платеж",
+        "Завтра выполним автоплатеж",
         "Оцените решение вопроса",
         "Детали полета и маршрутная квитанция",
         "По вашему рейсу произошли изменения",
