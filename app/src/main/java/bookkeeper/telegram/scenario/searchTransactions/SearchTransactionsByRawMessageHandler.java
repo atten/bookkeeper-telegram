@@ -87,7 +87,7 @@ class SearchTransactionsByRawMessageHandler implements AbstractHandler {
             );
         }
 
-        if (searchResult.size() > 0) {
+        if (!searchResult.isEmpty()) {
             response.add(String.format("(ещё %s)...", getItemsVerbose(searchResult.size())));
         }
 

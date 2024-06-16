@@ -44,7 +44,7 @@ class AssignExpenditureCallbackHandler implements AbstractHandler {
             return false;
 
         var transaction = transactionRepository.get(cm.getTransactionId()).orElseThrow(() -> new AccountTransactionNotFound(cm.getTransactionId()));
-        var merchant = getSpendingFromTransaction(transaction).getMerchant();
+        var merchant = getSpending(transaction).getMerchant();
         var newExpenditure = cm.getExpenditure();
         var hasAssociation = merchantExpenditureRepository.find(merchant, request.getTelegramUser()).isPresent();
         var useAssociationFurther = newExpenditure != Expenditure.OTHER && !hasAssociation;
@@ -79,7 +79,7 @@ class AssignExpenditureCallbackHandler implements AbstractHandler {
     /**
      * restore spending from transaction raw message
      */
-    private Spending getSpendingFromTransaction(AccountTransaction transaction) {
+    private Spending getSpending(AccountTransaction transaction) {
         try {
             return spendingParserRegistry.parse(transaction.getRaw());
         } catch (ParseException e) {
@@ -89,7 +89,7 @@ class AssignExpenditureCallbackHandler implements AbstractHandler {
 
     private void updateTransactionsExpenditure(List<AccountTransaction> transactions, String merchantFilter, Expenditure newExpenditure) {
         for (var transaction : transactions) {
-            var merchant = getSpendingFromTransaction(transaction).getMerchant();
+            var merchant = getSpending(transaction).getMerchant();
             if (merchant.equals(merchantFilter)) {
                 transaction.setExpenditure(newExpenditure);
             }

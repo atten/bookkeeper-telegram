@@ -106,4 +106,14 @@ public class AssetQuery {
         exchangeRateRepository.backfillExchangeRates(backfilledMap, exchangeCurrency, date);
         return backfilledMap;
     }
+
+    public record Asset(Account account, BigDecimal balance, BigDecimal exchangeRate, Currency exchangeCurrency) {
+        public BigDecimal getExchangeBalance() {
+            return balance.multiply(exchangeRate);
+        }
+
+        boolean isEmpty() {
+            return balance.stripTrailingZeros().equals(BigDecimal.ZERO);
+        }
+    }
 }
