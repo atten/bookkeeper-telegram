@@ -75,7 +75,7 @@ public class StringUtils {
             "%+,.0f %s",
             amount,
             currency.getSymbol()
-        );
+        ).replace("+0 ", "0 ");
     }
 
     /**
