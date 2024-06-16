@@ -70,7 +70,7 @@ public class StringUtils {
     /**
      * -10 101 ₽ (credit) | +10 101 ₽ (debit)
      */
-    private static String getRoundedAmountSigned(BigDecimal amount, Currency currency) {
+    public static String getRoundedAmountSigned(BigDecimal amount, Currency currency) {
         return String.format(
             "%+,.0f %s",
             amount,

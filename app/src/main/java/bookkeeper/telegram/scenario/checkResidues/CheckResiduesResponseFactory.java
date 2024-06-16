@@ -6,13 +6,12 @@ import bookkeeper.service.parser.Spending;
 import bookkeeper.service.parser.SpendingParserRegistry;
 import bookkeeper.service.query.AssetQuery;
 import bookkeeper.service.repository.AccountTransactionRepository;
-import bookkeeper.service.telegram.StringUtils;
 
 import javax.inject.Inject;
 import java.text.ParseException;
 import java.util.StringJoiner;
 
-import static bookkeeper.service.telegram.StringUtils.getRoundedAmount;
+import static bookkeeper.service.telegram.StringUtils.*;
 
 public class CheckResiduesResponseFactory {
     private final AssetQuery assetQuery;
@@ -44,11 +43,11 @@ public class CheckResiduesResponseFactory {
             var currency = asset.account().getCurrency();
             var message = "%s\nРазница: %s\nПосчитано: %s\nВведено: %s (`%s` от %s)".formatted(
                 asset.account().getName(),
-                getRoundedAmount(spendingBalance.subtract(asset.balance()), currency),
+                getRoundedAmountSigned(spendingBalance.subtract(asset.balance()), currency),
                 getRoundedAmount(asset.balance(), currency),
                 getRoundedAmount(spendingBalance, currency),
                 transaction.getRaw(),
-                StringUtils.getDateShort(transaction.date())
+                getDateShort(transaction.date())
             );
             content.add(message);
         }
