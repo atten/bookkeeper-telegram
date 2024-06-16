@@ -49,7 +49,7 @@ public class FreehandAccountMatcher implements AccountMatcher {
      */
     private Optional<Account> getLastUsedAccount(Collection<Account> accounts) {
         var recentTransactions = accounts.stream()
-            .map(account -> transactionRepository.findRecent(account, 1))
+            .map(account -> transactionRepository.findRecentAdded(account, 1))
             .flatMap(Collection::stream)
             .sorted(Comparator.comparing(AccountTransaction::getCreatedAt).reversed());
 

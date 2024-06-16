@@ -31,7 +31,7 @@ public class CheckResiduesResponseFactory {
 
         var content = new StringJoiner("\n\n");
         for (var asset : assets) {
-            var latestTransactions = transactionRepository.findRecent(asset.account(), 1);
+            var latestTransactions = transactionRepository.findRecentAdded(asset.account(), 1);
             if (latestTransactions.isEmpty())
                 continue;
 

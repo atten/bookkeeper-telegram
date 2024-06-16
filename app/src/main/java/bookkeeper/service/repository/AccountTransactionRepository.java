@@ -31,8 +31,8 @@ public class AccountTransactionRepository {
         return query.getResultList();
     }
 
-    public List<AccountTransaction> findRecent(Account account, int count) {
-        var sql = "SELECT i FROM AccountTransaction i WHERE account=:account ORDER BY createdAt DESC LIMIT :count";
+    public List<AccountTransaction> findRecentAdded(Account account, int count) {
+        var sql = "SELECT i FROM AccountTransaction i WHERE account=:account ORDER BY id DESC LIMIT :count";
         var query = manager.createQuery(sql, AccountTransaction.class)
             .setParameter("account", account)
             .setParameter("count", count);
