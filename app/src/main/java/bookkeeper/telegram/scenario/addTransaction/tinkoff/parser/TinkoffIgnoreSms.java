@@ -2,6 +2,9 @@ package bookkeeper.telegram.scenario.addTransaction.tinkoff.parser;
 
 import bookkeeper.service.parser.Spending;
 
+import java.math.BigDecimal;
+import java.util.Optional;
+
 
 /**
  * Example:
@@ -12,6 +15,11 @@ public class TinkoffIgnoreSms implements Spending {
     @Override
     public String getMerchant() {
         return "Tinkoff";
+    }
+
+    @Override
+    public Optional<BigDecimal> getBalance() {
+        return Optional.empty();
     }
 
 

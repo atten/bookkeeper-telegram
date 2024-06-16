@@ -5,6 +5,7 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 import java.util.Currency;
+import java.util.Optional;
 
 /**
  * Оплата СБП, счет RUB. 1760 RUB. YANDEX.AFISHA. Доступно 694.79 RUB
@@ -20,5 +21,10 @@ public class TinkoffFpsPurchaseSms implements Spending {
     @Override
     public String getMerchant() {
         return merchant;
+    }
+
+    @Override
+    public Optional<BigDecimal> getBalance() {
+        return Optional.of(accountBalance);
     }
 }

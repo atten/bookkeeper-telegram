@@ -5,6 +5,7 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 import java.util.Currency;
+import java.util.Optional;
 
 /**
  * Example:
@@ -22,5 +23,10 @@ public class TinkoffWithdrawalSms implements Spending {
     @Override
     public String getMerchant() {
         return casher;
+    }
+
+    @Override
+    public Optional<BigDecimal> getBalance() {
+        return Optional.of(accountBalance);
     }
 }

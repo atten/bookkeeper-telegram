@@ -4,6 +4,7 @@ import bookkeeper.telegram.scenario.addAccount.AddAccountHandlersModule;
 import bookkeeper.telegram.scenario.addTransaction.freehand.FreehandHandlersModule;
 import bookkeeper.telegram.scenario.addTransaction.tinkoff.TinkoffHandlersModule;
 import bookkeeper.telegram.scenario.addTransfer.AddTransferHandlersModule;
+import bookkeeper.telegram.scenario.checkResidues.CheckResiduesHandlersModule;
 import bookkeeper.telegram.scenario.editAccount.EditAccountHandlersModule;
 import bookkeeper.telegram.scenario.editTransaction.EditTransactionHandlersModule;
 import bookkeeper.telegram.scenario.searchTransactions.SearchTransactionsHandlersModule;
@@ -25,6 +26,7 @@ import dagger.Module;
         CommonHandlersModule.class,
         SearchTransactionsHandlersModule.class,
         ViewAnnualWorthHandlersModule.class,
+        CheckResiduesHandlersModule.class,
     }
 )
 interface AllHandlersModule {}

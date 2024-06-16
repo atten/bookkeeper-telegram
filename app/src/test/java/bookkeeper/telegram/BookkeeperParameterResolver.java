@@ -5,6 +5,7 @@ import bookkeeper.entity.AccountTransaction;
 import bookkeeper.entity.TelegramUser;
 import bookkeeper.resolverAnnotations.Month;
 import bookkeeper.resolverAnnotations.PreviousMonth;
+import bookkeeper.resolverAnnotations.Raw;
 import com.pengrad.telegrambot.model.User;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.extension.*;
@@ -102,9 +103,15 @@ public class BookkeeperParameterResolver implements ParameterResolver, BeforeEac
     private AccountTransaction accountTransactionFactory(Parameter parameter) {
         var obj = new AccountTransaction();
 
-        obj.setRaw("Transaction 10 RUB");
         obj.setCreatedAt(Instant.now());
         obj.setTimestamp(Instant.now());
+
+        if (parameter.isAnnotationPresent(Raw.class)) {
+            var raw = parameter.getAnnotation(Raw.class).raw();
+            obj.setRaw(raw);
+        } else {
+            obj.setRaw("Transaction 10 RUB");
+        }
 
         if (parameter.isAnnotationPresent(PreviousMonth.class)) {
             obj.setTimestamp(LocalDateTime.now().minusMonths(1).toInstant(ZoneOffset.UTC));

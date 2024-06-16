@@ -4,6 +4,7 @@ import bookkeeper.service.parser.Spending;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 /**
  * Example:
@@ -17,5 +18,10 @@ public class FreehandRecord implements Spending {
     @Override
     public String getMerchant() {
         return description;
+    }
+
+    @Override
+    public Optional<BigDecimal> getBalance() {
+        return Optional.empty();
     }
 }
