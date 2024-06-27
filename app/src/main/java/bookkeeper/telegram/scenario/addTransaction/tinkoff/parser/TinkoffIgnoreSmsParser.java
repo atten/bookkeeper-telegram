@@ -16,6 +16,7 @@ public class TinkoffIgnoreSmsParser implements SpendingParser<TinkoffIgnoreSms> 
         "Детали полета и маршрутная квитанция",
         "По вашему рейсу произошли изменения",
         "Полис путешественника оплачен и доступен",
+        "Посоветуйте карту",
         "Отказ"
     );
 
