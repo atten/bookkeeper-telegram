@@ -16,6 +16,7 @@ public class StringUtils {
     public static String ICON_RATES = "\uD83D\uDCC8";         // 📈
     public static String ICON_ASSETS = "\uD83C\uDFDB";        // 🏛
     public static String ICON_EXPENDITURE = "\uD83D\uDCDD";   // 📝
+    public static String ICON_APPROVE = "✅";                 // ✅
     public static String ICON_UNAPPROVE = "\uD83D\uDCDD";     // 📝
     public static String ICON_DELETE = "\uD83D\uDDD1";        // 🗑
     public static String ICON_WARNING = "⚠️";                 // ⚠️

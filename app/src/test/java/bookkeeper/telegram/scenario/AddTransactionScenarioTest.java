@@ -97,6 +97,15 @@ class AddTransactionScenarioTest {
             .expectContains("1 дубль");
     }
 
+    @Test
+    void showSummaryOnOverviewClick(FakeSession session) {
+        session
+            .sendText("еда 220\nтранспорт 1000")
+            .pressButton("Разобрать")
+            .pressButton("Готово")
+            .expectContains("Добавлены 2 записи");
+    }
+
     @ParameterizedTest
     @MethodSource({"emptyFreehandInputs", "emptyTinkoffInputs"})
     void skipEmptyTransaction(String input, FakeSession session) {

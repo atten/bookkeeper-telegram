@@ -26,6 +26,10 @@ public abstract class EditTransactionHandlersModule {
 
     @Binds
     @IntoSet
+    abstract AbstractHandler overviewTransactionsCallbackHandler(OverviewTransactionsCallbackHandler handler);
+
+    @Binds
+    @IntoSet
     abstract AbstractHandler removeMerchantExpenditureCallbackHandler(RemoveMerchantExpenditureCallbackHandler handler);
 
     @Binds
