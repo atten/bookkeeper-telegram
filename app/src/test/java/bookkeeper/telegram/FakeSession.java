@@ -36,6 +36,19 @@ public class FakeSession {
         return this;
     }
 
+    public FakeSession reply(String input) throws NoSuchElementException {
+        var messages = fakeTelegramBot.getSentMessages();
+        var lastMessage = messages.get(messages.size() - 1);
+        var update = new UpdateBuilder()
+            .setUser(user)
+            .setMessage(input)
+            .setReplyTo(lastMessage)
+            .build();
+
+        bot.processUpdate(update);
+        return this;
+    }
+
     /**
      * Compare most recent bot answer with expected text
      */

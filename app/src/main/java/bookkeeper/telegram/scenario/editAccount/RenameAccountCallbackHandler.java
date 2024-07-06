@@ -38,7 +38,7 @@ class RenameAccountCallbackHandler implements AbstractHandler {
     }
 
     private Boolean handleRename(Request request) throws AccountNotFound {
-        if (!(request.getCallbackMessageFromReply(0).orElse(null) instanceof ShowAccountDetailsCallback cm))
+        if (!(request.getCallbackMessageFromReply().orElse(null) instanceof ShowAccountDetailsCallback cm))
             return false;
 
         var replyToMessage = request.getReplyToMessage().orElseThrow();

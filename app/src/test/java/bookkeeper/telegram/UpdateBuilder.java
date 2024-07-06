@@ -6,6 +6,7 @@ import com.pengrad.telegrambot.model.CallbackQuery;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.User;
+import com.pengrad.telegrambot.request.BaseRequest;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -14,8 +15,8 @@ class UpdateBuilder {
     private static final Gson gson = new Gson();
 
     private User user;
-    private Message message;
-    private CallbackQuery callbackQuery;
+    private final Map<String, Object> messageMap = createMap();
+    private final Map<String, Object> callbackQueryMap = createMap();
 
     UpdateBuilder setUser(User user) {
         this.user = user;
@@ -23,21 +24,18 @@ class UpdateBuilder {
     }
 
     UpdateBuilder setMessage(String text) {
-        var map = createMap();
         var chatMap = createMap();
 
         chatMap.put("id", 1);
 
-        map.put("message_id", 100);
-        map.put("chat", chatMap);
-        map.put("from", user);
-        map.put("text", text);
-        this.message = fromMap(map, Message.class);
+        messageMap.put("message_id", 100);
+        messageMap.put("chat", chatMap);
+        messageMap.put("from", user);
+        messageMap.put("text", text);
         return this;
     }
 
     UpdateBuilder setCallbackQuery(String data) {
-        var map = createMap();
         var chatMap = createMap();
         var messageMap = createMap();
 
@@ -46,17 +44,32 @@ class UpdateBuilder {
         messageMap.put("message_id", 100);
         messageMap.put("chat", chatMap);
 
-        map.put("from", user);
-        map.put("data", data);
-        map.put("message", messageMap);
-        this.callbackQuery = fromMap(map, CallbackQuery.class);
+        callbackQueryMap.put("from", user);
+        callbackQueryMap.put("data", data);
+        callbackQueryMap.put("message", messageMap);
+        return this;
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    UpdateBuilder setReplyTo(BaseRequest request) {
+        var message = fromMap(request.getParameters(), Message.class);
+        this.messageMap.put("reply_to_message", message);
         return this;
     }
 
     Update build() {
         var map = createMap();
-        map.put("message", message);
-        map.put("callback_query", callbackQuery);
+
+        if (!messageMap.isEmpty()) {
+            var message = fromMap(messageMap, Message.class);
+            map.put("message", message);
+        }
+
+        if (!callbackQueryMap.isEmpty()) {
+            var callbackQuery = fromMap(callbackQueryMap, CallbackQuery.class);
+            map.put("callback_query", callbackQuery);
+        }
+
         return fromMap(map, Update.class);
     }
 

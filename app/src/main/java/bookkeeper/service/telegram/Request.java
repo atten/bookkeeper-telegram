@@ -71,7 +71,7 @@ public class Request {
      * Retrieve callback data from Nth button of replied message (if present).
      * Is used to extract context when user replies to message with buttons.
      */
-    public Optional<CallbackMessage> getCallbackMessageFromReply(int index) {
+    public Optional<CallbackMessage> getCallbackMessageFromReply() {
         if (getReplyToMessage().isEmpty())
             return Optional.empty();
 
@@ -79,7 +79,7 @@ public class Request {
             .stream(getReplyToMessage().get().replyMarkup().inlineKeyboard())
             .flatMap(Arrays::stream)
             .toList()
-            .get(index);
+            .get(0);    // button index to extract callback from
         return callbackMessageRegistry.getCallbackMessage(button.callbackData());
     }
 
