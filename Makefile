@@ -16,14 +16,16 @@ build:
 db_shell:
 	docker exec -it bookkeeper-postgres-dev psql -U bookkeeper -d bookkeeper
 
-db_dump:
-	docker exec -i bookkeeper-postgres-dev pg_dump --user bookkeeper > dump_dev.sql
-
-db_restore:
+db_recreate:
 	docker stop bookkeeper-postgres-dev
 	docker container rm bookkeeper-postgres-dev
 	docker volume rm bookkeeper-postgres-dev
 	docker-compose -f docker-compose.dev.yml up -d postgres_dev
+
+db_dump:
+	docker exec -i bookkeeper-postgres-dev pg_dump --user bookkeeper > dump_dev.sql
+
+db_restore: db_recreate
 	sleep 3
 	docker exec -i bookkeeper-postgres-dev psql -U bookkeeper -d bookkeeper < dump_dev.sql
 
