@@ -10,20 +10,21 @@ import java.util.List;
 public class TinkoffIgnoreSmsParser implements SpendingParser<TinkoffIgnoreSms> {
     private final List<String> ignore = List.of(
         "Никому не говорите код",
-        "Завтра выполним регулярный платеж",
-        "Завтра выполним автоплатеж",
+        "Завтра выполним",
+        "Посмотрите ответ",
         "Оцените решение вопроса",
-        "Детали полета и маршрутная квитанция",
-        "По вашему рейсу произошли изменения",
-        "Полис путешественника оплачен и доступен",
+        "Детали полета",
+        "По вашему рейсу",
+        "Полис путешественника",
         "Посоветуйте",
         "Советуйте",
-        "Отказ"
+        "Отказ",
+        "Вклад"
     );
 
     @Override
     public TinkoffIgnoreSms parse(String rawMessage) throws ParseException {
-        ignore.stream().filter(rawMessage::contains).findAny().orElseThrow(() -> new ParseException(rawMessage, 0));
+        ignore.stream().filter(rawMessage::startsWith).findAny().orElseThrow(() -> new ParseException(rawMessage, 0));
         return new TinkoffIgnoreSms();
     }
 }
