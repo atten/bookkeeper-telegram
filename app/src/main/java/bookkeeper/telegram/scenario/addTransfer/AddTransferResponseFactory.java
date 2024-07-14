@@ -27,7 +27,12 @@ class AddTransferResponseFactory {
     }
 
     String getDescriptionForTransferCreated(AccountTransfer transfer) {
-        return String.format("Перевод %s создан!", getDateShort(transfer.date()));
+        return String.format(
+            "Перевод %s ► %s (%s) создан!",
+            transfer.getWithdrawAccount().getName(),
+            transfer.getDepositAccount().getName(),
+            getDateShort(transfer.date())
+        );
     }
 
     InlineKeyboardMarkup getKeyboardForWithdrawAccount(TelegramUser user, AddTransferCallback memory) {
