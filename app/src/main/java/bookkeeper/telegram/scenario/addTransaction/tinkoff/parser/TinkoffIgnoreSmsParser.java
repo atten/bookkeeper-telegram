@@ -18,6 +18,7 @@ public class TinkoffIgnoreSmsParser implements SpendingParser<TinkoffIgnoreSms> 
         "Полис путешественника",
         "Посоветуйте",
         "Советуйте",
+        "Дарим",
         "Отказ",
         "Вклад"
     );
