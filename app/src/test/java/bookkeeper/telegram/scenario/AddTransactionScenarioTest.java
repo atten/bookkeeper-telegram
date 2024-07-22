@@ -51,6 +51,13 @@ class AddTransactionScenarioTest {
         );
     }
 
+    private static Collection<String> validSberInputs() {
+        return List.of(
+            "MIR-1234 20:55 Покупка по СБП 733.52р Прием платежей mos Баланс: 2 634.48р",
+            "СЧЁТ1234 16:36 Зачисление 1 000р Баланс: 1 123.48р"
+        );
+    }
+
     private static Collection<String> emptyTinkoffInputs() {
         return List.of(
             "Покупка, карта *0964. 1 RUB. Mos.Transport. Доступно 649.99 RUB",
@@ -71,7 +78,7 @@ class AddTransactionScenarioTest {
     }
 
     @ParameterizedTest
-    @MethodSource({"validFreehandInputs", "validTinkoffInputs"})
+    @MethodSource({"validFreehandInputs", "validTinkoffInputs", "validSberInputs"})
     void addSingleTransaction(String input, FakeSession session) {
         session.sendText(input).expectStartsWith("Добавлена запись на счёт");
     }

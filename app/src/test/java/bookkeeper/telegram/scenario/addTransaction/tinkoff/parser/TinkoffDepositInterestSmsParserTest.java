@@ -11,7 +11,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class TinkoffDepositInterestSmsParserTest {
     private final TinkoffDepositInterestSmsParser parser = new TinkoffDepositInterestSmsParser();
 
-
     @Test
     void parseOk() throws ParseException {
         var sms = parser.parse("Выплата процентов по вкладу: 1 872.95 RUB");
@@ -22,6 +21,5 @@ class TinkoffDepositInterestSmsParserTest {
         referenceSms.setInterestCurrency(Currency.getInstance("RUB"));
 
         assertEquals(referenceSms, sms);
-
     }
 }

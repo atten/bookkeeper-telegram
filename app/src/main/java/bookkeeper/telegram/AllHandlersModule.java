@@ -2,6 +2,7 @@ package bookkeeper.telegram;
 
 import bookkeeper.telegram.scenario.addAccount.AddAccountHandlersModule;
 import bookkeeper.telegram.scenario.addTransaction.freehand.FreehandHandlersModule;
+import bookkeeper.telegram.scenario.addTransaction.sber.SberHandlersModule;
 import bookkeeper.telegram.scenario.addTransaction.tinkoff.TinkoffHandlersModule;
 import bookkeeper.telegram.scenario.addTransfer.AddTransferHandlersModule;
 import bookkeeper.telegram.scenario.checkResidues.CheckResiduesHandlersModule;
@@ -22,6 +23,7 @@ import dagger.Module;
         AddTransferHandlersModule.class,
         FreehandHandlersModule.class,
         TinkoffHandlersModule.class,
+        SberHandlersModule.class,
         AddAccountHandlersModule.class,
         CommonHandlersModule.class,
         SearchTransactionsHandlersModule.class,
