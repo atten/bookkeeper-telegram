@@ -13,11 +13,11 @@ import java.util.Optional;
  */
 @Data
 public class SberReplenishSms implements Spending {
-    private String accountName;  // СЧЁТ1234
-    private BigDecimal replenishSum;  // 1000
-    private Currency replenishCurrency;  // RUB
-    private BigDecimal accountBalance;  // 1233.48
-    private Currency accountCurrency;  // RUB
+    public String accountName;  // СЧЁТ1234
+    public BigDecimal replenishSum;  // 1000
+    public Currency replenishCurrency;  // RUB
+    public BigDecimal accountBalance;  // 1233.48
+    public Currency accountCurrency;  // RUB
 
     @Override
     public String getMerchant() {

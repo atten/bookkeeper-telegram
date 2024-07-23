@@ -12,12 +12,12 @@ import java.util.Optional;
  */
 @Data
 public class SberFpsPurchaseSms implements Spending {
-    private String accountName;  // MIR-1234
-    private BigDecimal purchaseSum;  // 733.52
-    private Currency purchaseCurrency;  // RUB
-    private String merchant;  // Прием платежей mos
-    private BigDecimal accountBalance;  // 2634.48
-    private Currency accountCurrency;  // RUB
+    public String accountName;  // MIR-1234
+    public BigDecimal purchaseSum;  // 733.52
+    public Currency purchaseCurrency;  // RUB
+    public String merchant;  // Прием платежей mos
+    public BigDecimal accountBalance;  // 2634.48
+    public Currency accountCurrency;  // RUB
 
     @Override
     public String getMerchant() {

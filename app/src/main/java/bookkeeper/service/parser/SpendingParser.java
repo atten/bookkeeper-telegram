@@ -8,5 +8,4 @@ import java.text.ParseException;
 public interface SpendingParser<T extends Spending> {
 
     T parse(String rawMessage) throws ParseException;
-
 }

@@ -13,12 +13,12 @@ import java.util.Optional;
  */
 @Data
 public class SberRecurringChargeSms implements Spending {
-    private String accountName;  // СЧЁТ1234
-    private BigDecimal chargeSum;  // 70
-    private Currency chargeCurrency;  // RUB
-    private String destination;  // за уведомления по СберКартам
-    private BigDecimal accountBalance;  // 2611.81
-    private Currency accountCurrency;  // RUB
+    public String accountName;  // СЧЁТ1234
+    public BigDecimal chargeSum;  // 70
+    public Currency chargeCurrency;  // RUB
+    public String destination;  // за уведомления по СберКартам
+    public BigDecimal accountBalance;  // 2611.81
+    public Currency accountCurrency;  // RUB
 
     @Override
     public String getMerchant() {

@@ -13,8 +13,8 @@ import java.util.Optional;
  */
 @Data
 public class TinkoffDepositInterestSms implements Spending {
-    private BigDecimal interestSum;  // 1872.95
-    private Currency interestCurrency;  // RUB
+    public BigDecimal interestSum;  // 1872.95
+    public Currency interestCurrency;  // RUB
 
     @Override
     public String getMerchant() {
