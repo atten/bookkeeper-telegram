@@ -172,12 +172,15 @@ public class StringUtils {
     /**
      * Prepare raw input string for parsers:
      * - replace non-breaking spaces, double spaces with regular one
+     * - remove spaces before and after newlines
      * - strip spaces
      */
     static String cleanString(String input) {
         return input
             .replaceAll(Arrays.toString(Character.toChars(160)), " ")
             .replace("  ", " ")
+            .replace(" \n", "\n")
+            .replace("\n ", "\n")
             .strip();
     }
 

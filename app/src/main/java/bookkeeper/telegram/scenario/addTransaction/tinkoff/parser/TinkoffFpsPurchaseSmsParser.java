@@ -9,7 +9,7 @@ public class TinkoffFpsPurchaseSmsParser extends RegexpSpendingParser<TinkoffFps
         super(
             TinkoffFpsPurchaseSms.class,
             "Оплата СБП, счет",
-            TEXT,
+            OPTIONAL_TEXT,
             AMOUNT_FIELD,
             CURRENCY_FIELD,
             TEXT_FIELD,

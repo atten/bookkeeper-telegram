@@ -41,4 +41,19 @@ class SberReplenishSmsParserTest {
         assertEquals(referenceSms, sms);
     }
 
+    @Test
+    void parseOk_3() throws ParseException {
+        var sms = parser.parse("СЧЁТ1234 13:09 Зачисление зарплаты 1 000р Баланс: 1 103р");
+
+        var referenceSms = new SberReplenishSms();
+
+        referenceSms.setReplenishSum(new BigDecimal("1000"));
+        referenceSms.setReplenishCurrency(Currency.getInstance("RUB"));
+        referenceSms.setAccountBalance(new BigDecimal("1103"));
+        referenceSms.setAccountCurrency(Currency.getInstance("RUB"));
+        referenceSms.setAccountName("СЧЁТ1234");
+
+        assertEquals(referenceSms, sms);
+    }
+
 }

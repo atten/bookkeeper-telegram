@@ -5,9 +5,7 @@ import bookkeeper.entity.TelegramUser;
 import bookkeeper.service.matcher.AccountMatcher;
 import bookkeeper.service.parser.Spending;
 import bookkeeper.service.repository.AccountRepository;
-import bookkeeper.telegram.scenario.addTransaction.sber.parser.SberFpsPurchaseSms;
-import bookkeeper.telegram.scenario.addTransaction.sber.parser.SberRecurringChargeSms;
-import bookkeeper.telegram.scenario.addTransaction.sber.parser.SberReplenishSms;
+import bookkeeper.telegram.scenario.addTransaction.sber.parser.*;
 
 import java.util.Currency;
 import java.util.Optional;
@@ -28,6 +26,12 @@ public class SberAccountMatcher implements AccountMatcher {
             return Optional.of(getSberAccount(obj.getAccountName(), obj.getAccountCurrency(), user));
         }
         if (spending instanceof SberReplenishSms obj) {
+            return Optional.of(getSberAccount(obj.getAccountName(), obj.getAccountCurrency(), user));
+        }
+        if (spending instanceof SberReplenishSmsWithSender obj) {
+            return Optional.of(getSberAccount(obj.getAccountName(), obj.getAccountCurrency(), user));
+        }
+        if (spending instanceof SberTransferSms obj) {
             return Optional.of(getSberAccount(obj.getAccountName(), obj.getAccountCurrency(), user));
         }
         return Optional.empty();

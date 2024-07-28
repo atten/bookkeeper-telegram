@@ -2,9 +2,7 @@ package bookkeeper.telegram.scenario.addTransaction.sber.matcher;
 
 import bookkeeper.service.matcher.AmountMatcher;
 import bookkeeper.service.parser.Spending;
-import bookkeeper.telegram.scenario.addTransaction.sber.parser.SberFpsPurchaseSms;
-import bookkeeper.telegram.scenario.addTransaction.sber.parser.SberRecurringChargeSms;
-import bookkeeper.telegram.scenario.addTransaction.sber.parser.SberReplenishSms;
+import bookkeeper.telegram.scenario.addTransaction.sber.parser.*;
 
 import java.math.BigDecimal;
 import java.util.Optional;
@@ -20,6 +18,12 @@ public class SberAmountMatcher implements AmountMatcher {
         }
         if (spending instanceof SberReplenishSms obj) {
             return Optional.of(obj.getReplenishSum());
+        }
+        if (spending instanceof SberReplenishSmsWithSender obj) {
+            return Optional.of(obj.getReplenishSum());
+        }
+        if (spending instanceof SberTransferSms obj) {
+            return Optional.of(obj.getTransferSum().negate());
         }
         return Optional.empty();
     }
