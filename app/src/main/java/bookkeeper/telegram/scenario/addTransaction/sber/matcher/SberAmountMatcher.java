@@ -10,6 +10,9 @@ import java.util.Optional;
 public class SberAmountMatcher implements AmountMatcher {
     @Override
     public Optional<BigDecimal> match(Spending spending) {
+        if (spending instanceof SberPurchaseSms obj) {
+            return Optional.of(obj.getPurchaseSum().negate());
+        }
         if (spending instanceof SberFpsPurchaseSms obj) {
             return Optional.of(obj.getPurchaseSum().negate());
         }

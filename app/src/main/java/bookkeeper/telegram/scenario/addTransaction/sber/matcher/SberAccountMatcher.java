@@ -19,6 +19,9 @@ public class SberAccountMatcher implements AccountMatcher {
 
     @Override
     public Optional<Account> match(Spending spending, TelegramUser user) {
+        if (spending instanceof SberPurchaseSms obj) {
+            return Optional.of(getSberAccount(obj.getAccountName(), obj.getAccountCurrency(), user));
+        }
         if (spending instanceof SberFpsPurchaseSms obj) {
             return Optional.of(getSberAccount(obj.getAccountName(), obj.getAccountCurrency(), user));
         }
