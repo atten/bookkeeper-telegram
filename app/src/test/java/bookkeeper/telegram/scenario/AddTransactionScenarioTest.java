@@ -62,6 +62,12 @@ class AddTransactionScenarioTest {
         );
     }
 
+    private static Collection<String> emptySberInputs() {
+        return List.of(
+            "Автоперевод «ABC» со счёта *1234 клиенту Иван Пупкин Б. на 100р изменён. Следующий перевод 01.09.24."
+        );
+    }
+
     private static Collection<String> emptyTinkoffInputs() {
         return List.of(
             "Покупка, карта *0964. 1 RUB. Mos.Transport. Доступно 649.99 RUB",
@@ -121,7 +127,7 @@ class AddTransactionScenarioTest {
     }
 
     @ParameterizedTest
-    @MethodSource({"emptyFreehandInputs", "emptyTinkoffInputs"})
+    @MethodSource({"emptyFreehandInputs", "emptyTinkoffInputs", "emptySberInputs"})
     void skipEmptyTransaction(String input, FakeSession session) {
         session.sendText(input).expect("Не добавлено ни одной записи");
     }
