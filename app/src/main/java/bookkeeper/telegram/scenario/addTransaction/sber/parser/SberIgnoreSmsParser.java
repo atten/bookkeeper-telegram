@@ -9,7 +9,8 @@ import java.util.List;
 @MarkSpendingParser(provider = "sber")
 public class SberIgnoreSmsParser implements SpendingParser<SberIgnoreSms> {
     private final List<String> ignoreContains = List.of(
-        "изменён. Следующий перевод"
+        "изменён. Следующий перевод",
+        "Никому не сообщайте код"
     );
 
     @Override
