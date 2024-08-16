@@ -1,9 +1,12 @@
 package bookkeeper.enums;
 
+import lombok.Getter;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Getter
 public enum Expenditure {
     FOOD("Еда и хозтовары"),
     GOODS("Вещи"),
@@ -35,10 +38,6 @@ public enum Expenditure {
 
     Expenditure(String verboseName) {
         this.verboseName = verboseName;
-    }
-
-    public String getVerboseName() {
-        return verboseName;
     }
 
     private boolean isEnabled() { return !name().startsWith("RESERVED"); }

@@ -1,5 +1,6 @@
 package bookkeeper.telegram.scenario.searchTransactions;
 
+import bookkeeper.entity.AccountTransaction;
 import bookkeeper.entity.TelegramUser;
 import bookkeeper.enums.HandlerPriority;
 import bookkeeper.service.repository.AccountTransactionRepository;
@@ -12,6 +13,7 @@ import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import javax.inject.Inject;
 import java.math.BigDecimal;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Currency;
 import java.util.HashMap;
 import java.util.StringJoiner;
@@ -58,7 +60,10 @@ class SearchTransactionsByRawMessageHandler implements AbstractHandler {
     }
 
     private String getResponse(String searchQuery, int monthOffset, TelegramUser user) {
-        var searchResult = transactionRepository.findByRawText(searchQuery, monthOffset, user);
+        var searchResult = new ArrayList<AccountTransaction>();
+
+        searchResult.addAll(transactionRepository.findByExpenditureName(searchQuery, monthOffset, user));
+        searchResult.addAll(transactionRepository.findByRawText(searchQuery, monthOffset, user));
 
         var amountByCurrency = new HashMap<Currency, BigDecimal>();
         for (var transaction : searchResult) {

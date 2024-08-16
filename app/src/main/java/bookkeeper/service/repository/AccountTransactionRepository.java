@@ -76,6 +76,21 @@ public class AccountTransactionRepository {
         return query.getResultList();
     }
 
+    public List<AccountTransaction> findByExpenditureName(String text, int monthOffset, TelegramUser user) {
+        var expenditure = Expenditure
+            .enabledValues()
+            .stream()
+            .filter(e -> e.getVerboseName().toLowerCase().contains(text.toLowerCase()))
+            .findFirst();
+
+        if (expenditure.isEmpty()) {
+            return List.of();
+        }
+
+        var ids = findIds(expenditure.get(), monthOffset, user);
+        return findByIds(ids);
+    }
+
     public Map<Expenditure, BigDecimal> getMonthlyAmount(Account account, int monthOffset) {
         var sql = "SELECT expenditure, SUM(amount) from AccountTransaction " +
                 "WHERE account=:account " +

@@ -1,6 +1,8 @@
 package bookkeeper.telegram.scenario;
 
 import bookkeeper.entity.AccountTransaction;
+import bookkeeper.resolverAnnotations.Expenditure;
+import bookkeeper.resolverAnnotations.Raw;
 import bookkeeper.telegram.BookkeeperParameterResolver;
 import bookkeeper.telegram.FakeSession;
 import bookkeeper.resolverAnnotations.PreviousMonth;
@@ -27,10 +29,24 @@ class SearchTransactionsScenarioTest {
         session.sendText(input).expectStartsWith("Найдено 0 записей");
     }
 
+    @SuppressWarnings("unused")
     @Test
-    void nonEmptyResult(FakeSession session) {
-        session.sendText("еда 20 RUB");
-        session.sendText("еда").expectStartsWith("Найдена 1 запись");
+    void findByText(
+        @Raw(raw = "фигня 20 RUB")
+        AccountTransaction transaction,
+        FakeSession session
+    ) {
+        session.sendText("фигня").expectStartsWith("Найдена 1 запись");
+    }
+
+    @SuppressWarnings("unused")
+    @Test
+    void findByExpenditure(
+        @Expenditure(value = bookkeeper.enums.Expenditure.BANKING)
+        AccountTransaction transaction,
+        FakeSession session
+    ) {
+        session.sendText("кэшбек").expectStartsWith("Найдена 1 запись");
     }
 
     @Test
