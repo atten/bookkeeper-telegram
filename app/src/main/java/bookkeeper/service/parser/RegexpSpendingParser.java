@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.Currency;
+import java.util.List;
 import java.util.StringJoiner;
 import java.util.regex.Pattern;
 
@@ -19,13 +20,21 @@ public class RegexpSpendingParser<T extends Spending> implements SpendingParser<
     private final Pattern pattern;
     private final Class<T> spendingClass;
 
-    public RegexpSpendingParser(Class<T> clazz, String... items) {
+    protected static String nonCapturingGroup(String... fieldPatterns) {
+        var builder = new StringJoiner("|");
+        for (var pattern : fieldPatterns) {
+            builder.add(pattern);
+        }
+        return "(?:" + builder + ")";
+    }
+
+    public RegexpSpendingParser(Class<T> clazz, String... fieldPatterns) {
         String delimiter = "[.\\s]+";
         String terminator = "$";
 
         var builder = new StringJoiner(delimiter);
-        for (var item : items) {
-            builder.add(item);
+        for (var pattern : fieldPatterns) {
+            builder.add(pattern);
         }
 
         this.pattern = Pattern.compile(builder + terminator, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
@@ -34,7 +43,7 @@ public class RegexpSpendingParser<T extends Spending> implements SpendingParser<
 
     @Override
     public T parse(String rawMessage) throws ParseException {
-        String[] parts = split(rawMessage);
+        var groups = parseGroups(rawMessage);
         T spending;
         try {
             spending = spendingClass.getConstructor().newInstance();
@@ -44,7 +53,7 @@ public class RegexpSpendingParser<T extends Spending> implements SpendingParser<
 
         var index = 0;
         for (var field: spendingClass.getDeclaredFields()) {
-            String rawValue = parts[index];
+            String rawValue = groups.get(index);
             Object value;
             if (field.getType().equals(Currency.class)) {
                 value = parseCurrency(rawValue);
@@ -65,19 +74,19 @@ public class RegexpSpendingParser<T extends Spending> implements SpendingParser<
         return spending;
     }
 
-    private String[] split(String input) throws ParseException {
+    private List<String> parseGroups(String input) throws ParseException {
         var matcher = pattern.matcher(input);
         if (!matcher.find()) {
             throw new ParseException(input, 0);
         }
 
-        String[] parts = new String[matcher.groupCount()];
+        String[] groups = new String[matcher.groupCount()];
 
-        for (int i = 0; i < parts.length; i++) {
-            parts[i] = matcher.group(i + 1);
+        for (int i = 0; i < groups.length; i++) {
+            groups[i] = matcher.group(i + 1);
         }
 
-        return parts;
+        return List.of(groups);
     }
 
     private static BigDecimal parseAmount(String amount) {

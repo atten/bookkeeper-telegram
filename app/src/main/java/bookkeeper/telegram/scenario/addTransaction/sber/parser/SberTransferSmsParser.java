@@ -10,7 +10,7 @@ public class SberTransferSmsParser extends RegexpSpendingParser<SberTransferSms>
             SberTransferSms.class,
             ACCOUNT_FIELD,
             TIME,
-            "Перевод",
+            nonCapturingGroup("Перевод", "оплата"),
             AMOUNT_FIELD + CURRENCY_FIELD,
             "Баланс:",
             AMOUNT_FIELD + CURRENCY_FIELD

@@ -173,6 +173,7 @@ public class StringUtils {
      * Prepare raw input string for parsers:
      * - replace non-breaking spaces, double spaces with regular one
      * - remove spaces before and after newlines
+     * - transform known multiline messages into single-lined
      * - strip spaces
      */
     static String cleanString(String input) {
@@ -181,6 +182,7 @@ public class StringUtils {
             .replace("  ", " ")
             .replace(" \n", "\n")
             .replace("\n ", "\n")
+            .replace("\n@online", " @online")
             .strip();
     }
 

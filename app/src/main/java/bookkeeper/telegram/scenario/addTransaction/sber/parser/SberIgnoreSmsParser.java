@@ -8,14 +8,17 @@ import java.util.List;
 
 @MarkSpendingParser(provider = "sber")
 public class SberIgnoreSmsParser implements SpendingParser<SberIgnoreSms> {
-    private final List<String> ignoreContains = List.of(
+    private final List<String> ignoreIfContains = List.of(
         "изменён. Следующий перевод",
-        "Никому не сообщайте код"
+        "Никому не сообщайте код",
+        "Никому его не сообщайте",
+        "Вход в Сбер",
+        "Первый платёж со счёта"
     );
 
     @Override
     public SberIgnoreSms parse(String rawMessage) throws ParseException {
-        ignoreContains.stream().filter(rawMessage::contains).findAny().orElseThrow(() -> new ParseException(rawMessage, 0));
+        ignoreIfContains.stream().filter(rawMessage::contains).findAny().orElseThrow(() -> new ParseException(rawMessage, 0));
         return new SberIgnoreSms();
     }
 }
