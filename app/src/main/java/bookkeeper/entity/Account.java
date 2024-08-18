@@ -27,6 +27,11 @@ public class Account {
     @Column(nullable = false)
     private String currency;
 
+    @Getter
+    @Setter
+    @Column(nullable = false, name = "is_hidden")
+    private boolean isHidden;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, name = "telegram_user")
     @Getter
@@ -37,6 +42,8 @@ public class Account {
     @Getter
     @Setter
     private Instant createdAt;
+
+    public boolean isVisible() { return !isHidden; }
 
     public Currency getCurrency() {
         return Currency.getInstance(currency);

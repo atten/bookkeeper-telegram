@@ -1,5 +1,6 @@
 package bookkeeper.telegram.scenario.editTransaction;
 
+import bookkeeper.entity.Account;
 import bookkeeper.entity.AccountTransaction;
 import bookkeeper.entity.TelegramUser;
 import bookkeeper.exception.AccountTransactionNotFound;
@@ -44,6 +45,7 @@ class SelectAccountCallbackHandler implements AbstractHandler {
         var accounts = accountRepository.filter(user, transaction.currency());
         var buttons = accounts
             .stream()
+            .filter(Account::isVisible)
             // prepare buttons with account selector
             .map(account -> new SwitchAccountCallback(transaction.getId(), account.getId()).setPendingTransactionIds(pendingTransactionIds).asAccountButton(account))
             .toList();

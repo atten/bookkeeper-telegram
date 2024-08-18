@@ -4,10 +4,12 @@ import bookkeeper.service.telegram.CallbackMessage;
 import lombok.Getter;
 
 @Getter
-class RenameAccountCallback extends CallbackMessage {
+class SwitchAccountVisibilityCallback extends CallbackMessage {
     private final long accountId;
+    private final boolean isHidden;
 
-    RenameAccountCallback(long accountId) {
+    SwitchAccountVisibilityCallback(long accountId, boolean isHidden) {
         this.accountId = accountId;
+        this.isHidden = isHidden;
     }
 }

@@ -4,12 +4,10 @@ import bookkeeper.service.telegram.CallbackMessage;
 import lombok.Getter;
 
 
+@Getter
 public class ViewAssetsCallback extends CallbackMessage {
-    @Getter
     private final int monthOffset;
-    @Getter
     private final int page;
-    @Getter
     private final int pageSize;
 
     ViewAssetsCallback(int monthOffset, int page, int pageSize) {

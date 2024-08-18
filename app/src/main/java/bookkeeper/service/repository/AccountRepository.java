@@ -52,10 +52,10 @@ public class AccountRepository {
         return query.getResultList();
     }
 
-    public List<Account> filter(String nameContains, Currency currency, TelegramUser user) {
+    public List<Account> filter(String nameOrNodesContains, Currency currency, TelegramUser user) {
         var sql = "SELECT i FROM Account i WHERE (i.name ILIKE :text OR i.notes ILIKE :text) AND i.currency=:currency AND i.telegramUser=:telegramUser ORDER BY i.name";
         var query = manager.createQuery(sql, Account.class)
-            .setParameter("text", '%' + nameContains + '%')
+            .setParameter("text", '%' + nameOrNodesContains + '%')
             .setParameter("currency", currency.getCurrencyCode())
             .setParameter("telegramUser", user);
         return query.getResultList();
@@ -67,6 +67,7 @@ public class AccountRepository {
         account.setCurrency(currency);
         account.setTelegramUser(user);
         account.setCreatedAt(Instant.now());
+        account.setHidden(false);
         return account;
     }
 

@@ -1,0 +1,1 @@
+alter table if exists accounts add column is_hidden BOOLEAN not null default false;

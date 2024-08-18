@@ -23,4 +23,8 @@ public abstract class EditAccountHandlersModule {
     @Binds
     @IntoSet
     abstract AbstractHandler setAccountNotesCallbackHandler(SetAccountNotesCallbackHandler handler);
+
+    @Binds
+    @IntoSet
+    abstract AbstractHandler switchAccountVisibilityCallbackHandler(SwitchAccountVisibilityCallbackHandler handler);
 }

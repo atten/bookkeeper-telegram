@@ -78,6 +78,10 @@ public class BookkeeperParameterResolver implements ParameterResolver, BeforeEac
             obj.setName("Account %s".formatted(accountCache.size()));
         }
 
+        if (parameter.isAnnotationPresent(bookkeeper.resolverAnnotations.Hidden.class)) {
+            obj.setHidden(true);
+        }
+
         obj.setTelegramUser(telegramUserCache.stream().findAny().orElseGet(this::telegramUserFactory));
         obj.setCreatedAt(Instant.now());
 

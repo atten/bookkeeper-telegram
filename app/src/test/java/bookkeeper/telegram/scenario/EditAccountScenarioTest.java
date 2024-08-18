@@ -1,6 +1,7 @@
 package bookkeeper.telegram.scenario;
 
 import bookkeeper.entity.Account;
+import bookkeeper.resolverAnnotations.Hidden;
 import bookkeeper.resolverAnnotations.Name;
 import bookkeeper.telegram.BookkeeperParameterResolver;
 import bookkeeper.telegram.FakeSession;
@@ -43,5 +44,39 @@ class EditAccountScenarioTest {
 
         var acc = manager.find(Account.class, account.getId());
         Assertions.assertEquals(acc.getNotes(), "Это заметка для счёта");
+    }
+
+    @Test
+    void hideAccount(
+        @Name(name = "Lupa")
+        Account account,
+        FakeSession session,
+        EntityManager manager
+    ) {
+        session
+            .sendText("/accounts")
+            .pressButton("Lupa")
+            .pressButton("Скрыть");
+
+        var acc = manager.find(Account.class, account.getId());
+        Assertions.assertTrue(acc.isHidden());
+    }
+
+    @Test
+    void showAccount(
+        @Name(name = "Lupa")
+        @Hidden
+        Account account,
+        FakeSession session,
+        EntityManager manager
+    ) {
+        session
+            .sendText("/accounts")
+            .pressButton("Скрытые")
+            .pressButton("Lupa")
+            .pressButton("Показать");
+
+        var acc = manager.find(Account.class, account.getId());
+        Assertions.assertTrue(acc.isVisible());
     }
 }

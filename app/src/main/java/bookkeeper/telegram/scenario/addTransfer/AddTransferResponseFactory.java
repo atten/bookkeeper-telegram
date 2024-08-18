@@ -39,7 +39,7 @@ class AddTransferResponseFactory {
         var kb = new InlineKeyboardMarkup();
         accountRepository.filter(user, memory.getWithdrawCurrency())
                 .stream()
-                .filter(account -> account.getId() != memory.getDepositAccountId())
+                .filter(account -> account.isVisible() && account.getId() != memory.getDepositAccountId())
                 .map(account -> memory.setWithdrawAccountId(account.getId()).asAccountButton(account))
                 .forEach(kb::addRow);
         return kb;
@@ -49,7 +49,7 @@ class AddTransferResponseFactory {
         var kb = new InlineKeyboardMarkup();
         accountRepository.filter(user, memory.getDepositCurrency())
                 .stream()
-                .filter(account -> account.getId() != memory.getWithdrawAccountId())
+                .filter(account -> account.isVisible() && account.getId() != memory.getWithdrawAccountId())
                 .map(account -> memory.setDepositAccountId(account.getId()).asAccountButton(account))
                 .forEach(kb::addRow);
         return kb;

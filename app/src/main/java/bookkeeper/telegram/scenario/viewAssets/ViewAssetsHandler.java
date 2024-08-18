@@ -57,7 +57,7 @@ class ViewAssetsHandler implements AbstractHandler {
         var nextMonthButton = new ViewAssetsCallback(monthOffset + 1, page, pageSize).asNextMonthButton(monthOffset + 1);
         var prevPageButton = new ViewAssetsCallback(monthOffset, page - 1, pageSize).asButton("<");
         var nextPageButton = new ViewAssetsCallback(monthOffset, page + 1, pageSize).asButton(">");
-        var editAccountsButton = new ListAccountsCallback().asButton(StringUtils.ICON_ACCOUNT + "Счета");
+        var editAccountsButton = new ListAccountsCallback(false).asButton(StringUtils.ICON_ACCOUNT + "Счета");
 
         var buttons = new ArrayList<InlineKeyboardButton>();
 

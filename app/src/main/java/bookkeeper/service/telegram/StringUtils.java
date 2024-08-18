@@ -21,6 +21,8 @@ public class StringUtils {
     public static String ICON_DELETE = "\uD83D\uDDD1";        // 🗑
     public static String ICON_WARNING = "⚠️";                 // ⚠️
     public static String ICON_ERROR = "\uD83D\uDEAB";         // 🚫
+    public static String ICON_VISIBLE = "\uD83D\uDC41\u200D\uD83D\uDDE8"; // 👁‍🗨
+    public static String ICON_HIDDEN = "\uD83D\uDCA4";        // 💤
 
     public static String getNumberIcon(int number) {
         switch (number) {
