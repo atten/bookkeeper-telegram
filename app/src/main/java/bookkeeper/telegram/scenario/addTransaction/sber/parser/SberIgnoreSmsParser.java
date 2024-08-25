@@ -13,7 +13,8 @@ public class SberIgnoreSmsParser implements SpendingParser<SberIgnoreSms> {
         "Никому не сообщайте код",
         "Никому его не сообщайте",
         "Вход в Сбер",
-        "Первый платёж со счёта"
+        "Первый платёж со счёта",
+        "Выплата кешбэка по оплате через СБП"
     );
 
     @Override
