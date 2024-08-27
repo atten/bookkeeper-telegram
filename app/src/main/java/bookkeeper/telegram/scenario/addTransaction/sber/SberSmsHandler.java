@@ -1,8 +1,8 @@
 package bookkeeper.telegram.scenario.addTransaction.sber;
 
+import bookkeeper.dao.AccountRepository;
+import bookkeeper.dao.AccountTransactionRepository;
 import bookkeeper.service.matcher.ExpenditureMatcherByMerchant;
-import bookkeeper.service.repository.AccountRepository;
-import bookkeeper.service.repository.AccountTransactionRepository;
 import bookkeeper.telegram.scenario.addTransaction.AbstractTransactionRecordHandler;
 
 import javax.inject.Inject;

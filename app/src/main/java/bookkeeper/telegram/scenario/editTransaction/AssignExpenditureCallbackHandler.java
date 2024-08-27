@@ -1,12 +1,12 @@
 package bookkeeper.telegram.scenario.editTransaction;
 
-import bookkeeper.entity.AccountTransaction;
+import bookkeeper.dao.AccountTransactionRepository;
+import bookkeeper.dao.MerchantExpenditureRepository;
+import bookkeeper.dao.entity.AccountTransaction;
 import bookkeeper.enums.Expenditure;
 import bookkeeper.exception.AccountTransactionNotFound;
 import bookkeeper.service.parser.Spending;
 import bookkeeper.service.parser.SpendingParserRegistry;
-import bookkeeper.service.repository.AccountTransactionRepository;
-import bookkeeper.service.repository.MerchantExpenditureRepository;
 import bookkeeper.service.telegram.AbstractHandler;
 import bookkeeper.service.telegram.Request;
 

@@ -1,13 +1,13 @@
 package bookkeeper.telegram.scenario.searchTransactions;
 
-import bookkeeper.entity.AccountTransaction;
-import bookkeeper.entity.TelegramUser;
+import bookkeeper.dao.AccountTransactionRepository;
+import bookkeeper.dao.entity.AccountTransaction;
+import bookkeeper.dao.entity.TelegramUser;
 import bookkeeper.enums.HandlerPriority;
-import bookkeeper.service.repository.AccountTransactionRepository;
+import bookkeeper.exception.HandlerInterruptException;
 import bookkeeper.service.telegram.AbstractHandler;
 import bookkeeper.service.telegram.Request;
 import bookkeeper.service.telegram.StringUtils;
-import bookkeeper.exception.HandlerInterruptException;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 
 import javax.inject.Inject;

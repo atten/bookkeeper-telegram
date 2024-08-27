@@ -1,6 +1,6 @@
 package bookkeeper.telegram.scenario.addTransaction.freehand.matcher;
 
-import bookkeeper.entity.TelegramUser;
+import bookkeeper.dao.entity.TelegramUser;
 import bookkeeper.enums.Expenditure;
 import bookkeeper.service.matcher.ExpenditureMatcher;
 import bookkeeper.service.parser.Spending;

@@ -1,11 +1,11 @@
 package bookkeeper.telegram.scenario.checkResidues;
 
-import bookkeeper.entity.AccountTransaction;
-import bookkeeper.entity.TelegramUser;
+import bookkeeper.dao.AccountTransactionRepository;
+import bookkeeper.dao.entity.AccountTransaction;
+import bookkeeper.dao.entity.TelegramUser;
 import bookkeeper.service.parser.Spending;
 import bookkeeper.service.parser.SpendingParserRegistry;
 import bookkeeper.service.query.AssetQuery;
-import bookkeeper.service.repository.AccountTransactionRepository;
 
 import javax.inject.Inject;
 import java.text.ParseException;

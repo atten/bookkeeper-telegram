@@ -1,10 +1,10 @@
 package bookkeeper.telegram.scenario.addTransaction.sber.matcher;
 
-import bookkeeper.entity.Account;
-import bookkeeper.entity.TelegramUser;
+import bookkeeper.dao.AccountRepository;
+import bookkeeper.dao.entity.Account;
+import bookkeeper.dao.entity.TelegramUser;
 import bookkeeper.service.matcher.AccountMatcher;
 import bookkeeper.service.parser.Spending;
-import bookkeeper.service.repository.AccountRepository;
 import bookkeeper.telegram.scenario.addTransaction.sber.parser.*;
 
 import java.util.Currency;

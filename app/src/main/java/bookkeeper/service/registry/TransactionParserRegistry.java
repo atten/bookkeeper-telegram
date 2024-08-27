@@ -1,8 +1,8 @@
 package bookkeeper.service.registry;
 
-import bookkeeper.entity.Account;
-import bookkeeper.entity.AccountTransaction;
-import bookkeeper.entity.TelegramUser;
+import bookkeeper.dao.entity.Account;
+import bookkeeper.dao.entity.AccountTransaction;
+import bookkeeper.dao.entity.TelegramUser;
 import bookkeeper.enums.Expenditure;
 import bookkeeper.service.matcher.AccountMatcher;
 import bookkeeper.service.matcher.AmountMatcher;

@@ -1,9 +1,9 @@
 package bookkeeper.service.matcher;
 
-import bookkeeper.entity.TelegramUser;
+import bookkeeper.dao.MerchantExpenditureRepository;
+import bookkeeper.dao.entity.TelegramUser;
 import bookkeeper.enums.Expenditure;
 import bookkeeper.service.parser.Spending;
-import bookkeeper.service.repository.MerchantExpenditureRepository;
 
 import javax.inject.Inject;
 

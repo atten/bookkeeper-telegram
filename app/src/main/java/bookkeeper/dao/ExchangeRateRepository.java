@@ -1,6 +1,6 @@
-package bookkeeper.service.repository;
+package bookkeeper.dao;
 
-import bookkeeper.entity.ExchangeRate;
+import bookkeeper.dao.entity.ExchangeRate;
 import dagger.Reusable;
 import jakarta.persistence.EntityManager;
 
@@ -8,7 +8,10 @@ import javax.inject.Inject;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
-import java.util.*;
+import java.util.Currency;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 

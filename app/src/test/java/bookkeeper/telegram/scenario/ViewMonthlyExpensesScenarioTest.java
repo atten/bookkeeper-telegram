@@ -1,6 +1,6 @@
 package bookkeeper.telegram.scenario;
 
-import bookkeeper.entity.AccountTransaction;
+import bookkeeper.dao.entity.AccountTransaction;
 import bookkeeper.resolverAnnotations.Amount;
 import bookkeeper.resolverAnnotations.Expenditure;
 import bookkeeper.resolverAnnotations.PreviousMonth;

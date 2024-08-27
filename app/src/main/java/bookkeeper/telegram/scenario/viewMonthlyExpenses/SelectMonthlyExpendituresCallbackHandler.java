@@ -1,12 +1,12 @@
 package bookkeeper.telegram.scenario.viewMonthlyExpenses;
 
-import bookkeeper.entity.TelegramUser;
+import bookkeeper.dao.AccountTransactionRepository;
+import bookkeeper.dao.entity.TelegramUser;
 import bookkeeper.enums.Expenditure;
-import bookkeeper.service.repository.AccountTransactionRepository;
-import bookkeeper.telegram.scenario.editTransaction.EditTransactionBulkCallback;
 import bookkeeper.service.telegram.AbstractHandler;
 import bookkeeper.service.telegram.KeyboardUtils;
 import bookkeeper.service.telegram.Request;
+import bookkeeper.telegram.scenario.editTransaction.EditTransactionBulkCallback;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 
 import javax.inject.Inject;

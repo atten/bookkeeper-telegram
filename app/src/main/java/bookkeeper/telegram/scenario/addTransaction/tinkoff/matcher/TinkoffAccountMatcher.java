@@ -1,8 +1,8 @@
 package bookkeeper.telegram.scenario.addTransaction.tinkoff.matcher;
 
-import bookkeeper.entity.Account;
-import bookkeeper.entity.TelegramUser;
-import bookkeeper.service.repository.AccountRepository;
+import bookkeeper.dao.AccountRepository;
+import bookkeeper.dao.entity.Account;
+import bookkeeper.dao.entity.TelegramUser;
 import bookkeeper.service.matcher.AccountMatcher;
 import bookkeeper.service.parser.Spending;
 import bookkeeper.telegram.scenario.addTransaction.tinkoff.parser.*;

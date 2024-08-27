@@ -1,8 +1,8 @@
-package bookkeeper.service.repository;
+package bookkeeper.dao;
 
-import bookkeeper.entity.Account;
-import bookkeeper.entity.AccountTransaction;
-import bookkeeper.entity.TelegramUser;
+import bookkeeper.dao.entity.Account;
+import bookkeeper.dao.entity.AccountTransaction;
+import bookkeeper.dao.entity.TelegramUser;
 import bookkeeper.enums.Expenditure;
 import dagger.Reusable;
 import jakarta.persistence.EntityManager;
@@ -10,7 +10,10 @@ import jakarta.persistence.EntityManager;
 import javax.inject.Inject;
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Reusable
 public class AccountTransactionRepository {

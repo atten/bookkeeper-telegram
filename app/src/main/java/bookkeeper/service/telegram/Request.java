@@ -1,7 +1,7 @@
 package bookkeeper.service.telegram;
 
-import bookkeeper.entity.TelegramUser;
-import bookkeeper.service.repository.TelegramUserRepository;
+import bookkeeper.dao.TelegramUserRepository;
+import bookkeeper.dao.entity.TelegramUser;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;

@@ -1,12 +1,12 @@
 package bookkeeper.telegram.scenario.addTransaction.tinkoff;
 
-import bookkeeper.service.parser.SpendingParserRegistry;
-import bookkeeper.service.repository.AccountRepository;
+import bookkeeper.dao.AccountRepository;
 import bookkeeper.service.matcher.ExpenditureMatcherByMerchant;
+import bookkeeper.service.parser.SpendingParserRegistry;
+import bookkeeper.service.registry.TransactionParserRegistry;
 import bookkeeper.telegram.scenario.addTransaction.tinkoff.matcher.TinkoffAccountMatcher;
 import bookkeeper.telegram.scenario.addTransaction.tinkoff.matcher.TinkoffAmountMatcher;
 import bookkeeper.telegram.scenario.addTransaction.tinkoff.matcher.TinkoffTimestampMatcher;
-import bookkeeper.service.registry.TransactionParserRegistry;
 
 class TransactionParserRegistryFactoryTinkoff {
     private final AccountRepository accountRepository;

@@ -1,6 +1,6 @@
 package bookkeeper.service.telegram;
 
-import bookkeeper.entity.Account;
+import bookkeeper.dao.entity.Account;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import org.apache.commons.lang3.StringUtils;
 

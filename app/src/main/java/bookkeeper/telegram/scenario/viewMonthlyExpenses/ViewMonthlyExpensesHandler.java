@@ -1,7 +1,7 @@
 package bookkeeper.telegram.scenario.viewMonthlyExpenses;
 
-import bookkeeper.service.repository.AccountRepository;
-import bookkeeper.service.repository.AccountTransactionRepository;
+import bookkeeper.dao.AccountRepository;
+import bookkeeper.dao.AccountTransactionRepository;
 import bookkeeper.service.telegram.AbstractHandler;
 import bookkeeper.service.telegram.Request;
 

@@ -1,6 +1,6 @@
 package bookkeeper.telegram.scenario.addAccount;
 
-import bookkeeper.service.repository.AccountRepository;
+import bookkeeper.dao.AccountRepository;
 import bookkeeper.service.telegram.AbstractHandler;
 import bookkeeper.service.telegram.Request;
 

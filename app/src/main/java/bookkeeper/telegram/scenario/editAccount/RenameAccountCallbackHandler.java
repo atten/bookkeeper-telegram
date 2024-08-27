@@ -1,9 +1,9 @@
 package bookkeeper.telegram.scenario.editAccount;
 
-import bookkeeper.service.repository.AccountRepository;
+import bookkeeper.dao.AccountRepository;
+import bookkeeper.exception.AccountNotFound;
 import bookkeeper.service.telegram.AbstractHandler;
 import bookkeeper.service.telegram.Request;
-import bookkeeper.exception.AccountNotFound;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 
 import javax.inject.Inject;

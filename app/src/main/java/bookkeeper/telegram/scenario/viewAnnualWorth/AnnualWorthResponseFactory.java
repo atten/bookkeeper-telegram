@@ -1,6 +1,6 @@
 package bookkeeper.telegram.scenario.viewAnnualWorth;
 
-import bookkeeper.entity.TelegramUser;
+import bookkeeper.dao.entity.TelegramUser;
 import bookkeeper.service.query.AssetQuery;
 import org.apache.commons.lang3.StringUtils;
 

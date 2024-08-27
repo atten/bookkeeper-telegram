@@ -1,7 +1,7 @@
 package bookkeeper.telegram.scenario;
 
-import bookkeeper.entity.Account;
-import bookkeeper.entity.AccountTransaction;
+import bookkeeper.dao.entity.Account;
+import bookkeeper.dao.entity.AccountTransaction;
 import bookkeeper.enums.Expenditure;
 import bookkeeper.resolverAnnotations.Name;
 import bookkeeper.telegram.BookkeeperParameterResolver;

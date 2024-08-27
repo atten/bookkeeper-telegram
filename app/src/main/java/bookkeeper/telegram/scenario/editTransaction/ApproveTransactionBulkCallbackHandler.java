@@ -1,6 +1,6 @@
 package bookkeeper.telegram.scenario.editTransaction;
 
-import bookkeeper.service.repository.AccountTransactionRepository;
+import bookkeeper.dao.AccountTransactionRepository;
 import bookkeeper.service.telegram.AbstractHandler;
 import bookkeeper.service.telegram.Request;
 

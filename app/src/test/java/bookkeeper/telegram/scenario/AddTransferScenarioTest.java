@@ -1,6 +1,6 @@
 package bookkeeper.telegram.scenario;
 
-import bookkeeper.entity.Account;
+import bookkeeper.dao.entity.Account;
 import bookkeeper.resolverAnnotations.Name;
 import bookkeeper.telegram.BookkeeperParameterResolver;
 import bookkeeper.telegram.FakeSession;

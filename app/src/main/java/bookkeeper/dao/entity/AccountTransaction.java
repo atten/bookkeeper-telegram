@@ -1,4 +1,4 @@
-package bookkeeper.entity;
+package bookkeeper.dao.entity;
 
 import bookkeeper.enums.Expenditure;
 import jakarta.persistence.*;

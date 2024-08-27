@@ -1,12 +1,14 @@
 package bookkeeper.telegram.scenario.viewAssets;
 
-import bookkeeper.entity.TelegramUser;
+import bookkeeper.dao.entity.TelegramUser;
 import bookkeeper.service.query.AssetQuery;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.inject.Inject;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.Currency;
+import java.util.Map;
+import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
 import static bookkeeper.service.telegram.StringUtils.*;

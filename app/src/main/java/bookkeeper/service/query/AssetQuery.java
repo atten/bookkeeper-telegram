@@ -1,12 +1,12 @@
 package bookkeeper.service.query;
 
-import bookkeeper.entity.Account;
-import bookkeeper.entity.TelegramUser;
+import bookkeeper.dao.AccountRepository;
+import bookkeeper.dao.AccountTransactionRepository;
+import bookkeeper.dao.AccountTransferRepository;
+import bookkeeper.dao.ExchangeRateRepository;
+import bookkeeper.dao.entity.Account;
+import bookkeeper.dao.entity.TelegramUser;
 import bookkeeper.service.client.CbrApiClient;
-import bookkeeper.service.repository.AccountRepository;
-import bookkeeper.service.repository.AccountTransactionRepository;
-import bookkeeper.service.repository.AccountTransferRepository;
-import bookkeeper.service.repository.ExchangeRateRepository;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 

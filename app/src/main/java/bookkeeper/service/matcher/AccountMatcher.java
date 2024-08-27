@@ -1,7 +1,7 @@
 package bookkeeper.service.matcher;
 
-import bookkeeper.entity.Account;
-import bookkeeper.entity.TelegramUser;
+import bookkeeper.dao.entity.Account;
+import bookkeeper.dao.entity.TelegramUser;
 import bookkeeper.service.parser.Spending;
 
 import java.util.Optional;

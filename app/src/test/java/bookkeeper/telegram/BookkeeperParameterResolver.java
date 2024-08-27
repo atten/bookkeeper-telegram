@@ -1,8 +1,8 @@
 package bookkeeper.telegram;
 
-import bookkeeper.entity.Account;
-import bookkeeper.entity.AccountTransaction;
-import bookkeeper.entity.TelegramUser;
+import bookkeeper.dao.entity.Account;
+import bookkeeper.dao.entity.AccountTransaction;
+import bookkeeper.dao.entity.TelegramUser;
 import bookkeeper.resolverAnnotations.Month;
 import bookkeeper.resolverAnnotations.PreviousMonth;
 import bookkeeper.resolverAnnotations.Raw;

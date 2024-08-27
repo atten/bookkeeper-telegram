@@ -1,7 +1,7 @@
-package bookkeeper.service.repository;
+package bookkeeper.dao;
 
-import bookkeeper.entity.Account;
-import bookkeeper.entity.TelegramUser;
+import bookkeeper.dao.entity.Account;
+import bookkeeper.dao.entity.TelegramUser;
 import dagger.Reusable;
 import jakarta.persistence.EntityManager;
 

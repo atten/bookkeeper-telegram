@@ -1,11 +1,11 @@
 package bookkeeper.telegram.scenario;
 
-import bookkeeper.entity.AccountTransaction;
+import bookkeeper.dao.entity.AccountTransaction;
 import bookkeeper.resolverAnnotations.Expenditure;
+import bookkeeper.resolverAnnotations.PreviousMonth;
 import bookkeeper.resolverAnnotations.Raw;
 import bookkeeper.telegram.BookkeeperParameterResolver;
 import bookkeeper.telegram.FakeSession;
-import bookkeeper.resolverAnnotations.PreviousMonth;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;

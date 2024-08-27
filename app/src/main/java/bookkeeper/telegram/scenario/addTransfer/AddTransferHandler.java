@@ -1,11 +1,11 @@
 package bookkeeper.telegram.scenario.addTransfer;
 
-import bookkeeper.service.repository.AccountRepository;
-import bookkeeper.service.repository.AccountTransferRepository;
-import bookkeeper.service.telegram.AbstractHandler;
-import bookkeeper.service.telegram.Request;
+import bookkeeper.dao.AccountRepository;
+import bookkeeper.dao.AccountTransferRepository;
 import bookkeeper.exception.AccountNotFound;
 import bookkeeper.exception.HandlerInterruptException;
+import bookkeeper.service.telegram.AbstractHandler;
+import bookkeeper.service.telegram.Request;
 
 import javax.inject.Inject;
 import java.math.BigDecimal;

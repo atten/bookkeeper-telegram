@@ -1,7 +1,7 @@
 package bookkeeper.service.telegram;
 
-import bookkeeper.entity.Account;
-import bookkeeper.entity.AccountTransaction;
+import bookkeeper.dao.entity.Account;
+import bookkeeper.dao.entity.AccountTransaction;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

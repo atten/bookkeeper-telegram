@@ -1,9 +1,9 @@
 package bookkeeper.telegram.scenario.editTransaction;
 
-import bookkeeper.service.repository.AccountTransactionRepository;
+import bookkeeper.dao.AccountTransactionRepository;
+import bookkeeper.exception.AccountTransactionNotFound;
 import bookkeeper.service.telegram.AbstractHandler;
 import bookkeeper.service.telegram.Request;
-import bookkeeper.exception.AccountTransactionNotFound;
 
 import javax.inject.Inject;
 

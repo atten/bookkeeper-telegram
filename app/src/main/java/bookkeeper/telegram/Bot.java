@@ -1,10 +1,10 @@
 package bookkeeper.telegram;
 
 
-import bookkeeper.service.repository.TelegramUserRepository;
+import bookkeeper.dao.TelegramUserRepository;
+import bookkeeper.exception.HandlerInterruptException;
 import bookkeeper.service.telegram.AbstractHandler;
 import bookkeeper.service.telegram.Request;
-import bookkeeper.exception.HandlerInterruptException;
 import bookkeeper.service.telegram.StringUtils;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;

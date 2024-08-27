@@ -1,6 +1,6 @@
 package bookkeeper.service.matcher;
 
-import bookkeeper.entity.TelegramUser;
+import bookkeeper.dao.entity.TelegramUser;
 import bookkeeper.enums.Expenditure;
 import bookkeeper.service.parser.Spending;
 

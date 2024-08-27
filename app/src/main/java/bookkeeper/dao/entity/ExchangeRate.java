@@ -1,4 +1,4 @@
-package bookkeeper.entity;
+package bookkeeper.dao.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;

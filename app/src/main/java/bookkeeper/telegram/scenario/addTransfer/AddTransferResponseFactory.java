@@ -1,11 +1,12 @@
 package bookkeeper.telegram.scenario.addTransfer;
 
-import bookkeeper.entity.AccountTransfer;
-import bookkeeper.entity.TelegramUser;
-import bookkeeper.service.repository.AccountRepository;
+import bookkeeper.dao.AccountRepository;
+import bookkeeper.dao.entity.AccountTransfer;
+import bookkeeper.dao.entity.TelegramUser;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 
-import static bookkeeper.service.telegram.StringUtils.*;
+import static bookkeeper.service.telegram.StringUtils.getDateShort;
+import static bookkeeper.service.telegram.StringUtils.getMonthYearShort;
 
 class AddTransferResponseFactory {
     private final AccountRepository accountRepository;

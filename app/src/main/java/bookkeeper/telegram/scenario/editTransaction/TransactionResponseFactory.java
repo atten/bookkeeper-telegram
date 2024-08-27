@@ -1,6 +1,6 @@
 package bookkeeper.telegram.scenario.editTransaction;
 
-import bookkeeper.entity.AccountTransaction;
+import bookkeeper.dao.entity.AccountTransaction;
 import bookkeeper.enums.Expenditure;
 import bookkeeper.service.telegram.KeyboardUtils;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;

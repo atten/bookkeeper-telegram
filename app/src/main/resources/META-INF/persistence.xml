@@ -5,12 +5,12 @@
              xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
              version="2.0">
     <persistence-unit name="default">
-        <class>bookkeeper.entity.TelegramUser</class>
-        <class>bookkeeper.entity.Account</class>
-        <class>bookkeeper.entity.AccountTransaction</class>
-        <class>bookkeeper.entity.AccountTransfer</class>
-        <class>bookkeeper.entity.MerchantExpenditure</class>
-        <class>bookkeeper.entity.ExchangeRate</class>
+        <class>bookkeeper.dao.entity.TelegramUser</class>
+        <class>bookkeeper.dao.entity.Account</class>
+        <class>bookkeeper.dao.entity.AccountTransaction</class>
+        <class>bookkeeper.dao.entity.AccountTransfer</class>
+        <class>bookkeeper.dao.entity.MerchantExpenditure</class>
+        <class>bookkeeper.dao.entity.ExchangeRate</class>
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
             <property name="hibernate.hbm2ddl.auto" value="update"/>
