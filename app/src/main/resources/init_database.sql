@@ -1,1 +1,1 @@
-alter table if exists accounts add column is_hidden BOOLEAN not null default false;
+ALTER TABLE IF EXISTS merchant_expenditures ADD COLUMN rank INTEGER NOT NULL DEFAULT 1;

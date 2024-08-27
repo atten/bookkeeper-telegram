@@ -2,14 +2,13 @@ package bookkeeper.telegram.scenario.editTransaction;
 
 import bookkeeper.entity.AccountTransaction;
 import bookkeeper.enums.Expenditure;
+import bookkeeper.exception.AccountTransactionNotFound;
 import bookkeeper.service.parser.Spending;
 import bookkeeper.service.parser.SpendingParserRegistry;
 import bookkeeper.service.repository.AccountTransactionRepository;
 import bookkeeper.service.repository.MerchantExpenditureRepository;
 import bookkeeper.service.telegram.AbstractHandler;
 import bookkeeper.service.telegram.Request;
-import bookkeeper.exception.AccountTransactionNotFound;
-import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 
 import javax.inject.Inject;
 import java.text.ParseException;
@@ -35,8 +34,8 @@ class AssignExpenditureCallbackHandler implements AbstractHandler {
 
     /**
      * Handle expenditure selector click:
-     * 1. Store association with given merchant for further transactions (if applicable).
-     * 2. Associate specified AccountTransaction with given Expenditure.
+     * 1. Associate specified AccountTransaction with given Expenditure.
+     * 2. Remember association with given merchant for further transactions.
      * 3. Associate pending AccountTransactions with same merchant too (if any).
      */
     public Boolean handle(Request request) throws AccountTransactionNotFound {
@@ -45,29 +44,24 @@ class AssignExpenditureCallbackHandler implements AbstractHandler {
 
         var transaction = transactionRepository.get(cm.getTransactionId()).orElseThrow(() -> new AccountTransactionNotFound(cm.getTransactionId()));
         var merchant = getSpending(transaction).getMerchant();
-        var newExpenditure = cm.getExpenditure();
-        var hasAssociation = merchantExpenditureRepository.find(merchant, request.getTelegramUser()).isPresent();
-        var useAssociationFurther = newExpenditure != Expenditure.OTHER && !hasAssociation;
+        var selectedExpenditure = cm.getExpenditure();
         var pendingTransactionsCount = cm.getPendingTransactionIds().size();
+        var applyAssociationToPendingTransactions = selectedExpenditure != Expenditure.OTHER;
 
         // step 1
-        if (useAssociationFurther) {
-            merchantExpenditureRepository.addMerchantAssociation(merchant, newExpenditure, request.getTelegramUser());
-            var keyboard = new InlineKeyboardMarkup().addRow(new RemoveMerchantExpenditureCallback(merchant, newExpenditure).asButton("Отмена"));
-            request.sendMessage(getResponseMessage(merchant, newExpenditure), keyboard);
-        }
+        transaction.setExpenditure(selectedExpenditure);
 
         // step 2
-        transaction.setExpenditure(newExpenditure);
+        merchantExpenditureRepository.rememberExpenditurePreference(merchant, selectedExpenditure, request.getTelegramUser());
 
         if (pendingTransactionsCount == 0) {
             request.editMessage(getResponseMessage(transaction), getResponseKeyboard(transaction));
         } else {
             var pendingTransactions = transactionRepository.findByIds(cm.getPendingTransactionIds());
 
-            if (useAssociationFurther) {
+            if (applyAssociationToPendingTransactions) {
                 // step 3
-                updateTransactionsExpenditure(pendingTransactions, merchant, newExpenditure);
+                updateTransactionsExpenditure(pendingTransactions, merchant, selectedExpenditure);
             }
 
             request.editMessage(getResponseMessage(transaction, pendingTransactionsCount), getResponseKeyboard(transaction, cm.getPendingTransactionIds()));

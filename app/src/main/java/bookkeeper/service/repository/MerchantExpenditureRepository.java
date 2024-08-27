@@ -9,51 +9,48 @@ import jakarta.persistence.NoResultException;
 
 import javax.inject.Inject;
 import java.time.Instant;
-import java.util.Optional;
 
 @Reusable
 public class MerchantExpenditureRepository {
     private final EntityManager manager;
 
     @Inject
-    public MerchantExpenditureRepository(EntityManager manager) {
+    MerchantExpenditureRepository(EntityManager manager) {
         this.manager = manager;
     }
 
-    public Optional<MerchantExpenditure> find(String merchant, TelegramUser user) {
-        var sql = "SELECT i FROM MerchantExpenditure i WHERE i.merchant=:merchant AND i.telegramUser=:telegramUser ORDER BY i.createdAt DESC LIMIT 1";
+    public Expenditure getPreferredExpenditureForMerchant(String merchant, TelegramUser user) {
+        var sql = "SELECT i FROM MerchantExpenditure i WHERE i.merchant=:merchant AND i.telegramUser=:telegramUser ORDER BY i.rank DESC LIMIT 1";
         var query = manager.createQuery(sql, MerchantExpenditure.class)
             .setParameter("merchant", merchant)
             .setParameter("telegramUser", user);
 
         try {
-            return Optional.of(query.getSingleResult());
+            return query.getSingleResult().getExpenditure();
         } catch (NoResultException e) {
-            return Optional.empty();
+            return Expenditure.OTHER;
         }
     }
 
-    public void addMerchantAssociation(String merchant, Expenditure expenditure, TelegramUser user) {
-        var obj = newItemFactory(merchant, expenditure, user);
-        manager.merge(obj);
-    }
-
-    public void removeMerchantAssociation(String merchant, Expenditure expenditure, TelegramUser user) {
-        find(merchant, user).ifPresent(obj -> {
-            if (obj.getExpenditure() != expenditure)
-                manager.remove(obj);
-        });
-    }
-
-    public int removeMerchantAssociations(TelegramUser user) {
-        var sql = "DELETE FROM MerchantExpenditure i WHERE i.telegramUser=:telegramUser";
+    public void rememberExpenditurePreference(String merchant, Expenditure expenditure, TelegramUser user) {
+        var sql = "UPDATE MerchantExpenditure i SET rank = rank + 1 WHERE i.expenditure=:expenditure AND i.merchant=:merchant AND i.telegramUser=:telegramUser";
         var query = manager.createQuery(sql)
-                .setParameter("telegramUser", user);
-        return query.executeUpdate();
+            .setParameter("merchant", merchant)
+            .setParameter("expenditure", expenditure)
+            .setParameter("telegramUser", user);
+
+        int count = query.executeUpdate();
+        if (count == 0) {
+            // no records updated
+            var obj = newItemFactory(merchant, expenditure, user);
+            obj.setRank(1);
+            manager.merge(obj);
+        }
     }
 
     private MerchantExpenditure newItemFactory(String merchant, Expenditure expenditure, TelegramUser user) {
         var obj = new MerchantExpenditure();
+        obj.setRank(0);
         obj.setMerchant(merchant);
         obj.setExpenditure(expenditure);
         obj.setTelegramUser(user);

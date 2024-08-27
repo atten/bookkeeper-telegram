@@ -1,10 +1,9 @@
 package bookkeeper.service.matcher;
 
-import bookkeeper.entity.MerchantExpenditure;
 import bookkeeper.entity.TelegramUser;
 import bookkeeper.enums.Expenditure;
-import bookkeeper.service.repository.MerchantExpenditureRepository;
 import bookkeeper.service.parser.Spending;
+import bookkeeper.service.repository.MerchantExpenditureRepository;
 
 import javax.inject.Inject;
 
@@ -18,8 +17,6 @@ public class ExpenditureMatcherByMerchant implements ExpenditureMatcher {
 
     @Override
     public Expenditure match(Spending spending, TelegramUser telegramUser) {
-        return merchantExpenditureRepository.find(spending.getMerchant(), telegramUser)
-                .map(MerchantExpenditure::getExpenditure)
-                .orElse(Expenditure.OTHER);
+        return merchantExpenditureRepository.getPreferredExpenditureForMerchant(spending.getMerchant(), telegramUser);
     }
 }

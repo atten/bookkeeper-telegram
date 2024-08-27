@@ -72,10 +72,6 @@ public class TransactionResponseFactory {
         return response.toString();
     }
 
-    public static String getResponseMessage(String merchant, Expenditure expenditure) {
-        return String.format("Категория *%s* будет использоваться по умолчанию для последующих записей `%s`.", expenditure.getVerboseName(), merchant);
-    }
-
     public static InlineKeyboardMarkup getResponseKeyboard(List<AccountTransaction> transactions) {
         if (transactions.isEmpty()) {
             return new InlineKeyboardMarkup();

@@ -30,10 +30,6 @@ public abstract class EditTransactionHandlersModule {
 
     @Binds
     @IntoSet
-    abstract AbstractHandler removeMerchantExpenditureCallbackHandler(RemoveMerchantExpenditureCallbackHandler handler);
-
-    @Binds
-    @IntoSet
     abstract AbstractHandler removeTransactionCallbackHandler(RemoveTransactionCallbackHandler handler);
 
     @Binds
@@ -55,10 +51,6 @@ public abstract class EditTransactionHandlersModule {
     @Binds
     @IntoSet
     abstract AbstractHandler switchAccountCallbackHandler(SwitchAccountCallbackHandler handler);
-
-    @Binds
-    @IntoSet
-    abstract AbstractHandler slashClearAssociationsHandler(SlashClearAssociationsHandler handler);
 
     @Binds
     @IntoSet

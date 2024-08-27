@@ -81,8 +81,7 @@ class Bot {
             new BotCommand("check_residues", "Сверить остатки"),
             new BotCommand("new_account", "Создать счёт"),
             new BotCommand("new_transfer", "Создать перевод между счетами"),
-            new BotCommand("accounts", "Редактировать счета"),
-            new BotCommand("clear_associations", "Удалить сохранённые привязки категорий")
+            new BotCommand("accounts", "Редактировать счета")
         );
         var result = bot.execute(commandsRequest);
         var resultVerbose = result.description() != null ? result.description() : "OK";
