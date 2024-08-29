@@ -40,6 +40,9 @@ public class SberAccountMatcher implements AccountMatcher {
         if (spending instanceof SberTransferSms obj) {
             return Optional.of(getSberAccount(obj.getAccountName(), obj.getAccountCurrency(), user));
         }
+        if (spending instanceof SberDepositInterestSms obj) {
+            return Optional.of(getSberAccount(obj.getAccountId(), obj.getAccountCurrency(), user));
+        }
         if (spending instanceof SberIgnoreSms) {
             var defaultCurrency = Currency.getInstance("RUB");
             var defaultAccountName = "Sber";

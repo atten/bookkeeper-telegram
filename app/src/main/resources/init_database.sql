@@ -1,1 +1,2 @@
-ALTER TABLE IF EXISTS merchant_expenditures ADD COLUMN rank INTEGER NOT NULL DEFAULT 1;
+ALTER TABLE IF EXISTS accounts ALTER column is_hidden DROP default;
+ALTER TABLE IF EXISTS merchant_expenditures ALTER column rank DROP default;

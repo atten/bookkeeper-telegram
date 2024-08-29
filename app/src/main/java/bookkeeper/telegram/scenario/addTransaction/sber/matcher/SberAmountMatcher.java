@@ -31,6 +31,9 @@ public class SberAmountMatcher implements AmountMatcher {
         if (spending instanceof SberTransferSms obj) {
             return Optional.of(obj.getTransferSum().negate());
         }
+        if (spending instanceof SberDepositInterestSms obj) {
+            return Optional.of(obj.getInterestSum());
+        }
         if (spending instanceof SberIgnoreSms) {
             return Optional.of(BigDecimal.ZERO);
         }
