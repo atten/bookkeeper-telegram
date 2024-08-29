@@ -20,9 +20,10 @@ public class MerchantExpenditureRepository {
     }
 
     public Expenditure getPreferredExpenditureForMerchant(String merchant, TelegramUser user) {
-        var sql = "SELECT i FROM MerchantExpenditure i WHERE i.merchant=:merchant AND i.telegramUser=:telegramUser ORDER BY i.rank DESC LIMIT 1";
+        var normalizedMerchant = normalizeMerchant(merchant);
+        var sql = "SELECT i FROM MerchantExpenditure i WHERE i.merchant ILIKE :merchant AND i.telegramUser=:telegramUser ORDER BY i.rank DESC LIMIT 1";
         var query = manager.createQuery(sql, MerchantExpenditure.class)
-            .setParameter("merchant", merchant)
+            .setParameter("merchant", '%' + normalizedMerchant + '%')
             .setParameter("telegramUser", user);
 
         try {
@@ -33,19 +34,34 @@ public class MerchantExpenditureRepository {
     }
 
     public void rememberExpenditurePreference(String merchant, Expenditure expenditure, TelegramUser user) {
+        var normalizedMerchant = normalizeMerchant(merchant);
         var sql = "UPDATE MerchantExpenditure i SET rank = rank + 1 WHERE i.expenditure=:expenditure AND i.merchant=:merchant AND i.telegramUser=:telegramUser";
         var query = manager.createQuery(sql)
-            .setParameter("merchant", merchant)
+            .setParameter("merchant", normalizedMerchant)
             .setParameter("expenditure", expenditure)
             .setParameter("telegramUser", user);
 
         int count = query.executeUpdate();
         if (count == 0) {
             // no records updated
-            var obj = newItemFactory(merchant, expenditure, user);
+            var obj = newItemFactory(normalizedMerchant, expenditure, user);
             obj.setRank(1);
             manager.merge(obj);
         }
+    }
+
+    private String normalizeMerchant(String merchant) {
+        var normalized = new StringBuilder();
+
+        for (var c: merchant.toCharArray()) {
+            if (Character.isAlphabetic(c))
+                normalized.append(Character.toLowerCase(c));
+        }
+
+        if (normalized.isEmpty()) {
+            throw new RuntimeException("Merchant %s can't be normalized".formatted(merchant));
+        }
+        return normalized.toString();
     }
 
     private MerchantExpenditure newItemFactory(String merchant, Expenditure expenditure, TelegramUser user) {
