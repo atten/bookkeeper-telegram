@@ -1,4 +1,3 @@
-version: '3'
 services:
 
   postgres_dev:
@@ -24,7 +23,3 @@ services:
 volumes:
   postgres_dev:
     name: bookkeeper-postgres-dev
-
-networks:
-  default:
-    name: 'bookkeeper-dev-network'
