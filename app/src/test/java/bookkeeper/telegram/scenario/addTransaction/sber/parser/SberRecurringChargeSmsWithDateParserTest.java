@@ -8,20 +8,20 @@ import java.util.Currency;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class SberRecurringChargeSmsParserTest {
-    private final SberRecurringChargeSmsParser parser = new SberRecurringChargeSmsParser();
+class SberRecurringChargeSmsWithDateParserTest {
+    private final SberRecurringChargeSmsWithDateParser parser = new SberRecurringChargeSmsWithDateParser();
 
     @Test
     void parseOk() throws ParseException {
-        var sms = parser.parse("СЧЁТ1234 09:58 Оплата 550р Автоплатёж Энторнет Баланс: 1 378.52р");
+        var sms = parser.parse("СЧЁТ1234 01:27 Оплата 70р за уведомления по СберКартам. Следующее списание 23.08.24. Баланс 2 611,81р");
 
         var referenceSms = new SberRecurringChargeSms();
 
         referenceSms.setAccountName("СЧЁТ1234");
-        referenceSms.setChargeSum(new BigDecimal("550"));
+        referenceSms.setChargeSum(new BigDecimal("70"));
         referenceSms.setChargeCurrency(Currency.getInstance("RUB"));
-        referenceSms.setDestination("Энторнет");
-        referenceSms.setAccountBalance(new BigDecimal("1378.52"));
+        referenceSms.setDestination("за уведомления по СберКартам");
+        referenceSms.setAccountBalance(new BigDecimal("2611.81"));
         referenceSms.setAccountCurrency(Currency.getInstance("RUB"));
 
         assertEquals(referenceSms, sms);

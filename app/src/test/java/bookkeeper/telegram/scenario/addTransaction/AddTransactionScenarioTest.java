@@ -1,4 +1,4 @@
-package bookkeeper.telegram.scenario;
+package bookkeeper.telegram.scenario.addTransaction;
 
 import bookkeeper.telegram.BookkeeperParameterResolver;
 import bookkeeper.telegram.FakeSession;
@@ -56,6 +56,7 @@ class AddTransactionScenarioTest {
             "MIR-1234 16:00 Покупка 198р PEKARNYA Баланс: 1 681.81р",
             "MIR-1234 20:55 Покупка по СБП 733.52р Прием платежей mos Баланс: 2 634.48р",
             "СЧЁТ1234 01:27 Оплата 70р за уведомления по СберКартам. Следующее списание 23.08.24. Баланс 2 611,81р",
+            "СЧЁТ1234 09:58 Оплата 550р Автоплатёж Энторнет Баланс: 1 378.52р",
             "СЧЁТ1234 16:36 Зачисление 1 000р Баланс: 1 123.48р",
             "СЧЁТ1234 00:21 Перевод 140р от Сергей С. Баланс: 879.81р",
             "СЧЁТ1234 18:26 перевод 1 000р Баланс: 3 879.81р",

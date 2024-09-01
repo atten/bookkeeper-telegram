@@ -10,6 +10,7 @@ import java.util.Optional;
 /**
  * Example:
  * СЧЁТ1234 01:27 Оплата 70р за уведомления по СберКартам. Следующее списание 23.08.24. Баланс 2 611,81р
+ * СЧЁТ1234 09:58 Оплата 550р Автоплатёж Энторнет Баланс: 1 378.52р
  */
 @Data
 public class SberRecurringChargeSms implements Spending {
