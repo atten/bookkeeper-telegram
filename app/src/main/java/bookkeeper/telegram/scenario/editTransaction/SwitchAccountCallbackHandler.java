@@ -44,7 +44,7 @@ class SwitchAccountCallbackHandler implements AbstractHandler {
             request.editMessage(getResponseMessage(transaction), getResponseKeyboard(transaction));
         }
         else {
-            request.editMessage(getResponseMessage(transaction, pendingTransactionsCount), getResponseKeyboard(transaction, cm.getPendingTransactionIds()));
+            request.editMessage(getResponseMessage(transaction, pendingTransactionsCount), getResponseKeyboard(transaction, cm.getAllTransactionIds(), cm.getPendingTransactionIds()));
         }
 
         return true;

@@ -51,7 +51,7 @@ class SelectMonthlyExpendituresCallbackHandler implements AbstractHandler {
 
         // prepare buttons with expenditures selector
         var buttons = idsByExpenditure.entrySet().stream()
-            .map(entry -> new EditTransactionBulkCallback(entry.getValue()).asButton(entry.getKey().getVerboseName()))
+            .map(entry -> new EditTransactionBulkCallback(entry.getValue(), entry.getValue()).asButton(entry.getKey().getVerboseName()))
             .toList();
 
         return KeyboardUtils.createMarkupWithFixedColumns(buttons, 3)

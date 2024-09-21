@@ -27,9 +27,12 @@ class EditTransactionBulkCallbackHandler implements AbstractHandler {
         if (!(request.getCallbackMessage().orElse(null) instanceof EditTransactionBulkCallback cm))
             return false;
 
-        var transaction = transactionRepository.get(cm.getTransactionIds().get(0)).orElseThrow(() -> new AccountTransactionNotFound(cm.getTransactionIds().get(0)));
-        var pendingTransactionIds = cm.getTransactionIds().stream().skip(1).collect(Collectors.toList());
-        request.editMessage(getResponseMessage(transaction, pendingTransactionIds.size()), getResponseKeyboard(transaction, pendingTransactionIds));
+        if (cm.getRemainingTransactionIds().isEmpty())
+            return false;
+
+        var transaction = transactionRepository.get(cm.getRemainingTransactionIds().get(0)).orElseThrow(() -> new AccountTransactionNotFound(cm.getRemainingTransactionIds().get(0)));
+        var pendingTransactionIds = cm.getRemainingTransactionIds().stream().skip(1).collect(Collectors.toList());
+        request.editMessage(getResponseMessage(transaction, pendingTransactionIds.size()), getResponseKeyboard(transaction, cm.getAllTransactionIds(), pendingTransactionIds));
         return true;
     }
 }

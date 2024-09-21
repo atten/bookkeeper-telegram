@@ -42,14 +42,6 @@ public class AccountTransactionRepository {
         return query.getResultList();
     }
 
-    public List<AccountTransaction> findByCreatedAt(Instant createdAt, TelegramUser user) {
-        var sql = "SELECT i FROM AccountTransaction i WHERE account.telegramUser=:user AND createdAt = :createdAt";
-        var query = manager.createQuery(sql, AccountTransaction.class)
-                .setParameter("createdAt", createdAt)
-                .setParameter("user", user);
-        return query.getResultList();
-    }
-
     public List<Long> findIds(Expenditure expenditure, int monthOffset, TelegramUser user) {
         var sql = "SELECT id from AccountTransaction " +
                 "WHERE account.telegramUser=:user " +

@@ -29,8 +29,7 @@ class OverviewTransactionsCallbackHandler implements AbstractHandler {
         if (!(request.getCallbackMessage().orElse(null) instanceof OverviewTransactionsCallback cm))
             return false;
 
-        var transaction = transactionRepository.get(cm.getTransactionId()).orElseThrow(() -> new AccountTransactionNotFound(cm.getTransactionId()));
-        var allAddedTransactions = transactionRepository.findByCreatedAt(transaction.getCreatedAt(), request.getTelegramUser());
+        var allAddedTransactions = transactionRepository.findByIds(cm.getAllTransactionIds());
         request.editMessage(getResponseMessage(allAddedTransactions), getResponseKeyboard(allAddedTransactions));
         return true;
     }

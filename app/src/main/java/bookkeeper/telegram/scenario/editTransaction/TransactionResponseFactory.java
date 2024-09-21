@@ -9,7 +9,6 @@ import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.Collectors;
 
 import static bookkeeper.service.telegram.StringUtils.*;
 
@@ -80,10 +79,10 @@ public class TransactionResponseFactory {
             return getResponseKeyboard(transaction);
         }
         var kb = new InlineKeyboardMarkup();
-        var transactionIds = transactions.stream().map(AccountTransaction::getId).collect(Collectors.toList());
+        var transactionIds = transactions.stream().map(AccountTransaction::getId).toList();
         var approvedCount = transactions.stream().map(AccountTransaction::isApproved).filter(aBoolean -> aBoolean).count();
 
-        var button1 = new EditTransactionBulkCallback(transactionIds).asButton("Разобрать");
+        var button1 = new EditTransactionBulkCallback(transactionIds, transactionIds).asButton("Разобрать");
         var button2 = new ApproveTransactionBulkCallback(transactionIds).asButton("Подтвердить все");
         var button3 = new RemoveTransactionBulkCallback(transactionIds).asButton("Отменить все");
 
@@ -113,15 +112,15 @@ public class TransactionResponseFactory {
         return KeyboardUtils.createMarkupWithFixedColumns(buttons, 3);
     }
 
-    public static InlineKeyboardMarkup getResponseKeyboard(AccountTransaction transaction, List<Long> pendingTransactionIds) {
+    public static InlineKeyboardMarkup getResponseKeyboard(AccountTransaction transaction, List<Long> allTransactionIds, List<Long> pendingTransactionIds) {
         var transactionId = transaction.getId();
         var buttons = new ArrayList<InlineKeyboardButton>();
 
-        var selectExpenditureButton = new SelectExpenditureCallback(transactionId).setPendingTransactionIds(pendingTransactionIds).asButton(ICON_EXPENDITURE + " Категория");
-        var prevMonthButton = new ShiftTransactionMonthCallback(transactionId, -1).setPendingTransactionIds(pendingTransactionIds).asPrevMonthButton(transaction.date(), "В %s");
-        var nextMonthButton = new ShiftTransactionMonthCallback(transactionId, +1).setPendingTransactionIds(pendingTransactionIds).asNextMonthButton(transaction.date(), "В %s");
-        var accountButton = new SelectAccountCallback(transactionId).setPendingTransactionIds(pendingTransactionIds).asButton(ICON_ACCOUNT + " Счёт");
-        var overviewButton = new OverviewTransactionsCallback(transactionId).asButton("Готово");
+        var selectExpenditureButton = new SelectExpenditureCallback(transactionId).setTransactionIds(allTransactionIds, pendingTransactionIds).asButton(ICON_EXPENDITURE + " Категория");
+        var prevMonthButton = new ShiftTransactionMonthCallback(transactionId, -1).setTransactionIds(allTransactionIds, pendingTransactionIds).asPrevMonthButton(transaction.date(), "В %s");
+        var nextMonthButton = new ShiftTransactionMonthCallback(transactionId, +1).setTransactionIds(allTransactionIds, pendingTransactionIds).asNextMonthButton(transaction.date(), "В %s");
+        var accountButton = new SelectAccountCallback(transactionId).setTransactionIds(allTransactionIds, pendingTransactionIds).asButton(ICON_ACCOUNT + " Счёт");
+        var overviewButton = new OverviewTransactionsCallback(transactionId).setTransactionIds(allTransactionIds, pendingTransactionIds).asButton("Готово");
 
         buttons.add(selectExpenditureButton);
         buttons.add(prevMonthButton);
@@ -131,7 +130,7 @@ public class TransactionResponseFactory {
         var showApproveButton = !transaction.isApproved() || !pendingTransactionIds.isEmpty();
         if (showApproveButton) {
             var approveButtonText = transaction.isApproved() ? "Далее" : ICON_APPROVE + " Подтвердить";
-            var approveButton = new ApproveTransactionCallback(transactionId).setPendingTransactionIds(pendingTransactionIds).asButton(approveButtonText);
+            var approveButton = new ApproveTransactionCallback(transactionId).setTransactionIds(allTransactionIds, pendingTransactionIds).asButton(approveButtonText);
             buttons.add(approveButton);
         }
 

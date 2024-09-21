@@ -7,9 +7,11 @@ import java.util.List;
 
 @Getter
 public class EditTransactionBulkCallback extends CallbackMessage {
-    private final List<Long> transactionIds;
+    private final List<Long> allTransactionIds;
+    private final List<Long> remainingTransactionIds;
 
-    public EditTransactionBulkCallback(List<Long> transactionIds) {
-        this.transactionIds = transactionIds;
+    public EditTransactionBulkCallback(List<Long> allTransactionIds, List<Long> remainingTransactionIds) {
+        this.allTransactionIds = allTransactionIds;
+        this.remainingTransactionIds = remainingTransactionIds;
     }
 }

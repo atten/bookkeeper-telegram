@@ -64,7 +64,7 @@ class AssignExpenditureCallbackHandler implements AbstractHandler {
                 updateTransactionsExpenditure(pendingTransactions, merchant, selectedExpenditure);
             }
 
-            request.editMessage(getResponseMessage(transaction, pendingTransactionsCount), getResponseKeyboard(transaction, cm.getPendingTransactionIds()));
+            request.editMessage(getResponseMessage(transaction, pendingTransactionsCount), getResponseKeyboard(transaction, cm.getAllTransactionIds(), cm.getPendingTransactionIds()));
         }
 
         return true;

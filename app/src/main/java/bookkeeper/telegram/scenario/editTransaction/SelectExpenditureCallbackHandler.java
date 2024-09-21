@@ -7,7 +7,6 @@ import bookkeeper.service.telegram.Request;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 
 import javax.inject.Inject;
-import java.util.List;
 import java.util.stream.Stream;
 
 
@@ -26,21 +25,23 @@ class SelectExpenditureCallbackHandler implements AbstractHandler {
         if (!(request.getCallbackMessage().orElse(null) instanceof SelectExpenditureCallback cm))
             return false;
 
-        request.editMessage(getResponseKeyboard(cm.getTransactionId(), cm.getPendingTransactionIds()));
+        request.editMessage(getResponseKeyboard(cm));
         return true;
     }
 
-    private InlineKeyboardMarkup getResponseKeyboard(long transactionId, List<Long> pendingTransactionIds) {
+    private InlineKeyboardMarkup getResponseKeyboard(SelectExpenditureCallback callback) {
         // buttons with expenditures selector
         var buttons = Expenditure
             .enabledValues()
             .stream()
-            .map(expenditure -> new AssignExpenditureCallback(transactionId, expenditure).setPendingTransactionIds(pendingTransactionIds).asButton(expenditure.getVerboseName()))
+            .map(expenditure -> new AssignExpenditureCallback(callback.getTransactionId(), expenditure)
+                .setTransactionIds(callback.getAllTransactionIds(), callback.getPendingTransactionIds())
+                .asButton(expenditure.getVerboseName()))
             .toList();
 
         // button which returns to transaction edit message
-        var allTransactionIds = Stream.concat(Stream.of(transactionId), pendingTransactionIds.stream()).toList();
-        var backButton = new EditTransactionBulkCallback(allTransactionIds).asButton("Назад");
+        var pendingTransactionIds = Stream.concat(Stream.of(callback.getTransactionId()), callback.getPendingTransactionIds().stream()).toList();
+        var backButton = new EditTransactionBulkCallback(callback.getAllTransactionIds(), pendingTransactionIds).asButton("Назад");
 
         return KeyboardUtils.createMarkupWithFixedColumns(buttons, 3)
             .addRow(backButton);
