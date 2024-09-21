@@ -12,8 +12,9 @@ public class SberRecurringChargeSmsParser extends RegexpSpendingParser<SberRecur
             TIME,
             "Оплата",
             AMOUNT_FIELD + CURRENCY_FIELD,
-            "Автоплатёж",
             TEXT_FIELD,
+            "Следующее списание",
+            DATE,
             "Баланс",
             AMOUNT_FIELD + CURRENCY_FIELD
         );

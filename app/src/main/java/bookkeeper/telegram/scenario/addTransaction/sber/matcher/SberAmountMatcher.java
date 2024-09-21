@@ -13,9 +13,6 @@ public class SberAmountMatcher implements AmountMatcher {
         if (spending instanceof SberPurchaseSms obj) {
             return Optional.of(obj.getPurchaseSum().negate());
         }
-        if (spending instanceof SberFpsPurchaseSms obj) {
-            return Optional.of(obj.getPurchaseSum().negate());
-        }
         if (spending instanceof SberRecurringChargeSms obj) {
             return Optional.of(obj.getChargeSum().negate());
         }

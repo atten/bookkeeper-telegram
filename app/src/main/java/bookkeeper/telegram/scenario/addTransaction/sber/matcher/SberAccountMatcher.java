@@ -22,9 +22,6 @@ public class SberAccountMatcher implements AccountMatcher {
         if (spending instanceof SberPurchaseSms obj) {
             return Optional.of(getSberAccount(obj.getAccountName(), obj.getAccountCurrency(), user));
         }
-        if (spending instanceof SberFpsPurchaseSms obj) {
-            return Optional.of(getSberAccount(obj.getAccountName(), obj.getAccountCurrency(), user));
-        }
         if (spending instanceof SberRecurringChargeSms obj) {
             return Optional.of(getSberAccount(obj.getAccountName(), obj.getAccountCurrency(), user));
         }

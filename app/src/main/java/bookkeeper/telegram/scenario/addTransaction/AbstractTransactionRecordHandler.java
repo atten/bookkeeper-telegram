@@ -61,9 +61,10 @@ public class AbstractTransactionRecordHandler implements AbstractHandler {
 
         // handle errors
         if (!errors.isEmpty()) {
-            if (transactions.isEmpty())
+            if (transactions.isEmpty()) {
                 // failed to parse all messages -> skip handling
                 return false;
+            }
 
             // partial success -> display error message
             var summary = getErrorMessage(results);

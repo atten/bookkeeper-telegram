@@ -14,6 +14,7 @@ public class SberIgnoreSmsParser implements SpendingParser<SberIgnoreSms> {
         "Никому его не сообщайте",
         "Вход в Сбер",
         "Первый платёж со счёта",
+        "» изменён",
         "Выплата кешбэка по оплате через СБП"
     );
 
