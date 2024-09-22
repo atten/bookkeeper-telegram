@@ -107,6 +107,15 @@ class AddTransactionScenarioTest {
     }
 
     @Test
+    void addSingleTransactionAndApprove(FakeSession session) {
+        session
+            .sendText("фантики 15")
+            .expectContains("Добавлена запись")
+            .pressButton("Подтвердить")
+            .expectContains("Добавлена запись");
+    }
+
+    @Test
     void addMultipleFreehandTransactions(FakeSession session) {
         session
             .sendText("еда 220\nтранспорт 1000")

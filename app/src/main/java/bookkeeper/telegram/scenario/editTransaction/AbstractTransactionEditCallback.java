@@ -8,11 +8,12 @@ import java.util.List;
 @Getter
 class AbstractTransactionEditCallback extends CallbackMessage {
     private final long transactionId;
-    private List<Long> allTransactionIds = List.of();
+    private List<Long> allTransactionIds;
     private List<Long> pendingTransactionIds = List.of();
 
     AbstractTransactionEditCallback(long transactionId) {
         this.transactionId = transactionId;
+        this.allTransactionIds = List.of(transactionId);
     }
 
     AbstractTransactionEditCallback setTransactionIds(List<Long> allTransactionIds, List<Long> pendingTransactionIds) {
