@@ -52,8 +52,7 @@ public class StringUtils {
      * 100.55 ₽ (credit) | +100.55 ₽ (debit)
      */
     public static String getAmount(BigDecimal amount, Currency currency) {
-        return String.format(
-            "%s %s",
+        return "%s %s".formatted(
             amount.negate().toString().replace("-", "+"),
             currency.getSymbol()
         );
@@ -63,8 +62,7 @@ public class StringUtils {
      * -10 101 ₽ (credit) | 10 101 ₽ (debit)
      */
     public static String getRoundedAmount(BigDecimal amount, Currency currency) {
-        return String.format(
-            "%,.0f %s",
+        return "%,.0f %s".formatted(
             amount,
             currency.getSymbol()
         );
@@ -74,8 +72,7 @@ public class StringUtils {
      * -10 101 ₽ (credit) | +10 101 ₽ (debit)
      */
     public static String getRoundedAmountSigned(BigDecimal amount, Currency currency) {
-        return String.format(
-            "%+,.0f %s",
+        return "%+,.0f %s".formatted(
             amount,
             currency.getSymbol()
         ).replace("+0 ", "0 ");
@@ -106,7 +103,7 @@ public class StringUtils {
         var name = account.getName();
 
         if (!name.contains(currency))
-            name = String.format("%s (%s)", name, currency);
+            name = "%s (%s)".formatted(name, currency);
 
         if (Character.isLetterOrDigit(name.charAt(0)))
             name = ICON_ACCOUNT + name;
@@ -168,7 +165,7 @@ public class StringUtils {
      * pluralize for %s-strings
      */
     public static String pluralizeTemplate(Integer count, String single, String few, String many) {
-        return String.format(pluralize(count, single, few, many), count);
+        return pluralize(count, single, few, many).formatted(count);
     }
 
     /**
@@ -189,7 +186,7 @@ public class StringUtils {
     }
 
     public static String strikeoutMessage(String message) {
-        return String.format("<del>%s</del>", message);
+        return "<del>%s</del>".formatted(message);
     }
 
     public static BigDecimal parseAmount(String amount) {

@@ -29,7 +29,7 @@ public class TinkoffReplenishSmsParser implements SpendingParser<TinkoffReplenis
         try {
             replenishCurrency = Currency.getInstance(parts[4].replace(".", ""));
         } catch (IllegalArgumentException e) {
-            throw new ParseException(String.format("Cannot parse currency: %s", e), 0);
+            throw new ParseException("Cannot parse currency: %s".formatted(e), 0);
         }
 
         sms.replenishCurrency = replenishCurrency;

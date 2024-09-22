@@ -24,7 +24,7 @@ public class TinkoffWithdrawSmsParser implements SpendingParser<TinkoffWithdrawa
         try {
             currency = Currency.getInstance(parts[4].replace(".", ""));
         } catch (IllegalArgumentException e) {
-            throw new ParseException(String.format("Cannot parse currency: %s", e), 0);
+            throw new ParseException("Cannot parse currency: %s".formatted(e), 0);
         }
 
         sms.cardIdentifier = parts[2].replace(".", "");

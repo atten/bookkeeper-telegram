@@ -81,8 +81,7 @@ class SearchTransactionsByRawMessageHandler implements AbstractHandler {
             var transaction = searchResult.remove(0);
             var dateString = transaction.date().format(DateTimeFormatter.ofPattern("dd.MM"));
             response.add(
-                String.format(
-                    "%s %s. %s. %s\n`%s`",
+                "%s %s. %s. %s\n`%s`".formatted(
                     getNumberIcon(counter),
                     dateString,
                     transaction.getExpenditure().getVerboseName(),
@@ -93,7 +92,7 @@ class SearchTransactionsByRawMessageHandler implements AbstractHandler {
         }
 
         if (!searchResult.isEmpty()) {
-            response.add(String.format("(ещё %s)...", getItemsVerbose(searchResult.size())));
+            response.add("(ещё %s)...".formatted(getItemsVerbose(searchResult.size())));
         }
 
         return response.toString();

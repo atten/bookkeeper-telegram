@@ -33,6 +33,6 @@ public class KeyboardUtils {
     static String getInlineKeyboardVerboseString(InlineKeyboardMarkup keyboard) {
         var joiner = new StringJoiner(", ");
         getButtons(keyboard).stream().map(InlineKeyboardButton::text).forEach(joiner::add);
-        return String.format("[%s]", joiner);
+        return "[%s]".formatted(joiner);
     }
 }

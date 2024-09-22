@@ -2,8 +2,8 @@ package bookkeeper.telegram;
 
 import bookkeeper.service.ApplicationConfiguration;
 import com.pengrad.telegrambot.TelegramBot;
-import dagger.Provides;
 import dagger.Module;
+import dagger.Provides;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Persistence;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +15,10 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Properties;
 
 @Module
 @Slf4j
@@ -74,7 +77,7 @@ class Config {
         if (sql.isEmpty())
             return;
 
-        log.info(String.format("Run %s...", sqlPath));
+        log.info("Run %s...".formatted(sqlPath));
         var query = entityManager.createNativeQuery(sql);
         try {
             query.getSingleResult();

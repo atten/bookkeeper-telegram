@@ -25,7 +25,7 @@ class StringShortener {
         if (input.length() <= maxStringLength)
             return input;
 
-        var shrinked = String.format("#%s", input.hashCode());
+        var shrinked = "#%s".formatted(input.hashCode());
         if (shrinked.length() > maxStringLength)
             throw new RuntimeException("Not enough shrinked");
 

@@ -62,7 +62,7 @@ public class FakeSession {
      */
     public FakeSession expectStartsWith(String responseText) {
         var lastMessageText = getLastResponseText();
-        assertTrue(lastMessageText.startsWith(responseText), String.format("Expected message to start with '%s': %s", responseText, lastMessageText));
+        assertTrue(lastMessageText.startsWith(responseText), "Expected message to start with '%s': %s".formatted(responseText, lastMessageText));
         return this;
     }
 
@@ -71,7 +71,7 @@ public class FakeSession {
      */
     public FakeSession expectContains(String responseText) {
         var lastMessageText = getLastResponseTextNormalized();
-        assertTrue(lastMessageText.contains(responseText), String.format("Expect message to contain '%s': %s", responseText, lastMessageText));
+        assertTrue(lastMessageText.contains(responseText), "Expect message to contain '%s': %s".formatted(responseText, lastMessageText));
         return this;
     }
 

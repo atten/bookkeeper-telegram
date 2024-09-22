@@ -16,7 +16,7 @@ class AccountResponseFactory {
             .add("Имя: " + account.getName())
             .add("Валюта: " + account.getCurrency().getCurrencyCode())
             .add(getVisibilityDetails(account))
-            .add(String.format("Заметки: %s", account.getNotes() != null ? "```\n" + account.getNotes() + "```" : "нет"));
+            .add("Заметки: %s".formatted(account.getNotes() != null ? "```\n" + account.getNotes() + "```" : "нет"));
 
         return lines.toString();
     }

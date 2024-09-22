@@ -46,7 +46,7 @@ class Bot {
             .sorted(Comparator.comparing(AbstractHandler::getPriority))
             .toList();
         this.userRepository = userRepository;
-        log.info(String.format("%s handlers loaded", this.handlers.size()));
+        log.info("%s handlers loaded".formatted(this.handlers.size()));
     }
 
     void notifyStartup(int telegramUserId) {
@@ -104,7 +104,7 @@ class Bot {
             } catch (HandlerInterruptException e) {
                 processed = true;
                 log.warn(e.toString());
-                request.sendMessage(String.format("%s Ошибка: `%s`", StringUtils.ICON_ERROR, e.getLocalizedMessage()));
+                request.sendMessage("%s Ошибка: `%s`".formatted(StringUtils.ICON_ERROR, e.getLocalizedMessage()));
                 break;
             }
             if (processed)

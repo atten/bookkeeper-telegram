@@ -60,7 +60,7 @@ public class FreehandAccountMatcher implements AccountMatcher {
 
     private Account getOrCreateAccount(TelegramUser user, Currency currency) {
         return repository.getMatchOrCreate(
-            String.format("Счёт %s", currency.getCurrencyCode()),
+            "Счёт %s".formatted(currency.getCurrencyCode()),
             currency,
             user
         );

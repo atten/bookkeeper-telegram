@@ -34,6 +34,6 @@ public class TelegramUser implements Serializable {
     private String languageCode;
 
     public String toString() {
-        return String.format("%s (id=%d)", username, telegramId);
+        return "%s (id=%d)".formatted(username, telegramId);
     }
 }

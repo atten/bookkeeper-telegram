@@ -133,9 +133,9 @@ public class Request {
         if (update.message() != null)
             return update.message().text();
         if (update.callbackQuery() != null)
-            return String.format("(callback): %s", update.callbackQuery().data());
+            return "(callback): %s".formatted(update.callbackQuery().data());
         if (update.editedMessage() != null)
-            return String.format("(edited): %s", update.editedMessage().text());
+            return "(edited): %s".formatted(update.editedMessage().text());
         return update.toString();
     }
 

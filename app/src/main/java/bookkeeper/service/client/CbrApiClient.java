@@ -12,7 +12,10 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.Currency;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class CbrApiClient {
     private static final String API_URL = "http://cbr.ru/scripts/XML_daily.asp";
@@ -22,7 +25,7 @@ public class CbrApiClient {
     public CbrApiClient() { }
 
     public Map<Currency, BigDecimal> getRubExchangeRates(LocalDate date) throws IOException {
-        var url = String.format("%s?date_req=%s", API_URL, date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        var url = "%s?date_req=%s".formatted(API_URL, date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         var request = new Request.Builder().url(url).build();
         var xmlMapper = new XmlMapper();
         try (var response = CLIENT.newCall(request).execute()) {

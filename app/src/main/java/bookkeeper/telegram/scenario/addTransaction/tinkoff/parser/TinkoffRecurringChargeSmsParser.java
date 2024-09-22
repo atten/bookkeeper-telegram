@@ -32,7 +32,7 @@ public class TinkoffRecurringChargeSmsParser implements SpendingParser<TinkoffRe
         try {
             currency = Currency.getInstance(currencyPart);
         } catch (IllegalArgumentException e) {
-            throw new ParseException(String.format("Cannot parse currency: %s", e), 0);
+            throw new ParseException("Cannot parse currency: %s".formatted(e), 0);
         }
 
         sms.chargeSum = parseAmount(chargeSumPart);

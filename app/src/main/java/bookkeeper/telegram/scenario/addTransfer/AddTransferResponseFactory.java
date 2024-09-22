@@ -24,12 +24,11 @@ class AddTransferResponseFactory {
     }
 
     String getDescriptionForMonth(AddTransferCallback memory) {
-        return String.format("Выберите месяц перевода (выбран %s):", getMonthYearShort(memory.getMonthOffset()));
+        return "Выберите месяц перевода (выбран %s):".formatted(getMonthYearShort(memory.getMonthOffset()));
     }
 
     String getDescriptionForTransferCreated(AccountTransfer transfer) {
-        return String.format(
-            "Перевод %s ► %s (%s) создан!",
+        return "Перевод %s ► %s (%s) создан!".formatted(
             transfer.getWithdrawAccount().getName(),
             transfer.getDepositAccount().getName(),
             getDateShort(transfer.date())

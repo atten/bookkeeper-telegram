@@ -31,7 +31,7 @@ public class TransactionResponseFactory {
 
         if (counterMap.size() == 1) {
             var transaction = transactions.get(0);
-            var item = String.format("в *%s*", transaction.getExpenditure().getVerboseName());
+            var item = "в *%s*".formatted(transaction.getExpenditure().getVerboseName());
             if (!isTransactionRecent(transaction)) {
                 // add date (e.g. 10.01.23) if transaction was added earlier than 12h ago
                 item += " " + getDateShort(transaction.date());
@@ -41,13 +41,13 @@ public class TransactionResponseFactory {
             counterMap
                 .entrySet()
                 .stream()
-                .map(entry -> String.format("• %s в *%s*", entry.getValue(), entry.getKey().getVerboseName()))
+                .map(entry -> "• %s в *%s*".formatted(entry.getValue(), entry.getKey().getVerboseName()))
                 .forEach(items::add);
         }
 
         var totalAmount = transactions.stream().map(AccountTransaction::getAmount).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
         var account = transactions.get(0).getAccount();
-        var accountVerbose = String.format("на счёт %s", account.getName());
+        var accountVerbose = "на счёт %s".formatted(account.getName());
         var totalAccountVerbose = getAmount(totalAmount, account);
 
         return totalItemsVerbose + " " + accountVerbose + ":\n" + items + "\n" + "на сумму " + totalAccountVerbose;
@@ -62,7 +62,7 @@ public class TransactionResponseFactory {
         if (remainingCount == 0)
             remaining = "Это последняя запись.";
         else
-            remaining = String.format("Осталось: %s", remainingCount);
+            remaining = "Осталось: %s".formatted(remainingCount);
 
         var response = new StringJoiner("\n\n");
         response.add("`%s`".formatted(transaction.getRaw()));

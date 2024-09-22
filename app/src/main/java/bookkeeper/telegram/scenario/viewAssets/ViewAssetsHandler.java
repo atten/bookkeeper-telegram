@@ -1,10 +1,10 @@
 package bookkeeper.telegram.scenario.viewAssets;
 
-import bookkeeper.telegram.scenario.editAccount.ListAccountsCallback;
 import bookkeeper.service.telegram.AbstractHandler;
 import bookkeeper.service.telegram.KeyboardUtils;
 import bookkeeper.service.telegram.Request;
 import bookkeeper.service.telegram.StringUtils;
+import bookkeeper.telegram.scenario.editAccount.ListAccountsCallback;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 
 import javax.inject.Inject;
@@ -63,7 +63,7 @@ class ViewAssetsHandler implements AbstractHandler {
 
         if (page >= 1)
             buttons.add(prevPageButton);
-        if (!message.endsWith(String.format(" %s / %s", page + 1, page + 1)))
+        if (!message.endsWith(" %s / %s".formatted(page + 1, page + 1)))
             buttons.add(nextPageButton);
 
         buttons.add(prevMonthButton);

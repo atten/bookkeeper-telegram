@@ -32,7 +32,7 @@ class RenameAccountCallbackHandler implements AbstractHandler {
 
         var account = accountRepository.get(cm.getAccountId()).orElseThrow(() -> new AccountNotFound(cm.getAccountId()));
         var kb = new InlineKeyboardMarkup(new ShowAccountDetailsCallback(account.getId()).asButton("Назад"));
-        request.editMessage(String.format("Введите *в ответе* новое имя для %s:", account.getName()), kb);
+        request.editMessage("Введите *в ответе* новое имя для %s:".formatted(account.getName()), kb);
 
         return true;
     }

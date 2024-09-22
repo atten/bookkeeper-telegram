@@ -1,7 +1,7 @@
 package bookkeeper.telegram.scenario.addTransaction.tinkoff.parser;
 
-import bookkeeper.service.parser.SpendingParser;
 import bookkeeper.service.parser.MarkSpendingParser;
+import bookkeeper.service.parser.SpendingParser;
 
 import java.text.ParseException;
 import java.util.Arrays;
@@ -26,7 +26,7 @@ public class TinkoffTransferSmsParser implements SpendingParser<TinkoffTransferS
         try {
             currency = Currency.getInstance(parts[4].replace(".", ""));
         } catch (IllegalArgumentException e) {
-            throw new ParseException(String.format("Cannot parse currency: %s", e), 0);
+            throw new ParseException("Cannot parse currency: %s".formatted(e), 0);
         }
 
         sms.transferSum = parseAmount(parts[3]);

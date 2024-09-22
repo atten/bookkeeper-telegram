@@ -34,25 +34,24 @@ class AssetsResponseFactory {
             .skip((long) page * pageSize)
             .limit(pageSize)
             .map(asset ->
-                String.format(
-                    "<b>%s</b>\n%s | %s",
+                "<b>%s</b>\n%s | %s".formatted(
                     getAccountDisplayName(asset.account()),
-                    String.format("%,.2f %s", asset.balance(), asset.account().getCurrency().getSymbol()),
-                    String.format("%.1f%%", asset.getExchangeBalance().floatValue() / netAssets * 100)
+                    "%,.2f %s".formatted(asset.balance(), asset.account().getCurrency().getSymbol()),
+                    "%.1f%%".formatted(asset.getExchangeBalance().floatValue() / netAssets * 100)
                 )
             )
             .forEach(content::add);
 
         var result = new StringJoiner("\n\n");
         result
-            .add(String.format(ICON_ACCOUNT + " Сводка по непустым счетам на конец <b>%s</b>:", getMonthYearRelative(monthOffset)))
+            .add(ICON_ACCOUNT + " Сводка по непустым счетам на конец <b>%s</b>:".formatted(getMonthYearRelative(monthOffset)))
             .add(content.toString())
             .add("________________________________")
-            .add(String.format(ICON_RATES + " <b>Курс на %s</b>:\n%s", getDateShort(exchangeDate), exchangeRatesVerbose(exchangeRates)))
-            .add(String.format(ICON_ASSETS + " <b>Итог за %s</b>: %,.2f %s", getMonthName(monthOffset), netAssets, assetQuery.getExchangeCurrency().getSymbol()));
+            .add(ICON_RATES + " <b>Курс на %s</b>:\n%s".formatted(getDateShort(exchangeDate), exchangeRatesVerbose(exchangeRates)))
+            .add(ICON_ASSETS + " <b>Итог за %s</b>: %,.2f %s".formatted(getMonthName(monthOffset), netAssets, assetQuery.getExchangeCurrency().getSymbol()));
 
         var pagesCount = (int) Math.ceil((double) assets.size() / pageSize);
-        result.add(String.format("Страница %s / %s", page + 1, pagesCount));
+        result.add("Страница %s / %s".formatted(page + 1, pagesCount));
 
         return result.toString();
     }
@@ -65,7 +64,7 @@ class AssetsResponseFactory {
             .entrySet()
             .stream()
             .filter(entry -> !entry.getValue().equals(BigDecimal.ONE))  // skip native currency
-            .map(entry -> String.format("%s %s", entry.getKey().getCurrencyCode(), entry.getValue()))
+            .map(entry -> "%s %s".formatted(entry.getKey().getCurrencyCode(), entry.getValue()))
             .collect(Collectors.joining(" | "));
     }
 }

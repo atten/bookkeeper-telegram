@@ -42,10 +42,10 @@ public abstract class CallbackMessage implements Serializable {
         if (template.startsWith("%s"))
             monthName = StringUtils.capitalize(monthName);
 
-        var templated = String.format(template, monthName);
+        var templated = template.formatted(monthName);
 
         if (forward)
-            return asButton(String.format("%s ▶️", templated));
-        return asButton(String.format("◀️ %s", templated));
+            return asButton("%s ▶️".formatted(templated));
+        return asButton("◀️ %s".formatted(templated));
     }
 }

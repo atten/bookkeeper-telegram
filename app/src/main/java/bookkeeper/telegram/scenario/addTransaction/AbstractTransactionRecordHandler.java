@@ -87,13 +87,13 @@ public class AbstractTransactionRecordHandler implements AbstractHandler {
 
         for (var result : results) {
             if (result.error().isPresent()) {
-                errorStrings.add(String.format("%s `%s`: %s", StringUtils.getNumberIcon(messageCount), result.rawMessage(), result.error().get().getLocalizedMessage()));
+                errorStrings.add("%s `%s`: %s".formatted(StringUtils.getNumberIcon(messageCount), result.rawMessage(), result.error().get().getLocalizedMessage()));
                 errorsCount++;
             }
             messageCount++;
         }
 
-        var summary = String.format("%s / %s строк не распознано:", errorsCount, results.size());
+        var summary = "%s / %s строк не распознано:".formatted(errorsCount, results.size());
         return summary + "\n" + errorStrings;
     }
 
@@ -116,8 +116,7 @@ public class AbstractTransactionRecordHandler implements AbstractHandler {
                     .toList();
 
                 if (!ignoreCaseDuplicates.isEmpty()) {
-                    var message = String.format(
-                        "%s `%s`: %s",
+                    var message = "%s `%s`: %s".formatted(
                         StringUtils.getNumberIcon(messageCount),
                         result.rawMessage(),
                         StringUtils.pluralizeTemplate(
@@ -138,7 +137,7 @@ public class AbstractTransactionRecordHandler implements AbstractHandler {
             return Optional.empty();
         }
 
-        var summary = String.format("%s Обнаружены повторяющиеся записи за %s:", StringUtils.ICON_WARNING, StringUtils.getMonthName(monthOffset));
+        var summary = "%s Обнаружены повторяющиеся записи за %s:".formatted(StringUtils.ICON_WARNING, StringUtils.getMonthName(monthOffset));
         return Optional.of(summary + "\n\n" + duplicateStrings);
     }
 }

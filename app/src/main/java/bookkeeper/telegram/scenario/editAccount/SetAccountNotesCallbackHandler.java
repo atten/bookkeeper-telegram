@@ -32,7 +32,7 @@ class SetAccountNotesCallbackHandler implements AbstractHandler {
 
         var account = accountRepository.get(cm.getAccountId()).orElseThrow(() -> new AccountNotFound(cm.getAccountId()));
         var kb = new InlineKeyboardMarkup(new ShowAccountDetailsCallback(account.getId()).asButton("Назад"));
-        request.editMessage(String.format("Введите *в ответе* заметки для %s:", account.getName()), kb);
+        request.editMessage("Введите *в ответе* заметки для %s:".formatted(account.getName()), kb);
 
         return true;
     }

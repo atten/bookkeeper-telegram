@@ -60,17 +60,17 @@ class MonthlyExpensesResponseFactory {
                     continue;
                 }
 
-                lines.add(String.format(formatString, expenditure.getVerboseName(), roundedAmountString(amount)));
+                lines.add(formatString.formatted(expenditure.getVerboseName(), roundedAmountString(amount)));
             }
 
             lines.add("```");
         }
 
-        lines.add(String.format("*\uD83D\uDCDA Всего за %s*", getMonthYearShort(monthOffset)));
+        lines.add("*\uD83D\uDCDA Всего за %s*".formatted(getMonthYearShort(monthOffset)));
         lines.add("```");
-        lines.add(String.format("%-7s %s", "Расходы", getRoundedAmountMulti(creditByCurrency)));
-        lines.add(String.format("%-7s %s", "Доходы", getRoundedAmountMulti(debitByCurrency)));
-        lines.add(String.format("%-7s %s", "Баланс", getRoundedAmountMulti(allByCurrency)));
+        lines.add("%-7s %s".formatted("Расходы", getRoundedAmountMulti(creditByCurrency)));
+        lines.add("%-7s %s".formatted("Доходы", getRoundedAmountMulti(debitByCurrency)));
+        lines.add("%-7s %s".formatted("Баланс", getRoundedAmountMulti(allByCurrency)));
         lines.add("```");
 
         return lines.toString();
@@ -86,6 +86,6 @@ class MonthlyExpensesResponseFactory {
     }
 
     private String roundedAmountString(BigDecimal value) {
-        return String.format("% ,.0f", value.negate()).replace("-", "+");
+        return "% ,.0f".formatted(value.negate()).replace("-", "+");
     }
 }

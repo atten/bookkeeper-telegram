@@ -29,14 +29,15 @@ class AnnualWorthResponseFactory {
             var assets = assetQuery.getMonthlyAssets(user, monthOffset);
             var netAssets = AssetQuery.getNetAssetsValue(assets);
             var netAssetsDelta = netAssets - prevNetAssets;
-            var netAssetMillions = String.format("%.2f", netAssets / 1000 / 1000);
-            var netAssetsDeltaKilos = String.format("%+.2f", netAssetsDelta / 1000);
+            var netAssetMillions = "%.2f".formatted(netAssets / 1000 / 1000);
+            var netAssetsDeltaKilos = "%+.2f".formatted(netAssetsDelta / 1000);
             var monthStr = StringUtils.capitalize(getMonthName(monthOffset));
 
             // don't include Dec of previous year
             if (month > 0) {
                 rows.add(
-                    String.format("`%3.3s %5.5sM (%5.5sK)`", monthStr, netAssetMillions, netAssetsDeltaKilos)
+                    "`%3.3s %5.5sM (%5.5sK)`"
+                        .formatted(monthStr, netAssetMillions, netAssetsDeltaKilos)
                         // if delta does not fully fit into 5 characters, remove redundant comma
                         .replace(",K", " K")
                         // if delta has empty fraction part, remove extra precision

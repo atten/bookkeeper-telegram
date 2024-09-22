@@ -54,9 +54,9 @@ class AddTransferHandler implements AbstractHandler {
             return false;
 
         var lines = List.of(
-                String.format("Синтаксис: `%s <from_amount> <from_currency> <to_amount> <to_currency>`", COMMAND),
-                String.format("Пример №1: `%s 1000 rub 10 usd`", COMMAND),
-                String.format("Пример №2: `%s 1000 rub` (если суммы и валюты совпадают)", COMMAND)
+            "Синтаксис: `%s <from_amount> <from_currency> <to_amount> <to_currency>`".formatted(COMMAND),
+            "Пример №1: `%s 1000 rub 10 usd`".formatted(COMMAND),
+            "Пример №2: `%s 1000 rub` (если суммы и валюты совпадают)".formatted(COMMAND)
         );
 
         request.sendMessage(String.join("\n", lines));
