@@ -9,8 +9,8 @@ public class SberRefundSmsParser extends RegexpSpendingParser<SberRefundSms> {
         super(
             SberRefundSms.class,
             ACCOUNT_FIELD,
-            TIME,
-            "Отмена" + OPTIONAL_TEXT,
+            DATETIME,
+            nonCapturingGroup("Отмена", "возврат") + OPTIONAL_TEXT,
             AMOUNT_FIELD + CURRENCY_FIELD,
             TEXT_FIELD,
             "Баланс:",
