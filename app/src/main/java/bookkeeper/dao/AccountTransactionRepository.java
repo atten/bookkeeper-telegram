@@ -10,10 +10,7 @@ import jakarta.persistence.EntityManager;
 import javax.inject.Inject;
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Reusable
 public class AccountTransactionRepository {
@@ -35,9 +32,13 @@ public class AccountTransactionRepository {
     }
 
     public List<AccountTransaction> findRecentAdded(Account account, int count) {
-        var sql = "SELECT i FROM AccountTransaction i WHERE account=:account ORDER BY id DESC LIMIT :count";
+        return findRecentAdded(Set.of(account), count);
+    }
+
+    public List<AccountTransaction> findRecentAdded(Collection<Account> accounts, int count) {
+        var sql = "SELECT i FROM AccountTransaction i WHERE account IN :accounts ORDER BY id DESC LIMIT :count";
         var query = manager.createQuery(sql, AccountTransaction.class)
-            .setParameter("account", account)
+            .setParameter("accounts", accounts)
             .setParameter("count", count);
         return query.getResultList();
     }

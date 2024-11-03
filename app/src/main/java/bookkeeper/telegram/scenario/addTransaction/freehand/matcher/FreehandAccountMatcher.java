@@ -10,10 +10,9 @@ import bookkeeper.service.parser.Spending;
 import bookkeeper.telegram.scenario.addTransaction.freehand.parser.FreehandRecord;
 import bookkeeper.telegram.scenario.addTransaction.freehand.parser.FreehandRecordWithCurrency;
 
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.Currency;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class FreehandAccountMatcher implements AccountMatcher {
     private final AccountRepository repository;
@@ -45,17 +44,17 @@ public class FreehandAccountMatcher implements AccountMatcher {
     }
 
     /**
-     * Find account among provided with most recent added transaction.
+     * Find account among provided with the biggest count of recently added transactions.
      */
     private Optional<Account> getLastUsedAccount(Collection<Account> accounts) {
-        var recentTransactions = accounts.stream()
-            .map(account -> transactionRepository.findRecentAdded(account, 1))
-            .flatMap(Collection::stream)
-            .sorted(Comparator.comparing(AccountTransaction::getCreatedAt).reversed());
-
-        return recentTransactions
+        return transactionRepository.findRecentAdded(accounts, 3)
+            .stream()
             .map(AccountTransaction::getAccount)
-            .findFirst();
+            .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+            .entrySet()
+            .stream()
+            .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
+            .map(Map.Entry::getKey).findFirst();
     }
 
     private Account getOrCreateAccount(TelegramUser user, Currency currency) {

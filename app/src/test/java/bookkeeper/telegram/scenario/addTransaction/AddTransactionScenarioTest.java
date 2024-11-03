@@ -125,6 +125,16 @@ class AddTransactionScenarioTest {
     }
 
     @Test
+    void addFreehandTransactionsAndDetectCurrency(FakeSession session) {
+        session
+            .sendText("картошка 220 BYN")
+            .sendText("капуста 100 BYN")
+            .sendText("крокодил 1000 USD")
+            .sendText("лук 100")  // BYN is expected to be most used currency despite USD was the latest
+            .expectContains("на сумму 100 BYN");
+    }
+
+    @Test
     void showErrorMessageOnPartialSuccess(FakeSession session) {
         session
             .sendText("еда 220\nblahblah")

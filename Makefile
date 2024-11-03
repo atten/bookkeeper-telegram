@@ -16,6 +16,9 @@ build:
 db_shell:
 	docker exec -it bookkeeper-postgres-dev psql -U bookkeeper -d bookkeeper
 
+db_shell_plus:
+	pgcli postgres://bookkeeper:bookkeeper@localhost:5434/bookkeeper
+
 db_recreate:
 	docker stop bookkeeper-postgres-dev
 	docker container rm bookkeeper-postgres-dev
