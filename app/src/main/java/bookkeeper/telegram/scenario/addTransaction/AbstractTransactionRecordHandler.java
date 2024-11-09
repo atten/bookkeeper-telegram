@@ -31,8 +31,8 @@ public class AbstractTransactionRecordHandler implements AbstractHandler {
      * Parse record list and display summary.
      * 1. Take telegram message contains one or more raw transactions.
      * 2. Transform them to AccountTransaction and put to AccountTransactionRepository.
-     * 3. In case of partial success (some records have been parsed, some haven't), don't save them and display error message.
-     * 4. Save all successfully parsed transactions.
+     * 3. Save all successfully parsed transactions.
+     * 4. In case of partial success (some records have been parsed, some haven't), display warning message.
      * 5. In case of duplicated transactions found, display warning message.
      */
     public Boolean handle(Request request) throws AccountTransactionNotParsed {
@@ -60,27 +60,25 @@ public class AbstractTransactionRecordHandler implements AbstractHandler {
             .toList();
 
         // handle errors
-        if (!errors.isEmpty()) {
-            if (transactions.isEmpty()) {
-                // failed to parse all messages -> skip handling
-                return false;
-            }
-
-            // partial success -> display error message
-            var summary = getErrorMessage(results);
-            throw new AccountTransactionNotParsed(summary);
+        if (!errors.isEmpty() && transactions.isEmpty()) {
+            // failed to parse all messages -> skip handling
+            return false;
         }
 
+        // partial success -> display warning message
+        var unidentifiedMessage = getUnidentifiedLinesWarningMessage(results);
+
         // detect duplicates
-        var duplicatesMessage = getDuplicatesMessage(results);
+        var duplicatesMessage = getDuplicatesWarningMessage(results);
 
         transactions.forEach(transactionRepository::save);
         request.replyMessage(getResponseMessage(transactions), getResponseKeyboard(transactions));
+        unidentifiedMessage.ifPresent(request::replyMessage);
         duplicatesMessage.ifPresent(request::replyMessage);
         return true;
     }
 
-    private static String getErrorMessage(List<TransactionParserRegistry.TransactionParseResult> results) {
+    private static Optional<String> getUnidentifiedLinesWarningMessage(List<TransactionParserRegistry.TransactionParseResult> results) {
         var errorStrings = new StringJoiner("\n");
         var errorsCount = 0;
         var messageCount = 1;
@@ -93,11 +91,15 @@ public class AbstractTransactionRecordHandler implements AbstractHandler {
             messageCount++;
         }
 
-        var summary = "%s / %s строк не распознано:".formatted(errorsCount, results.size());
-        return summary + "\n" + errorStrings;
+        if (errorsCount == 0) {
+            return Optional.empty();
+        }
+
+        var summary = "%s %s / %s строк не распознано:".formatted(StringUtils.ICON_WARNING, errorsCount, results.size());
+        return Optional.of(summary + "\n" + errorStrings);
     }
 
-    private Optional<String> getDuplicatesMessage(List<TransactionParserRegistry.TransactionParseResult> results) {
+    private Optional<String> getDuplicatesWarningMessage(List<TransactionParserRegistry.TransactionParseResult> results) {
         var duplicateStrings = new StringJoiner("\n");
         var duplicatesCount = 0;
         var messageCount = 1;

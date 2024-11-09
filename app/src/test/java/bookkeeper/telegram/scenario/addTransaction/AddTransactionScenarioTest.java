@@ -135,10 +135,10 @@ class AddTransactionScenarioTest {
     }
 
     @Test
-    void showErrorMessageOnPartialSuccess(FakeSession session) {
+    void showWarningMessageOnPartialSuccess(FakeSession session) {
         session
             .sendText("еда 220\nblahblah")
-            .expectContains("Ошибка")
+            .expectHistoryContains("Добавлена запись")
             .expectContains("1 / 2 строк не распознано");
     }
 
