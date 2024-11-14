@@ -13,7 +13,7 @@ public class RegexpSpendingParser<T extends Spending> implements SpendingParser<
     protected static String DATE = "[\\d.]+?";
     protected static String TIME = "[\\d:]+";
     protected static String DATETIME = "[\\d.:\\s]+?";
-    protected static String AMOUNT_FIELD = "([\\d\\s.,]+)";
+    protected static String AMOUNT_FIELD = "\\+?([\\d\\s.,]+)";
     protected static String CURRENCY_FIELD = "(\\D+?)";
     protected static String OPTIONAL_TEXT = ".*?";
     protected static String TEXT_FIELD = "(.+?)";

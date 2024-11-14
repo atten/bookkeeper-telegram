@@ -10,7 +10,7 @@ public class SberReplenishSmsWithSenderParser extends RegexpSpendingParser<SberR
             SberReplenishSmsWithSender.class,
             ACCOUNT_FIELD,
             TIME,
-            "Перевод",
+            "Перевод" + OPTIONAL_TEXT,
             AMOUNT_FIELD + CURRENCY_FIELD,
             "от",
             TEXT_FIELD,
