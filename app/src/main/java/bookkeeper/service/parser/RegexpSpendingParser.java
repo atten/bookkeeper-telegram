@@ -13,9 +13,10 @@ public class RegexpSpendingParser<T extends Spending> implements SpendingParser<
     protected static String DATE = "[\\d.]+?";
     protected static String TIME = "[\\d:]+";
     protected static String DATETIME = "[\\d.:\\s]+?";
+    protected static String TEXT = ".+?";
+    protected static String OPTIONAL_TEXT = ".*?";
     protected static String AMOUNT_FIELD = "\\+?([\\d\\s.,]+)";
     protected static String CURRENCY_FIELD = "(\\D+?)";
-    protected static String OPTIONAL_TEXT = ".*?";
     protected static String TEXT_FIELD = "(.+?)";
 
     private final Pattern pattern;
@@ -30,7 +31,7 @@ public class RegexpSpendingParser<T extends Spending> implements SpendingParser<
     }
 
     public RegexpSpendingParser(Class<T> clazz, String... fieldPatterns) {
-        String delimiter = "[.:\\s]+";
+        String delimiter = "[.,:\\s]+";
         String terminator = "$";
 
         var builder = new StringJoiner(delimiter);
