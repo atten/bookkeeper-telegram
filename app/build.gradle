@@ -2,7 +2,7 @@ plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
     id 'application'
     // docker image builder
-    id 'com.google.cloud.tools.jib' version "3.3.2"
+    id 'com.google.cloud.tools.jib' version "3.4.4"
     // coverage
     id 'jacoco'
     // code generation
