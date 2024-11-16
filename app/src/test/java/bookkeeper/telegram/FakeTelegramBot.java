@@ -1,16 +1,17 @@
 package bookkeeper.telegram;
 
-import com.pengrad.telegrambot.BotUtils;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.request.BaseRequest;
 import com.pengrad.telegrambot.response.BaseResponse;
 import com.pengrad.telegrambot.response.SendResponse;
+import com.pengrad.telegrambot.utility.BotUtils;
 import lombok.Getter;
 
 import java.util.LinkedList;
 
+@SuppressWarnings("ALL")
+@Getter
 class FakeTelegramBot extends TelegramBot {
-    @Getter
     private final LinkedList<BaseRequest> sentMessages = new LinkedList<>();
 
     FakeTelegramBot() {

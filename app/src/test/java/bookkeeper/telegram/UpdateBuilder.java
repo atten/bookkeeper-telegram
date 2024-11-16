@@ -1,18 +1,23 @@
 package bookkeeper.telegram;
 
+import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
-import com.pengrad.telegrambot.BotUtils;
+import com.google.gson.GsonBuilder;
 import com.pengrad.telegrambot.model.CallbackQuery;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.User;
 import com.pengrad.telegrambot.request.BaseRequest;
+import com.pengrad.telegrambot.utility.BotUtils;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 class UpdateBuilder {
-    private static final Gson gson = new Gson();
+    private static final Gson gson = new GsonBuilder()
+        // for proper serialization (callbackData -> callback_data)
+        .setFieldNamingStrategy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+        .create();
 
     private User user;
     private final Map<String, Object> messageMap = createMap();
