@@ -6,8 +6,10 @@ plugins {
     // coverage
     id 'jacoco'
     // code generation
-    id "io.freefair.lombok" version "8.3"
+    id "io.freefair.lombok" version "8.11"
 }
+
+sourceCompatibility = JavaVersion.VERSION_21
 
 repositories {
     mavenCentral()

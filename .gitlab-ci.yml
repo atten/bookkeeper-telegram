@@ -12,7 +12,7 @@ before_script:
 
 build:
   stage: build
-  image: amazoncorretto:17-alpine
+  image: amazoncorretto:21-alpine
   only:
     - main
   cache:
@@ -30,7 +30,7 @@ build:
 
 run-tests:
   stage: test
-  image: amazoncorretto:17-alpine
+  image: amazoncorretto:21-alpine
   services:
     - redis:alpine
     - postgres:15-alpine
