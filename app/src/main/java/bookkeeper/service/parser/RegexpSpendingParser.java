@@ -3,6 +3,9 @@ package bookkeeper.service.parser;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Currency;
 import java.util.List;
 import java.util.StringJoiner;
@@ -10,14 +13,15 @@ import java.util.regex.Pattern;
 
 public class RegexpSpendingParser<T extends Spending> implements SpendingParser<T> {
     protected static String ACCOUNT_FIELD = "(\\S+)";
-    protected static String DATE = "[\\d.]+?";
     protected static String TIME = "[\\d:]+";
+    protected static String DATE = "[\\d.]+?";
+    protected static String DATE_FIELD = "([\\d.]+?)";
     protected static String DATETIME = "[\\d.:\\s]+?";
-    protected static String TEXT = ".+?";
-    protected static String OPTIONAL_TEXT = ".*?";
     protected static String AMOUNT_FIELD = "\\+?([\\d\\s.,]+)";
     protected static String CURRENCY_FIELD = "(\\D+?)";
-    protected static String TEXT_FIELD = "(.+?)";
+    protected static String OPTIONAL_TEXT = ".*?";
+    protected static String TEXT = ".+?";
+    protected static String TEXT_FIELD = "[\\\"«]?(.+?)[\\\"»]?";  // trim quotes: "abc", «abc» -> abc
 
     private final Pattern pattern;
     private final Class<T> spendingClass;
@@ -61,6 +65,8 @@ public class RegexpSpendingParser<T extends Spending> implements SpendingParser<
                 value = parseCurrency(rawValue);
             } else if (field.getType().equals(BigDecimal.class)) {
                 value = parseAmount(rawValue);
+            } else if (field.getType().equals(LocalDate.class)) {
+                value = parseLocalDate(rawValue);
             } else {
                 value = rawValue;
             }
@@ -100,11 +106,25 @@ public class RegexpSpendingParser<T extends Spending> implements SpendingParser<
     }
 
     private static Currency parseCurrency(String currency) throws ParseException {
-        var value = currency.replace("р", "RUB");
+        var value = currency
+            .replace(".", "") // remove trailing dot e.g. "р." -> "р"
+            .replace("р", "RUB");
         try {
             return Currency.getInstance(value);
         } catch (IllegalArgumentException e) {
             throw new ParseException(currency, 0);
         }
+    }
+
+    private static LocalDate parseLocalDate(String localDate) throws ParseException {
+        var datePatterns = new String[]{"dd.MM.yyyy", "d.MM.yyyy"};
+        for (var datePattern : datePatterns) {
+            try {
+                return LocalDate.parse(localDate, DateTimeFormatter.ofPattern(datePattern));
+            } catch (DateTimeParseException ignored) {}
+        }
+
+        // no patterns matched
+        throw new ParseException(localDate, 0);
     }
 }

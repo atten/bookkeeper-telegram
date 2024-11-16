@@ -1,33 +1,23 @@
 package bookkeeper.telegram.scenario.addTransaction.tinkoff.parser;
 
 import bookkeeper.service.parser.MarkSpendingParser;
-import bookkeeper.service.parser.SpendingParser;
-
-import java.text.ParseException;
-import java.util.Arrays;
+import bookkeeper.service.parser.RegexpSpendingParser;
 
 @MarkSpendingParser(provider = "tinkoff")
-public class TinkoffReplenishWithSenderSmsParser implements SpendingParser<TinkoffReplenishSms> {
+public class TinkoffReplenishWithSenderSmsParser extends RegexpSpendingParser<TinkoffReplenishWithSenderSms> {
 
-    @Override
-    public TinkoffReplenishWithSenderSms parse(String rawMessage) throws ParseException {
-        String[] parts = rawMessage.split(" ");
-        if (!rawMessage.startsWith("Пополнение") || parts.length < 9)
-            throw new ParseException(rawMessage, 0);
-
-        var senderPart = String.join(" ", Arrays.copyOfRange(parts, 5, parts.length - 3));
-        var smsWithoutSenderText = rawMessage.replace(senderPart + " ", "");
-
-        // parse sender and reuse TinkoffReplenishSmsParser for the rest of fields
-        var smsWithoutSender = new TinkoffReplenishSmsParser().parse(smsWithoutSenderText);
-        var sms = new TinkoffReplenishWithSenderSms();
-
-        sms.replenishSender = senderPart.replace(".", "");
-        sms.replenishSum = smsWithoutSender.replenishSum;
-        sms.replenishCurrency = smsWithoutSender.replenishCurrency;
-        sms.accountBalance = smsWithoutSender.accountBalance;
-        sms.accountCurrency = smsWithoutSender.accountCurrency;
-
-        return sms;
+    public TinkoffReplenishWithSenderSmsParser() {
+        super(
+            TinkoffReplenishWithSenderSms.class,
+            "Пополнение",
+            "счет",
+            TEXT,
+            AMOUNT_FIELD,
+            CURRENCY_FIELD,
+            TEXT_FIELD,
+            "Доступно",
+            AMOUNT_FIELD,
+            CURRENCY_FIELD
+        );
     }
 }

@@ -22,6 +22,9 @@ public class TinkoffAccountMatcher implements AccountMatcher {
         if (spending instanceof TinkoffPurchaseSms obj) {
             return Optional.of(getTinkoffAccount(obj.accountCurrency, user));
         }
+        if (spending instanceof TinkoffPurchaseSmsWithDate obj) {
+            return Optional.of(getTinkoffAccount(obj.accountCurrency, user));
+        }
         if (spending instanceof TinkoffTransferSms obj) {
             return Optional.of(getTinkoffAccount(obj.accountCurrency, user));
         }
@@ -32,6 +35,9 @@ public class TinkoffAccountMatcher implements AccountMatcher {
             return Optional.of(getTinkoffAccount(obj.accountCurrency, user));
         }
         if (spending instanceof TinkoffReplenishSms obj) {
+            return Optional.of(getTinkoffAccount(obj.accountCurrency, user));
+        }
+        if (spending instanceof TinkoffReplenishWithSenderSms obj) {
             return Optional.of(getTinkoffAccount(obj.accountCurrency, user));
         }
         if (spending instanceof TinkoffDepositInterestSms obj) {

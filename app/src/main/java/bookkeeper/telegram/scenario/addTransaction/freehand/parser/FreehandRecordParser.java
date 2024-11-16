@@ -3,9 +3,8 @@ package bookkeeper.telegram.scenario.addTransaction.freehand.parser;
 import bookkeeper.service.parser.MarkSpendingParser;
 import bookkeeper.service.parser.SpendingParser;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
-
-import static bookkeeper.service.telegram.StringUtils.parseAmount;
 
 @MarkSpendingParser(provider = "freehand")
 public class FreehandRecordParser implements SpendingParser<FreehandRecord> {
@@ -23,7 +22,9 @@ public class FreehandRecordParser implements SpendingParser<FreehandRecord> {
         var record = new FreehandRecord();
         record.setDescription(rawMessage.substring(0, rawMessage.lastIndexOf(' ')));
         try {
-            record.setAmount(parseAmount(strAmount));
+            // Replace comma (localized amount format) with dot (normal BigDecimal format).
+            var amount = new BigDecimal(strAmount.replace(",", "."));
+            record.setAmount(amount);
         } catch (NumberFormatException e) {
             throw new ParseException(rawMessage, 0);
         }

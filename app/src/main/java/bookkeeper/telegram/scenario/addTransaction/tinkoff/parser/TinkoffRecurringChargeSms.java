@@ -13,9 +13,9 @@ import java.util.Optional;
  */
 @Data
 public class TinkoffRecurringChargeSms implements Spending {
+    public String destination;  // на мегафон
     public BigDecimal chargeSum;  // 360
     public Currency chargeCurrency;  // RUB
-    public String destination;  // на мегафон
 
     @Override
     public String getMerchant() {

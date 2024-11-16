@@ -18,6 +18,13 @@ public class TinkoffAmountMatcher implements AmountMatcher {
 
             return Optional.of(obj.purchaseSum.negate());
         }
+        if (spending instanceof TinkoffPurchaseSmsWithDate obj) {
+            // "1 RUB" expenses are ephemeral and should be ignored (e.g. Mos.Transport uses it to check card validity)
+            if (obj.purchaseSum.equals(BigDecimal.ONE) && obj.purchaseCurrency.equals(Currency.getInstance("RUB")))
+                return Optional.of(BigDecimal.ZERO);
+
+            return Optional.of(obj.purchaseSum.negate());
+        }
         if (spending instanceof TinkoffFpsPurchaseSms obj) {
             return Optional.of(obj.purchaseSum.negate());
         }
@@ -28,6 +35,9 @@ public class TinkoffAmountMatcher implements AmountMatcher {
             return Optional.of(obj.chargeSum.negate());
         }
         if (spending instanceof TinkoffReplenishSms obj) {
+            return Optional.of(obj.replenishSum);
+        }
+        if (spending instanceof TinkoffReplenishWithSenderSms obj) {
             return Optional.of(obj.replenishSum);
         }
         if (spending instanceof TinkoffDepositInterestSms obj) {
