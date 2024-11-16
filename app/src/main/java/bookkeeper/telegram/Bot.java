@@ -46,7 +46,7 @@ class Bot {
             .sorted(Comparator.comparing(AbstractHandler::getPriority))
             .toList();
         this.userRepository = userRepository;
-        log.info("%s handlers loaded".formatted(this.handlers.size()));
+        log.info("{} handlers loaded", this.handlers.size());
     }
 
     void notifyStartup(int telegramUserId) {

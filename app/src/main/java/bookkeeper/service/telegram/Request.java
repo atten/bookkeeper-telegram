@@ -79,7 +79,7 @@ public class Request {
             .stream(getReplyToMessage().get().replyMarkup().inlineKeyboard())
             .flatMap(Arrays::stream)
             .toList()
-            .get(0);    // button index to extract callback from
+            .getFirst();    // button index to extract callback from
         return callbackMessageRegistry.getCallbackMessage(button.callbackData());
     }
 

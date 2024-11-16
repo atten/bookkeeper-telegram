@@ -77,7 +77,7 @@ class Config {
         if (sql.isEmpty())
             return;
 
-        log.info("Run %s...".formatted(sqlPath));
+        log.info("Run {}...", sqlPath);
         var query = entityManager.createNativeQuery(sql);
         try {
             query.getSingleResult();

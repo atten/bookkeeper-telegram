@@ -74,10 +74,10 @@ public class AssetQuery {
         var exchangeRates = exchangeRateRepository.getExchangeRates(currencies, exchangeCurrency, exchangeDate);
         var missingRates = currencies.stream().filter(currency -> !exchangeRates.containsKey(currency)).collect(Collectors.toSet());
 
-        log.info("Exchange date: %s".formatted(exchangeDate));
-        log.info("Required exchange rates: %s".formatted(currencies));
-        log.info("Existing exchange rates: %s".formatted(exchangeRates));
-        log.info("Missing  exchange rates: %s".formatted(missingRates));
+        log.info("Exchange date: {}", exchangeDate);
+        log.info("Required exchange rates: {}", currencies);
+        log.info("Existing exchange rates: {}", exchangeRates);
+        log.info("Missing  exchange rates: {}", missingRates);
 
         if (!missingRates.isEmpty()) {
             try {
@@ -87,7 +87,7 @@ public class AssetQuery {
             } catch (IOException e) {
                 log.error(e.toString());
             } finally {
-                log.info("Complete exchange rates: %s".formatted(exchangeRates));
+                log.info("Complete exchange rates: {}", exchangeRates);
             }
         }
         return exchangeRates;
