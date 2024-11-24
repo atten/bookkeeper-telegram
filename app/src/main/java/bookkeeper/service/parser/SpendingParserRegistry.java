@@ -4,8 +4,7 @@ import org.reflections.Reflections;
 
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * An aggregate of multiple parsers.
@@ -49,10 +48,31 @@ public class SpendingParserRegistry {
 
         if (candidates.size() == 1)
             // single result as expected
-            return candidates.get(0);
+            return candidates.getFirst();
 
         if (candidates.isEmpty())
             throw new ParseException("No suitable SmsParser found.", 0);
+
+        // Multiple SmsParsers found suitable.
+        // Do the best guess and suggest the most detailed candidate (if all candidates have same balance).
+        // Otherwise, a result is ambiguous and should be handled manually.
+        var balances = candidates
+            .stream()
+            .map(Spending::getBalance)
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .toList();
+
+        var uniqueBalances = Set.copyOf(balances);
+
+        if (balances.size() == candidates.size() && uniqueBalances.size() == 1) {
+            // most detailed candidate = class with the largest number of fields
+            return candidates
+                .stream()
+                .sorted(Comparator.comparingInt(spending -> spending.getClass().getFields().length).reversed())
+                .toList()
+                .getFirst();
+        }
 
         throw new ParseException("Multiple SmsParser found suitable: %s".formatted(candidates), 0);
     }
