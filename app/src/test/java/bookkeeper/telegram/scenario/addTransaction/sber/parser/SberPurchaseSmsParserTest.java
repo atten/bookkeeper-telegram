@@ -75,4 +75,19 @@ class SberPurchaseSmsParserTest {
         assertEquals(referenceSms, sms);
     }
 
+    @Test
+    void parseOk_5() throws ParseException {
+        var sms = parser.parse("MIR-1234 12:57 перевод 593р Т-Банк Баланс: 1 891.76р");
+
+        var referenceSms = new SberPurchaseSms();
+
+        referenceSms.setAccountName("MIR-1234");
+        referenceSms.setPurchaseSum(new BigDecimal("593"));
+        referenceSms.setPurchaseCurrency(Currency.getInstance("RUB"));
+        referenceSms.setMerchant("Т-Банк");
+        referenceSms.setAccountBalance(new BigDecimal("1891.76"));
+        referenceSms.setAccountCurrency(Currency.getInstance("RUB"));
+
+        assertEquals(referenceSms, sms);
+    }
 }

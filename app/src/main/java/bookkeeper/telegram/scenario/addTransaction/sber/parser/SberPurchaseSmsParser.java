@@ -10,7 +10,7 @@ public class SberPurchaseSmsParser extends RegexpSpendingParser<SberPurchaseSms>
             SberPurchaseSms.class,
             ACCOUNT_FIELD,
             TIME,
-            nonCapturingGroup("Покупка", "Покупка по СБП", "Оплата"),
+            nonCapturingGroup("Покупка", "Покупка по СБП", "Оплата", "Перевод"),
             AMOUNT_FIELD + CURRENCY_FIELD,
             TEXT_FIELD,
             "Баланс",
