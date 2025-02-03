@@ -4,7 +4,10 @@ import org.reflections.Reflections;
 
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * An aggregate of multiple parsers.
@@ -35,12 +38,15 @@ public class SpendingParserRegistry {
         return registry;
     }
 
+    @SuppressWarnings("rawtypes")
     public Spending parse(String rawMessage) throws ParseException {
         ArrayList<Spending> candidates = new ArrayList<>();
+        ArrayList<SpendingParser> parsers = new ArrayList<>();
 
         for (SpendingParser<? extends Spending> spendingParser : spendingParsers) {
             try {
                 candidates.add(spendingParser.parse(rawMessage));
+                parsers.add(spendingParser);
             } catch (ParseException e) {
                 // will try another parser
             }
@@ -54,18 +60,19 @@ public class SpendingParserRegistry {
             throw new ParseException("No suitable SmsParser found.", 0);
 
         // Multiple SmsParsers found suitable.
-        // Do the best guess and suggest the most detailed candidate (if all candidates have same balance).
-        // Otherwise, a result is ambiguous and should be handled manually.
-        var balances = candidates
+        // Do the best guess and suggest the most detailed candidate.
+        // Otherwise, parser with a higher rank wins.
+        var uniqueFieldsCount = candidates
             .stream()
-            .map(Spending::getBalance)
-            .filter(Optional::isPresent)
-            .map(Optional::get)
-            .toList();
+            .map(spending -> spending.getClass().getFields().length)
+            .collect(Collectors.toSet());
 
-        var uniqueBalances = Set.copyOf(balances);
+        var uniqueRanks = parsers
+            .stream()
+            .map(SpendingParser::weight)
+            .collect(Collectors.toSet());
 
-        if (balances.size() == candidates.size() && uniqueBalances.size() == 1) {
+        if (uniqueFieldsCount.size() != 1) {
             // most detailed candidate = class with the largest number of fields
             return candidates
                 .stream()
@@ -73,6 +80,16 @@ public class SpendingParserRegistry {
                 .toList()
                 .getFirst();
         }
+
+        if (uniqueRanks.size() != 1) {
+            return parsers
+                .stream()
+                .sorted(Comparator.comparingInt(SpendingParser::weight))
+                .toList()
+                .getLast()
+                .parse(rawMessage);
+        }
+
 
         throw new ParseException("Multiple SmsParser found suitable: %s".formatted(candidates), 0);
     }

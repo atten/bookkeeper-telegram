@@ -11,11 +11,16 @@ public class SberReplenishSmsWithSenderParser extends RegexpSpendingParser<SberR
             ACCOUNT_FIELD,
             TIME,
             "Перевод" + OPTIONAL_TEXT,
-            AMOUNT_FIELD + CURRENCY_FIELD,
+            AMOUNT_FIELD_POSITIVE + CURRENCY_FIELD,
             "от",
             TEXT_FIELD,
             "Баланс:",
             AMOUNT_FIELD + CURRENCY_FIELD
         );
+    }
+
+    @Override
+    public int weight() {
+        return 1;
     }
 }

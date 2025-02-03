@@ -17,7 +17,8 @@ public class RegexpSpendingParser<T extends Spending> implements SpendingParser<
     protected static String DATE = "[\\d.]+?";
     protected static String DATE_FIELD = "([\\d.]+?)";
     protected static String DATETIME = "[\\d.:\\s]+?";
-    protected static String AMOUNT_FIELD = "\\+?([\\d\\s.,]+)";
+    protected static String AMOUNT_FIELD = "([\\d\\s.,+-]+)";
+    protected static String AMOUNT_FIELD_POSITIVE = "\\+?([\\d\\s.,]+)";  // omit plus sign
     protected static String CURRENCY_FIELD = "(\\D+?)";
     protected static String OPTIONAL_TEXT = ".*?";
     protected static String TEXT = ".+?";
@@ -102,13 +103,18 @@ public class RegexpSpendingParser<T extends Spending> implements SpendingParser<
             amount
                 .replace(" ", "")
                 .replace(",", ".")
+                // Treat '+100' amount as negative spending (double inversion means refill).
+                .replace("+", "-")
         );
     }
 
     private static Currency parseCurrency(String currency) throws ParseException {
         var value = currency
+            .toUpperCase()
             .replace(".", "") // remove trailing dot e.g. "р." -> "р"
-            .replace("р", "RUB");
+            .replace("РУБ", "RUB")
+            .replace("Р", "RUB")
+            .replace("$", "USD");
         try {
             return Currency.getInstance(value);
         } catch (IllegalArgumentException e) {

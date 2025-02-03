@@ -15,8 +15,10 @@ class AddTransactionScenarioTest {
     private static Collection<String> validFreehandInputs() {
         return List.of(
             "еда 220",
-            "еда 220 USD",
-            "еда 220 usd",
+            "еда 220 руб",
+            "еда 220 rub",
+            "еда 220 RUB",
+            "еда 220 $",
             "транспорт 1000",
             "транспорт 100.50",
             "транспорт 100,50",

@@ -19,4 +19,9 @@ public class SberRecurringChargeSmsParser extends RegexpSpendingParser<SberRecur
             AMOUNT_FIELD + CURRENCY_FIELD
         );
     }
+
+    @Override
+    public int weight() {
+        return 1;
+    }
 }

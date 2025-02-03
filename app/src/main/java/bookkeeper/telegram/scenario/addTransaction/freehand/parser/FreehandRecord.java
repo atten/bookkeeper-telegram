@@ -12,8 +12,8 @@ import java.util.Optional;
  */
 @Data
 public class FreehandRecord implements Spending {
-    private String description;  // Еда
-    private BigDecimal amount;  // 220
+    public String description;  // Еда
+    public BigDecimal amount;  // 220
 
     @Override
     public String getMerchant() {
