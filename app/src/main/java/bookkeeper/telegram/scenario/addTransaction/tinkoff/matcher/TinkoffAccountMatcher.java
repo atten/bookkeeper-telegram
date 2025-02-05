@@ -46,7 +46,7 @@ public class TinkoffAccountMatcher implements AccountMatcher {
         if (spending instanceof TinkoffWithdrawalSms obj) {
             return Optional.of(getTinkoffAccount(obj.getAccountCurrency(), user));
         }
-        if (spending instanceof TinkoffIgnoreSms) {
+        if (spending instanceof TinkoffEmptySms) {
             var defaultCurrency = Currency.getInstance("RUB");
             return Optional.of(getTinkoffAccount(defaultCurrency, user));
         }

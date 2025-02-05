@@ -7,7 +7,7 @@ import java.text.ParseException;
 import java.util.List;
 
 @MarkSpendingParser(provider = "tinkoff")
-public class TinkoffIgnoreSmsParser implements SpendingParser<TinkoffIgnoreSms> {
+public class TinkoffEmptySmsParser implements SpendingParser<TinkoffEmptySms> {
     private final List<String> ignore = List.of(
         "Никому не говорите код",
         "Завтра выполним",
@@ -24,8 +24,8 @@ public class TinkoffIgnoreSmsParser implements SpendingParser<TinkoffIgnoreSms> 
     );
 
     @Override
-    public TinkoffIgnoreSms parse(String rawMessage) throws ParseException {
+    public TinkoffEmptySms parse(String rawMessage) throws ParseException {
         ignore.stream().filter(rawMessage::startsWith).findAny().orElseThrow(() -> new ParseException(rawMessage, 0));
-        return new TinkoffIgnoreSms();
+        return new TinkoffEmptySms();
     }
 }

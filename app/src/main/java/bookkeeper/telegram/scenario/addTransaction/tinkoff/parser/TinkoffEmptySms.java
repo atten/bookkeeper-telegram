@@ -10,7 +10,7 @@ import java.util.Optional;
  * Example:
  * Никому не говорите код 1234! Вход в Тинькофф в 17:30 19.08.23
  */
-public class TinkoffIgnoreSms implements Spending {
+public class TinkoffEmptySms implements Spending {
 
     @Override
     public String getMerchant() {

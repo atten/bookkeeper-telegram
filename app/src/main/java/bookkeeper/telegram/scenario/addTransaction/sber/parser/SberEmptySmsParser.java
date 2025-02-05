@@ -7,7 +7,7 @@ import java.text.ParseException;
 import java.util.List;
 
 @MarkSpendingParser(provider = "sber")
-public class SberIgnoreSmsParser implements SpendingParser<SberIgnoreSms> {
+public class SberEmptySmsParser implements SpendingParser<SberEmptySms> {
     private final List<String> ignoreIfContains = List.of(
         "изменён. Следующий перевод",
         "не исполнен по техническим причинам",
@@ -22,8 +22,8 @@ public class SberIgnoreSmsParser implements SpendingParser<SberIgnoreSms> {
     );
 
     @Override
-    public SberIgnoreSms parse(String rawMessage) throws ParseException {
+    public SberEmptySms parse(String rawMessage) throws ParseException {
         ignoreIfContains.stream().filter(rawMessage::contains).findAny().orElseThrow(() -> new ParseException(rawMessage, 0));
-        return new SberIgnoreSms();
+        return new SberEmptySms();
     }
 }
