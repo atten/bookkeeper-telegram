@@ -36,7 +36,7 @@ public class RegexpSpendingParser<T extends Spending> implements SpendingParser<
     }
 
     public RegexpSpendingParser(Class<T> clazz, String... fieldPatterns) {
-        String delimiter = "[.,:\\s]+";
+        String delimiter = "[.,:()\\s]+";
         String terminator = "$";
 
         var builder = new StringJoiner(delimiter);
