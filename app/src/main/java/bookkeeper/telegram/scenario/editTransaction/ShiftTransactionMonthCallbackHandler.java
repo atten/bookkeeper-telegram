@@ -6,7 +6,7 @@ import bookkeeper.service.telegram.AbstractHandler;
 import bookkeeper.service.telegram.Request;
 
 import javax.inject.Inject;
-import java.time.temporal.ChronoUnit;
+import java.time.ZoneId;
 
 import static bookkeeper.telegram.scenario.editTransaction.TransactionResponseFactory.getResponseKeyboard;
 import static bookkeeper.telegram.scenario.editTransaction.TransactionResponseFactory.getResponseMessage;
@@ -32,8 +32,7 @@ class ShiftTransactionMonthCallbackHandler implements AbstractHandler {
 
         var transaction = transactionRepository.get(cm.getTransactionId()).orElseThrow(() -> new AccountTransactionNotFound(cm.getTransactionId()));
         var pendingTransactionsCount = cm.getPendingTransactionIds().size();
-        var days = 30 * cm.getMonthOffset();
-        transaction.setTimestamp(transaction.getTimestamp().plus(days, ChronoUnit.DAYS));
+        transaction.setTimestamp(transaction.date().plusMonths(cm.getMonthOffset()).atStartOfDay(ZoneId.systemDefault()).toInstant());
 
         if (pendingTransactionsCount == 0) {
             request.editMessage(getResponseMessage(transaction), getResponseKeyboard(transaction));
