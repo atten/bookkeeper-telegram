@@ -15,6 +15,7 @@ public class TinkoffEmptySmsParser implements SpendingParser<TinkoffEmptySms> {
         "Оцените решение вопроса",
         "Детали полета",
         "По вашему рейсу",
+        "Изменилось расписание рейса",
         "Полис путешественника",
         "Посоветуйте",
         "Советуйте",
