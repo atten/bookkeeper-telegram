@@ -37,6 +37,7 @@ db_restore: db_recreate
 
 up_test_env:
 	docker compose -f docker-compose.dev.yml up -d
+	sleep 3
 	docker exec -i bookkeeper-postgres-dev psql -U bookkeeper -d postgres -c "CREATE DATABASE bookkeeper_test"
 
 test:
