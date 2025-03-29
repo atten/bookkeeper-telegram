@@ -21,6 +21,7 @@ public class TinkoffEmptySmsParser implements SpendingParser<TinkoffEmptySms> {
         "Советуйте",
         "Дарим",
         "Отказ",
+        "Вход в",
         "Вклад"
     );
 
