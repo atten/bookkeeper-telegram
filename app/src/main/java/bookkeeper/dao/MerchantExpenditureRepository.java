@@ -59,7 +59,8 @@ public class MerchantExpenditureRepository {
         }
 
         if (normalized.isEmpty()) {
-            throw new RuntimeException("Merchant %s can't be normalized".formatted(merchant));
+            // fallback to original merchant if normalization fails
+            return merchant;
         }
         return normalized.toString();
     }
