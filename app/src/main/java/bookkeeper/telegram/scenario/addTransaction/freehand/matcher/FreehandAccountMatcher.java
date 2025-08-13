@@ -7,16 +7,18 @@ import bookkeeper.dao.entity.AccountTransaction;
 import bookkeeper.dao.entity.TelegramUser;
 import bookkeeper.service.matcher.AccountMatcher;
 import bookkeeper.service.parser.Spending;
+import bookkeeper.service.parser.SpendingParserRegistry;
 import bookkeeper.telegram.scenario.addTransaction.freehand.parser.FreehandRecord;
 import bookkeeper.telegram.scenario.addTransaction.freehand.parser.FreehandRecordWithCurrency;
 
+import java.text.ParseException;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class FreehandAccountMatcher implements AccountMatcher {
     private final AccountRepository repository;
     private final AccountTransactionRepository transactionRepository;
+    private final SpendingParserRegistry spendingParserRegistry = SpendingParserRegistry.ofAllParsers();
 
     public FreehandAccountMatcher(AccountRepository repository, AccountTransactionRepository transactionRepository) {
         this.repository = repository;
@@ -44,13 +46,12 @@ public class FreehandAccountMatcher implements AccountMatcher {
     }
 
     /**
-     * Find account among provided with the biggest count of recently added transactions.
+     * Find account among provided with the biggest count of recently added freehand transactions.
      */
     private Optional<Account> getLastUsedAccount(Collection<Account> accounts) {
-        return transactionRepository.findRecentAdded(accounts, 3)
+        return transactionRepository.findRecentAdded(accounts, 10)
             .stream()
-            .map(AccountTransaction::getAccount)
-            .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+            .collect(Collectors.toMap(AccountTransaction::getAccount, i -> getSpending(i) instanceof FreehandRecord ? 1 : 0, Integer::sum))
             .entrySet()
             .stream()
             .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
@@ -63,5 +64,16 @@ public class FreehandAccountMatcher implements AccountMatcher {
             currency,
             user
         );
+    }
+
+    /**
+     * restore spending from transaction raw message
+     */
+    private Spending getSpending(AccountTransaction transaction) {
+        try {
+            return spendingParserRegistry.parse(transaction.getRaw());
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
