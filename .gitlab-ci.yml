@@ -33,18 +33,15 @@ run-tests:
   image: amazoncorretto:21-alpine
   services:
     - redis:alpine
-    - postgres:15-alpine
+    - name: ydbplatform/local-ydb:latest
+      alias: local-ydb
   variables:
     # test container
     JEDIS_REDIS_PATH: "redis://redis:6379"
-    JAKARTA_PERSISTENCE_JDBC_URL: "jdbc:postgresql://postgres:5432/bookkeeper_test"
-    JAKARTA_PERSISTENCE_JDBC_USER: bookkeeper_test
-    JAKARTA_PERSISTENCE_JDBC_PASSWORD: bookkeeper_test
+    JAKARTA_PERSISTENCE_JDBC_URL: "jdbc:ydb:grpc://local-ydb:2136/local"
 
-    # postgres container
-    POSTGRES_DATABASE: bookkeeper_test
-    POSTGRES_USER: bookkeeper_test
-    POSTGRES_PASSWORD: bookkeeper_test
+    # YDB container
+    GRPC_PORT: 2136
   only:
     variables:
       # run for protected branches only

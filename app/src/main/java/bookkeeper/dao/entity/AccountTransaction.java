@@ -17,7 +17,7 @@ import java.util.Currency;
 @Table(name = "account_transactions")
 public class AccountTransaction {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Getter
     private long id;
 

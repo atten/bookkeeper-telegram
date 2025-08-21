@@ -38,27 +38,30 @@ public class AccountRepository {
         return Optional.ofNullable(manager.find(Account.class, id));
     }
 
+    @SuppressWarnings("unchecked")
     public List<Account> filter(TelegramUser user) {
-        var sql = "SELECT i FROM Account i WHERE i.telegramUser = :user ORDER BY i.name";
-        var query = manager.createQuery(sql, Account.class).setParameter("user", user);
-        return query.getResultList();
+        var sql = "SELECT * FROM accounts WHERE telegram_user = :user ORDER BY name";
+        var query = manager.createNativeQuery(sql, Account.class).setParameter("user", user.getTelegramId());
+        return (List<Account>)query.getResultList();
     }
 
+    @SuppressWarnings("unchecked")
     public List<Account> filter(TelegramUser user, Currency currency) {
-        var sql = "SELECT i FROM Account i WHERE i.telegramUser = :user AND i.currency = :currency ORDER BY i.name";
-        var query = manager.createQuery(sql, Account.class)
-                .setParameter("user", user)
+        var sql = "SELECT * FROM accounts WHERE telegram_user = :user AND currency = :currency ORDER BY name";
+        var query = manager.createNativeQuery(sql, Account.class)
+                .setParameter("user", user.getTelegramId())
                 .setParameter("currency", currency.getCurrencyCode());
-        return query.getResultList();
+        return (List<Account>)query.getResultList();
     }
 
+    @SuppressWarnings("unchecked")
     public List<Account> filter(String nameOrNotesContains, Currency currency, TelegramUser user) {
-        var sql = "SELECT i FROM Account i WHERE (i.name ILIKE :text OR i.notes ILIKE :text) AND i.currency=:currency AND i.telegramUser=:telegramUser ORDER BY i.name";
-        var query = manager.createQuery(sql, Account.class)
+        var sql = "SELECT * FROM accounts WHERE (name ILIKE :text OR notes ILIKE :text) AND currency = :currency AND telegram_user = :telegramUser ORDER BY name";
+        var query = manager.createNativeQuery(sql, Account.class)
             .setParameter("text", '%' + nameOrNotesContains + '%')
             .setParameter("currency", currency.getCurrencyCode())
-            .setParameter("telegramUser", user);
-        return query.getResultList();
+            .setParameter("telegramUser", user.getTelegramId());
+        return (List<Account>)query.getResultList();
     }
 
     private Account newAccountFactory(String name, Currency currency, TelegramUser user) {

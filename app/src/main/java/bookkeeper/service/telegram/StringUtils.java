@@ -52,10 +52,13 @@ public class StringUtils {
      * 100.55 ₽ (credit) | +100.55 ₽ (debit)
      */
     public static String getAmount(BigDecimal amount, Currency currency) {
-        return "%s %s".formatted(
-            amount.negate().toString().replace("-", "+"),
+        return "%.2f %s".formatted(
+            amount.negate(),
             currency.getSymbol()
-        );
+        )
+            .replace(",", ".")
+            .replace(".00", "")
+            .replace("-", "+");
     }
 
     /**

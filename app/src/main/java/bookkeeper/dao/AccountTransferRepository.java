@@ -27,17 +27,17 @@ public class AccountTransferRepository {
     }
 
     public BigDecimal getTransferBalance(Account account, int monthOffset) {
-        var monthClause = "date_trunc('month', timestamp) <= date_trunc('month', current_timestamp) + :monthOffset MONTH";
+        var monthClause = "DateTime::MakeDate(DateTime::StartOfMonth(timestamp)) <= DateTime::MakeDate(DateTime::ShiftMonths(DateTime::StartOfMonth(CurrentUtcDate()), :monthOffset))";
         var sql =
                 "SELECT SUM(amount) FROM " +
                 "(" +
-                "    SELECT SUM(depositAmount) AS amount FROM AccountTransfer WHERE depositAccount = :account AND " + monthClause +
+                "    SELECT SUM(deposit_amount) AS amount FROM account_transfers WHERE deposit_account_id = :account AND " + monthClause +
                 "    UNION " +
-                "    SELECT SUM(withdrawAmount) AS amount FROM AccountTransfer WHERE withdrawAccount = :account AND " + monthClause +
+                "    SELECT SUM(withdraw_amount) AS amount FROM account_transfers WHERE withdraw_account_id = :account AND " + monthClause +
                 ") amounts";
 
-        var query = manager.createQuery(sql)
-                .setParameter("account", account)
+        var query = manager.createNativeQuery(sql)
+                .setParameter("account", account.getId())
                 .setParameter("monthOffset", monthOffset);
 
         var result = query.getSingleResult();

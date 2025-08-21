@@ -34,7 +34,7 @@ public class CheckResiduesResponseFactory {
             if (latestTransactions.isEmpty())
                 continue;
 
-            var transaction = latestTransactions.get(0);
+            var transaction = latestTransactions.getFirst();
             var spending = getSpending(transaction);
             if (spending.getBalance().isEmpty())
                 continue;

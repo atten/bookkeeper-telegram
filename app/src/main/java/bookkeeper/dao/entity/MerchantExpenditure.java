@@ -12,7 +12,7 @@ import java.time.Instant;
 @Table(name = "merchant_expenditures", uniqueConstraints = { @UniqueConstraint(columnNames = {"merchant", "expenditure", "telegram_user"}) })
 public class MerchantExpenditure {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)

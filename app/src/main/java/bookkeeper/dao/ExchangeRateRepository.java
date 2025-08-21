@@ -39,18 +39,19 @@ public class ExchangeRateRepository {
             .map(Currency::getCurrencyCode)
             .collect(Collectors.toSet());
 
-        var sql = "SELECT i from ExchangeRate i " +
-                "WHERE i.singularCurrency IN :currenciesFilter " +
-                "AND i.exchangeCurrency IN :currenciesFilter " +
-                "AND date(i.timestamp) = :date";
+        var sql = "SELECT * FROM exchange_rates " +
+                "WHERE singular_currency IN :currenciesFilter " +
+                "AND exchange_currency IN :currenciesFilter " +
+                "AND DateTime::MakeDate(timestamp) = :date";
 
-        var query = manager.createQuery(sql, ExchangeRate.class)
+        var query = manager.createNativeQuery(sql, ExchangeRate.class)
             .setParameter("currenciesFilter", currenciesFilter)
             .setParameter("date", date);
 
         for (var row : query.getResultList()) {
-            if (row.getExchangeCurrency().equals(exchangeCurrency)) {
-                rates.put(row.getSingularCurrency(), row.getPrice());
+            var exchangeRate = (ExchangeRate)row;
+            if (exchangeRate.getExchangeCurrency().equals(exchangeCurrency)) {
+                rates.put(exchangeRate.getSingularCurrency(), exchangeRate.getPrice());
             }
         }
 

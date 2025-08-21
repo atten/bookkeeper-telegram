@@ -13,32 +13,25 @@ build:
 
 # ========================= DATABASE ============================
 
-db_shell:
-	docker exec -it bookkeeper-postgres-dev psql -U bookkeeper -d bookkeeper
+YDB_CMD = echo 1234 > /tmp/bookkeeper-password && ydb --endpoint grpc://127.0.0.1:2136 --database /local --user root --password-file /tmp/bookkeeper-password
 
-db_shell_plus:
-	pgcli postgres://bookkeeper:bookkeeper@localhost:5434/bookkeeper
+db_shell:
+	$(YDB_CMD)
 
 db_recreate:
-	docker stop bookkeeper-postgres-dev
-	docker container rm bookkeeper-postgres-dev
-	docker volume rm bookkeeper-postgres-dev
-	docker compose -f docker-compose.dev.yml up -d postgres_dev
+	docker stop bookkeeper-ydb-dev
+	docker container rm bookkeeper-ydb-dev
+	docker compose -f docker-compose.dev.yml up -d ydb_dev
 
 db_dump:
-	docker exec -i bookkeeper-postgres-dev pg_dump --user bookkeeper > dump_dev.sql
+	$(YDB_CMD) tools dump --output backup
 
 db_restore: db_recreate
 	sleep 3
-	docker exec -i bookkeeper-postgres-dev psql -U bookkeeper -d bookkeeper < dump_dev.sql
+	$(YDB_CMD) tools restore --input backup --path .
 
 
 # ========================= TESTS ============================
-
-up_test_env:
-	docker compose -f docker-compose.dev.yml up -d
-	sleep 3
-	docker exec -i bookkeeper-postgres-dev psql -U bookkeeper -d postgres -c "CREATE DATABASE bookkeeper_test"
 
 test:
 	./gradlew test

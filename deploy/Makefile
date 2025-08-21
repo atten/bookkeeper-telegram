@@ -8,10 +8,12 @@ logs:
 	docker logs -f --since=30m bookkeeper-app
 
 db_shell:
-	docker exec -it bookkeeper-postgres psql --user ${POSTGRES_USER}
+	ydb --endpoint ${YDB_ENDPOINT} --database ${YDB_DATABASE} --sa-key-file ${YDB_SA_KEY_PATH}
 
 db_dump:
-	docker exec -i bookkeeper-postgres pg_dump --user ${POSTGRES_USER} > dump.sql
+	ydb --endpoint ${YDB_ENDPOINT} --database ${YDB_DATABASE} --sa-key-file ${YDB_SA_KEY_PATH} tools dump --output dump
+	tar -czf dump.tar.gz dump/
+	rm -rf dump/
 
 restart:
 	docker compose restart app

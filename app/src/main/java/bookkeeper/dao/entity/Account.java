@@ -11,7 +11,7 @@ import java.util.Currency;
 @Table(name = "accounts", uniqueConstraints = { @UniqueConstraint(columnNames = { "name", "currency", "telegram_user" }) })
 public class Account {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Getter
     private long id;
 

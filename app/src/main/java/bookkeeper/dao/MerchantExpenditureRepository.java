@@ -5,7 +5,6 @@ import bookkeeper.dao.entity.TelegramUser;
 import bookkeeper.enums.Expenditure;
 import dagger.Reusable;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.NoResultException;
 
 import javax.inject.Inject;
 import java.time.Instant;
@@ -21,25 +20,26 @@ public class MerchantExpenditureRepository {
 
     public Expenditure getPreferredExpenditureForMerchant(String merchant, TelegramUser user) {
         var normalizedMerchant = normalizeMerchant(merchant);
-        var sql = "SELECT i FROM MerchantExpenditure i WHERE i.merchant ILIKE :merchant AND i.telegramUser=:telegramUser ORDER BY i.rank DESC LIMIT 1";
-        var query = manager.createQuery(sql, MerchantExpenditure.class)
+        var sql = "SELECT * FROM merchant_expenditures WHERE merchant ILIKE :merchant AND telegram_user = :telegramUser ORDER BY rank DESC LIMIT 1";
+        var query = manager.createNativeQuery(sql, MerchantExpenditure.class)
             .setParameter("merchant", '%' + normalizedMerchant + '%')
-            .setParameter("telegramUser", user);
+            .setParameter("telegramUser", user.getTelegramId());
+        var result = query.getSingleResultOrNull();
 
-        try {
-            return query.getSingleResult().getExpenditure();
-        } catch (NoResultException e) {
+        if (result != null) {
+            return ((MerchantExpenditure)result).getExpenditure();
+        } else {
             return Expenditure.OTHER;
         }
     }
 
     public void rememberExpenditurePreference(String merchant, Expenditure expenditure, TelegramUser user) {
         var normalizedMerchant = normalizeMerchant(merchant);
-        var sql = "UPDATE MerchantExpenditure i SET rank = rank + 1 WHERE i.expenditure=:expenditure AND i.merchant=:merchant AND i.telegramUser=:telegramUser";
-        var query = manager.createQuery(sql)
+        var sql = "UPDATE merchant_expenditures SET rank = rank + 1 WHERE expenditure = :expenditure AND merchant = :merchant AND telegram_user = :telegramUser";
+        var query = manager.createNativeQuery(sql)
             .setParameter("merchant", normalizedMerchant)
-            .setParameter("expenditure", expenditure)
-            .setParameter("telegramUser", user);
+            .setParameter("expenditure", expenditure.ordinal())
+            .setParameter("telegramUser", user.getTelegramId());
 
         int count = query.executeUpdate();
         if (count == 0) {

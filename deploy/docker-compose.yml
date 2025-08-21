@@ -4,7 +4,6 @@ services:
     container_name: bookkeeper-app
     image: "${DOCKER_IMAGE}"
     links:
-      - postgres
       - redis
     restart: unless-stopped
     environment:
@@ -12,29 +11,10 @@ services:
       - BOT_TOKEN=${BOT_TOKEN}
       - JEDIS_REDIS_PATH=redis://redis:6379
       - JAKARTA_PERSISTENCE_JDBC_URL=${JDBC_URL}
-      - JAKARTA_PERSISTENCE_JDBC_USER=${POSTGRES_USER}
-      - JAKARTA_PERSISTENCE_JDBC_PASSWORD=${POSTGRES_PASSWORD}
-
-  postgres:
-    container_name: bookkeeper-postgres
-    image: 'postgres:15-alpine'
-    restart: unless-stopped
-    environment:
-      - POSTGRES_DATABASE=${POSTGRES_DATABASE}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     volumes:
-      - 'postgres:/var/lib/postgresql/data'
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready", "-d", "bookkeeper" ]
-      interval: 1s
-      timeout: 1s
-      retries: 5
+      - './${YDB_SA_KEY_PATH}:/sa_key.json'
 
   redis:
     container_name: bookkeeper-redis
     image: redis:alpine
     restart: unless-stopped
-
-volumes:
-  postgres: {}

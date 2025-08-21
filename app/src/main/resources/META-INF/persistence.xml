@@ -12,13 +12,13 @@
         <class>bookkeeper.dao.entity.MerchantExpenditure</class>
         <class>bookkeeper.dao.entity.ExchangeRate</class>
         <properties>
-            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
-            <property name="hibernate.hbm2ddl.auto" value="update"/>
+            <property name="hibernate.dialect" value="tech.ydb.hibernate.dialect.YdbDialect"/>
+            <property name="jakarta.persistence.schema-generation.database.action" value="update"/>
             <property name="hibernate.connection.pool_size" value="1"/>
-            <property name="jakarta.persistence.jdbc.driver" value="org.postgresql.Driver"/>
-            <property name="jakarta.persistence.jdbc.url" value="jdbc:postgresql://localhost:5434/bookkeeper"/>
-            <property name="jakarta.persistence.jdbc.user" value="bookkeeper"/>
-            <property name="jakarta.persistence.jdbc.password" value="bookkeeper"/>
+            <property name="jakarta.persistence.jdbc.driver" value="tech.ydb.jdbc.YdbDriver"/>
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:ydb:grpc://localhost:2136/local"/>
+            <property name="jakarta.persistence.jdbc.user" value="root"/>
+            <property name="jakarta.persistence.jdbc.password" value="1234"/>
         </properties>
     </persistence-unit>
 </persistence>

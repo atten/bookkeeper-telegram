@@ -59,6 +59,6 @@ class ViewMonthlyExpensesScenarioTest {
             .pressButton("Разобрать")
             .pressButton("Другое")
             .expectContains(transaction.getRaw())
-            .expectContains("1000.00 ₽");
+            .expectContains("1000 ₽");
     }
 }

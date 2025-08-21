@@ -1,17 +1,16 @@
 services:
 
-  postgres_dev:
-    container_name: bookkeeper-postgres-dev
-    image: 'postgres:15-alpine'
+  ydb_dev:
+    container_name: bookkeeper-ydb-dev
+    image: ydbplatform/local-ydb:latest
     restart: unless-stopped
+    hostname: localhost
     environment:
-      - POSTGRES_DATABASE=bookkeeper
-      - POSTGRES_USER=bookkeeper
-      - POSTGRES_PASSWORD=bookkeeper
-    volumes:
-      - 'postgres_dev:/var/lib/postgresql/data'
+      - MON_PORT=8765
+      - GRPC_PORT=2136
     ports:
-      - '5434:5432'
+      - '2136:2136'
+      - '8765:8765'
 
   redis_dev:
     container_name: bookkeeper-redis-dev
@@ -19,7 +18,3 @@ services:
     restart: unless-stopped
     ports:
       - '6390:6379'
-
-volumes:
-  postgres_dev:
-    name: bookkeeper-postgres-dev

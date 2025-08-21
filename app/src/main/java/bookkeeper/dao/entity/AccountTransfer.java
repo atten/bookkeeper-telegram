@@ -14,7 +14,7 @@ import java.time.ZoneId;
 @Table(name = "account_transfers")
 public class AccountTransfer {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
