@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class FreehandAccountMatcher implements AccountMatcher {
     private final AccountRepository repository;
     private final AccountTransactionRepository transactionRepository;
-    private final SpendingParserRegistry spendingParserRegistry = SpendingParserRegistry.ofAllParsers();
+    private final SpendingParserRegistry freehandSpendingParserRegistry = SpendingParserRegistry.ofProvider("freehand");
 
     public FreehandAccountMatcher(AccountRepository repository, AccountTransactionRepository transactionRepository) {
         this.repository = repository;
@@ -51,7 +51,7 @@ public class FreehandAccountMatcher implements AccountMatcher {
     private Optional<Account> getLastUsedAccount(Collection<Account> accounts) {
         return transactionRepository.findRecentAdded(accounts, 10)
             .stream()
-            .collect(Collectors.toMap(AccountTransaction::getAccount, i -> getSpending(i) instanceof FreehandRecord ? 1 : 0, Integer::sum))
+            .collect(Collectors.toMap(AccountTransaction::getAccount, i -> isFreehandRecord(i) ? 1 : 0, Integer::sum))
             .entrySet()
             .stream()
             .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
@@ -66,14 +66,12 @@ public class FreehandAccountMatcher implements AccountMatcher {
         );
     }
 
-    /**
-     * restore spending from transaction raw message
-     */
-    private Spending getSpending(AccountTransaction transaction) {
+    private Boolean isFreehandRecord(AccountTransaction transaction) {
         try {
-            return spendingParserRegistry.parse(transaction.getRaw());
+            freehandSpendingParserRegistry.parse(transaction.getRaw());
+            return true;
         } catch (ParseException e) {
-            throw new RuntimeException(e);
+            return false;
         }
     }
 }
