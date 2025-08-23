@@ -153,6 +153,20 @@ class AddTransactionScenarioTest {
     }
 
     @Test
+    void addFreehandTransactionsAndDetectExpenditure(FakeSession session) {
+        session.sendText("такси 150")
+            .expectContains("Другое")
+            .pressButton("Категория")
+            .pressButton("Транспорт")  // expenditure assigned manually
+            .sendText("такси 250")
+            .expectContains("Транспорт") // auto-detected expenditure
+            .pressButton("Категория")
+            .pressButton("Путешествия") // expenditure reassigned manually
+            .sendText("такси 350")
+            .expectContains("Транспорт"); // auto-detected expenditure
+    }
+
+    @Test
     void showWarningMessageOnPartialSuccess(FakeSession session) {
         session
             .sendText("еда 220\nblahblah")

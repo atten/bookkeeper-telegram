@@ -14,7 +14,7 @@ public class TelegramUserRepository {
     private final EntityManager manager;
 
     @Inject
-    public TelegramUserRepository(EntityManager manager) {
+    TelegramUserRepository(EntityManager manager) {
         this.manager = manager;
     }
 

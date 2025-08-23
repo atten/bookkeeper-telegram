@@ -35,18 +35,22 @@ public class MerchantExpenditureRepository {
 
     public void rememberExpenditurePreference(String merchant, Expenditure expenditure, TelegramUser user) {
         var normalizedMerchant = normalizeMerchant(merchant);
-        var sql = "UPDATE merchant_expenditures SET rank = rank + 1 WHERE expenditure = :expenditure AND merchant = :merchant AND telegram_user = :telegramUser";
-        var query = manager.createNativeQuery(sql)
-            .setParameter("merchant", normalizedMerchant)
-            .setParameter("expenditure", expenditure.ordinal())
-            .setParameter("telegramUser", user.getTelegramId());
+        var currentExpenditure = getPreferredExpenditureForMerchant(merchant, user);
 
-        int count = query.executeUpdate();
-        if (count == 0) {
-            // no records updated
+        if (currentExpenditure == Expenditure.OTHER) {
+            // save new
             var obj = newItemFactory(normalizedMerchant, expenditure, user);
             obj.setRank(1);
             manager.merge(obj);
+        } else {
+            // update existing
+            var sql = "UPDATE merchant_expenditures SET rank = rank + 1 WHERE expenditure = :expenditure AND merchant = :merchant AND telegram_user = :telegramUser";
+            var query = manager.createNativeQuery(sql)
+                .setParameter("merchant", normalizedMerchant)
+                .setParameter("expenditure", expenditure.ordinal())
+                .setParameter("telegramUser", user.getTelegramId());
+
+            query.executeUpdate();
         }
     }
 

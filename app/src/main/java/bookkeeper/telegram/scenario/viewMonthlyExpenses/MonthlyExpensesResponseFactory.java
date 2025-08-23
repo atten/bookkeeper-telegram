@@ -46,7 +46,7 @@ class MonthlyExpensesResponseFactory {
             lines.add("*" + getAccountDisplayName(account) + "*");
             lines.add("```");
 
-            for (var expenditure : amountByExpenditure.keySet()) {
+            for (var expenditure : amountByExpenditure.keySet().stream().sorted().toList()) {
                 var amount = amountByExpenditure.get(expenditure);
                 var sign = amount.compareTo(BigDecimal.ZERO);
 

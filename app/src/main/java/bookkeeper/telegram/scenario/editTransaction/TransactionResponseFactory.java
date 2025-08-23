@@ -30,7 +30,7 @@ public class TransactionResponseFactory {
         var items = new StringJoiner("\n");
 
         if (counterMap.size() == 1) {
-            var transaction = transactions.get(0);
+            var transaction = transactions.getFirst();
             var item = "в *%s*".formatted(transaction.getExpenditure().getVerboseName());
             if (!isTransactionRecent(transaction)) {
                 // add date (e.g. 10.01.23) if transaction was added earlier than 12h ago
@@ -46,7 +46,7 @@ public class TransactionResponseFactory {
         }
 
         var totalAmount = transactions.stream().map(AccountTransaction::getAmount).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
-        var account = transactions.get(0).getAccount();
+        var account = transactions.getFirst().getAccount();
         var accountVerbose = "на счёт %s".formatted(account.getName());
         var totalAccountVerbose = getAmount(totalAmount, account);
 
@@ -75,7 +75,7 @@ public class TransactionResponseFactory {
         if (transactions.isEmpty()) {
             return new InlineKeyboardMarkup();
         } else if (transactions.size() == 1) {
-            var transaction = transactions.get(0);
+            var transaction = transactions.getFirst();
             return getResponseKeyboard(transaction);
         }
         var kb = new InlineKeyboardMarkup();
