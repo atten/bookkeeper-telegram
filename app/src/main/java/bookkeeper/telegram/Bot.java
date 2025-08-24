@@ -1,7 +1,7 @@
 package bookkeeper.telegram;
 
 
-import bookkeeper.dao.TelegramUserRepository;
+import bookkeeper.dao.repository.TelegramUserRepository;
 import bookkeeper.exception.HandlerInterruptException;
 import bookkeeper.service.telegram.AbstractHandler;
 import bookkeeper.service.telegram.Request;
@@ -96,6 +96,7 @@ class Bot {
         entityManager.getTransaction().begin();
 
         var request = new Request(update, bot, userRepository, jedisPool);
+        request.setupUser();
         Boolean processed = false;
 
         for (AbstractHandler handler : handlers) {

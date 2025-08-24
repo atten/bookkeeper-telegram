@@ -40,8 +40,8 @@ public class BookkeeperParameterResolver implements ParameterResolver, BeforeEac
     private TelegramUser telegramUserFactory() {
         var obj = new TelegramUser();
         obj.setTelegramId(userCache.stream().findAny().orElseGet(this::userFactory).id());
-        obj.setFirstAccess(Instant.now());
-        obj.setLastAccess(Instant.now());
+        obj.setFirstAccess(LocalDate.now());
+        obj.setLastAccess(LocalDate.now());
         obj.setLanguageCode("ru");
 
         FakeApp.container.entityManager().persist(obj);

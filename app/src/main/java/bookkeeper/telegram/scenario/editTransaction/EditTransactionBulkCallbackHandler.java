@@ -1,6 +1,6 @@
 package bookkeeper.telegram.scenario.editTransaction;
 
-import bookkeeper.dao.AccountTransactionRepository;
+import bookkeeper.dao.repository.AccountTransactionRepository;
 import bookkeeper.exception.AccountTransactionNotFound;
 import bookkeeper.service.telegram.AbstractHandler;
 import bookkeeper.service.telegram.Request;
@@ -30,7 +30,7 @@ class EditTransactionBulkCallbackHandler implements AbstractHandler {
         if (cm.getRemainingTransactionIds().isEmpty())
             return false;
 
-        var transaction = transactionRepository.get(cm.getRemainingTransactionIds().get(0)).orElseThrow(() -> new AccountTransactionNotFound(cm.getRemainingTransactionIds().get(0)));
+        var transaction = transactionRepository.get(cm.getRemainingTransactionIds().getFirst()).orElseThrow(() -> new AccountTransactionNotFound(cm.getRemainingTransactionIds().getFirst()));
         var pendingTransactionIds = cm.getRemainingTransactionIds().stream().skip(1).collect(Collectors.toList());
         request.editMessage(getResponseMessage(transaction, pendingTransactionIds.size()), getResponseKeyboard(transaction, cm.getAllTransactionIds(), pendingTransactionIds));
         return true;

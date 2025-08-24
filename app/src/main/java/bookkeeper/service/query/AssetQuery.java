@@ -1,11 +1,11 @@
 package bookkeeper.service.query;
 
-import bookkeeper.dao.AccountRepository;
-import bookkeeper.dao.AccountTransactionRepository;
-import bookkeeper.dao.AccountTransferRepository;
-import bookkeeper.dao.ExchangeRateRepository;
 import bookkeeper.dao.entity.Account;
 import bookkeeper.dao.entity.TelegramUser;
+import bookkeeper.dao.repository.AccountRepository;
+import bookkeeper.dao.repository.AccountTransactionRepository;
+import bookkeeper.dao.repository.AccountTransferRepository;
+import bookkeeper.dao.repository.ExchangeRateRepository;
 import bookkeeper.service.client.CbrApiClient;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -44,14 +44,16 @@ public class AssetQuery {
     public List<Asset> getMonthlyAssets(TelegramUser user, int monthOffset) {
         var exchangeDate = getExchangeDate(monthOffset);
         var exchangeRates = getExchangeRates(user, exchangeDate);
+        var transactionBalances = transactionRepository.getTransactionBalances(user, monthOffset);
+        var transferBalances = transferRepository.getTransferBalances(user, monthOffset);
 
         return accountRepository.filter(user).stream()
             .map(account ->
                 new Asset(
                     account,
                     BigDecimal.ZERO
-                        .add(transactionRepository.getTransactionBalance(account, monthOffset))
-                        .add(transferRepository.getTransferBalance(account, monthOffset)),
+                        .add(transactionBalances.getOrDefault(account.getId(), BigDecimal.ZERO))
+                        .add(transferBalances.getOrDefault(account.getId(), BigDecimal.ZERO)),
                     exchangeRates.getOrDefault(account.getCurrency(), BigDecimal.ZERO),
                     exchangeCurrency
                 )

@@ -1,7 +1,7 @@
 package bookkeeper.telegram.scenario.addTransaction.freehand;
 
-import bookkeeper.dao.AccountRepository;
-import bookkeeper.dao.AccountTransactionRepository;
+import bookkeeper.dao.repository.AccountRepository;
+import bookkeeper.dao.repository.AccountTransactionRepository;
 import bookkeeper.service.matcher.ExpenditureMatcherByMerchant;
 import bookkeeper.service.parser.SpendingParserRegistry;
 import bookkeeper.service.registry.TransactionParserRegistry;

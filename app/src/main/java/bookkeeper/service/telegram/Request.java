@@ -1,7 +1,7 @@
 package bookkeeper.service.telegram;
 
-import bookkeeper.dao.TelegramUserRepository;
 import bookkeeper.dao.entity.TelegramUser;
+import bookkeeper.dao.repository.TelegramUserRepository;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
@@ -19,6 +19,7 @@ import redis.clients.jedis.JedisPool;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.Optional;
 
 import static bookkeeper.service.telegram.StringUtils.cleanString;
@@ -37,10 +38,15 @@ public class Request {
         this.callbackMessageRegistry = new CallbackMessageRegistry(jedisPool);
     }
 
+    public void setupUser() {
+        var user = getTelegramUser();
+        log.info("{} -> {}", user, this);
+        Locale.setDefault(Locale.forLanguageTag(user.getLanguageCode()));
+        telegramUserRepository.updateLastAccess(user);
+    }
+
     public TelegramUser getTelegramUser() {
-        var telegramUser = telegramUserRepository.getOrCreate(getUser(update));
-        telegramUserRepository.updateLastAccess(telegramUser);
-        return telegramUser;
+        return telegramUserRepository.getOrCreate(getUser(update));
     }
 
     public String getMessageText() {

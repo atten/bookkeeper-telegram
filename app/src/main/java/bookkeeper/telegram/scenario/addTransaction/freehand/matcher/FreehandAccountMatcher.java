@@ -1,10 +1,10 @@
 package bookkeeper.telegram.scenario.addTransaction.freehand.matcher;
 
-import bookkeeper.dao.AccountRepository;
-import bookkeeper.dao.AccountTransactionRepository;
 import bookkeeper.dao.entity.Account;
 import bookkeeper.dao.entity.AccountTransaction;
 import bookkeeper.dao.entity.TelegramUser;
+import bookkeeper.dao.repository.AccountRepository;
+import bookkeeper.dao.repository.AccountTransactionRepository;
 import bookkeeper.service.matcher.AccountMatcher;
 import bookkeeper.service.parser.Spending;
 import bookkeeper.service.parser.SpendingParserRegistry;

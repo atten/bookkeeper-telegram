@@ -1,7 +1,7 @@
 package bookkeeper.telegram.scenario.viewMonthlyExpenses;
 
-import bookkeeper.dao.AccountTransactionRepository;
 import bookkeeper.dao.entity.TelegramUser;
+import bookkeeper.dao.repository.AccountTransactionRepository;
 import bookkeeper.enums.Expenditure;
 import bookkeeper.service.telegram.AbstractHandler;
 import bookkeeper.service.telegram.KeyboardUtils;
@@ -10,7 +10,6 @@ import bookkeeper.telegram.scenario.editTransaction.EditTransactionBulkCallback;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 
 import javax.inject.Inject;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -40,17 +39,13 @@ class SelectMonthlyExpendituresCallbackHandler implements AbstractHandler {
     }
 
     private InlineKeyboardMarkup getResponseKeyboard(int monthOffset, TelegramUser user) {
-        Map<Expenditure, List<Long>> idsByExpenditure = new LinkedHashMap<>();
-
-        Expenditure.enabledValues()
-            .forEach(expenditure -> {
-                var ids = transactionRepository.findIds(expenditure, monthOffset, user);
-                if (!ids.isEmpty())
-                    idsByExpenditure.put(expenditure, ids);
-            });
+        Map<Expenditure, List<Long>> idsByExpenditure = transactionRepository.findIds(monthOffset, user);
 
         // prepare buttons with expenditures selector
-        var buttons = idsByExpenditure.entrySet().stream()
+        var buttons = idsByExpenditure
+            .entrySet()
+            .stream()
+            .sorted(Map.Entry.comparingByKey())
             .map(entry -> new EditTransactionBulkCallback(entry.getValue(), entry.getValue()).asButton(entry.getKey().getVerboseName()))
             .toList();
 

@@ -1,6 +1,6 @@
 package bookkeeper.telegram.scenario.addAccount;
 
-import bookkeeper.dao.AccountRepository;
+import bookkeeper.dao.repository.AccountRepository;
 import bookkeeper.service.telegram.AbstractHandler;
 import bookkeeper.service.telegram.Request;
 
@@ -49,7 +49,7 @@ class AddAccountHandler implements AbstractHandler {
         var accountName = String.join(" ", arguments.subList(0, arguments.size() - 1));
         Currency currency;
         try {
-            currency = Currency.getInstance(arguments.get(arguments.size() - 1).toUpperCase());
+            currency = Currency.getInstance(arguments.getLast().toUpperCase());
         } catch (IllegalArgumentException e) {
             return false;
         }

@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
-import java.time.Instant;
+import java.time.LocalDate;
 
 @Setter
 @Entity
@@ -21,13 +21,13 @@ public class TelegramUser implements Serializable {
     @Column
     private String username;
 
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false, name = "first_access")
     @Getter
-    private Instant firstAccess;
+    private LocalDate firstAccess;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "last_access")
     @Getter
-    private Instant lastAccess;
+    private LocalDate lastAccess;
 
     @Column(nullable = false, name = "language_code")
     @Getter

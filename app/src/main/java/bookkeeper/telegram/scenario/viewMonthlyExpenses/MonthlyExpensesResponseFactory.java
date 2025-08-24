@@ -1,8 +1,8 @@
 package bookkeeper.telegram.scenario.viewMonthlyExpenses;
 
-import bookkeeper.dao.AccountRepository;
-import bookkeeper.dao.AccountTransactionRepository;
 import bookkeeper.dao.entity.TelegramUser;
+import bookkeeper.dao.repository.AccountRepository;
+import bookkeeper.dao.repository.AccountTransactionRepository;
 import bookkeeper.enums.Expenditure;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 
@@ -31,13 +31,14 @@ class MonthlyExpensesResponseFactory {
         var maxExpenditureLength = Expenditure.enabledValues().stream().map(expenditure -> expenditure.getVerboseName().length()).max(Comparator.naturalOrder()).orElse(0);
         var formatString = "%-" + maxExpenditureLength + "s %s";  // example: "%-15s %s"
         var accounts = accountRepository.filter(user);
+        var amounts = transactionRepository.getMonthlyAmount(user, monthOffset);
 
         for (var account : accounts) {
-            var currency = account.getCurrency();
-            var amountByExpenditure = transactionRepository.getMonthlyAmount(account, monthOffset);
-
-            if (amountByExpenditure.isEmpty())
+            if (!amounts.containsKey(account.getId()))
                 continue;
+
+            var amountByExpenditure = amounts.get(account.getId());
+            var currency = account.getCurrency();
 
             creditByCurrency.putIfAbsent(currency, BigDecimal.ZERO);
             debitByCurrency.putIfAbsent(currency, BigDecimal.ZERO);

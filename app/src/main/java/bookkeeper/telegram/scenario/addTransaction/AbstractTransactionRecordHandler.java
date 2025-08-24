@@ -1,6 +1,6 @@
 package bookkeeper.telegram.scenario.addTransaction;
 
-import bookkeeper.dao.AccountTransactionRepository;
+import bookkeeper.dao.repository.AccountTransactionRepository;
 import bookkeeper.exception.AccountTransactionNotParsed;
 import bookkeeper.service.registry.TransactionParserRegistry;
 import bookkeeper.service.telegram.AbstractHandler;

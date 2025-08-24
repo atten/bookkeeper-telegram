@@ -1,7 +1,7 @@
 package bookkeeper.service.matcher;
 
-import bookkeeper.dao.MerchantExpenditureRepository;
 import bookkeeper.dao.entity.TelegramUser;
+import bookkeeper.dao.repository.MerchantExpenditureRepository;
 import bookkeeper.enums.Expenditure;
 import bookkeeper.service.parser.Spending;
 

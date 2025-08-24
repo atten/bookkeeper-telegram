@@ -1,4 +1,4 @@
-package bookkeeper.dao;
+package bookkeeper.dao.repository;
 
 import bookkeeper.dao.entity.TelegramUser;
 import com.pengrad.telegrambot.model.User;
@@ -6,7 +6,7 @@ import dagger.Reusable;
 import jakarta.persistence.EntityManager;
 
 import javax.inject.Inject;
-import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Reusable
@@ -35,15 +35,15 @@ public class TelegramUserRepository {
     }
 
     public void updateLastAccess(TelegramUser telegramUser) {
-        telegramUser.setLastAccess(Instant.now());
+        telegramUser.setLastAccess(LocalDate.now());
     }
 
     private TelegramUser newUserFactory(User user) {
         var telegramUser = new TelegramUser();
         telegramUser.setTelegramId(user.id());
         telegramUser.setUsername(user.username());
-        telegramUser.setFirstAccess(Instant.now());
-        telegramUser.setLastAccess(Instant.now());
+        telegramUser.setFirstAccess(LocalDate.now());
+        telegramUser.setLastAccess(LocalDate.now());
         telegramUser.setLanguageCode("en");
         return telegramUser;
     }

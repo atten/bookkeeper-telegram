@@ -10,13 +10,5 @@ import dagger.multibindings.IntoSet;
 abstract class CommonHandlersModule {
     @Binds
     @IntoSet
-    abstract AbstractHandler localeHandler(LocaleHandler handler);
-
-    @Binds
-    @IntoSet
-    abstract AbstractHandler loggingHandler(LoggingHandler handler);
-
-    @Binds
-    @IntoSet
     abstract AbstractHandler slashStartHandler(SlashStartHandler handler);
 }

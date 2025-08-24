@@ -1,7 +1,7 @@
 package bookkeeper.telegram.scenario.editTransaction;
 
-import bookkeeper.dao.AccountRepository;
-import bookkeeper.dao.AccountTransactionRepository;
+import bookkeeper.dao.repository.AccountRepository;
+import bookkeeper.dao.repository.AccountTransactionRepository;
 import bookkeeper.exception.AccountNotFound;
 import bookkeeper.exception.AccountTransactionNotFound;
 import bookkeeper.exception.HandlerInterruptException;

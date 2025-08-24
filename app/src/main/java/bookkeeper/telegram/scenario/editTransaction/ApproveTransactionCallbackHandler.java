@@ -1,6 +1,6 @@
 package bookkeeper.telegram.scenario.editTransaction;
 
-import bookkeeper.dao.AccountTransactionRepository;
+import bookkeeper.dao.repository.AccountTransactionRepository;
 import bookkeeper.exception.AccountTransactionNotFound;
 import bookkeeper.service.telegram.AbstractHandler;
 import bookkeeper.service.telegram.Request;
@@ -41,7 +41,7 @@ class ApproveTransactionCallbackHandler implements AbstractHandler {
             request.editMessage(getResponseMessage(allAddedTransactions), getResponseKeyboard(allAddedTransactions));
         }
         else {
-            var nextPendingTransactionId = cm.getPendingTransactionIds().get(0);
+            var nextPendingTransactionId = cm.getPendingTransactionIds().getFirst();
             var nextPendingTransaction = transactionRepository.get(nextPendingTransactionId).orElseThrow(() -> new AccountTransactionNotFound(nextPendingTransactionId));
             var remainingTransactionIds = cm.getPendingTransactionIds().stream().skip(1).collect(Collectors.toList());
             request.editMessage(getResponseMessage(nextPendingTransaction, remainingTransactionIds.size()), getResponseKeyboard(nextPendingTransaction, cm.getAllTransactionIds(), remainingTransactionIds));

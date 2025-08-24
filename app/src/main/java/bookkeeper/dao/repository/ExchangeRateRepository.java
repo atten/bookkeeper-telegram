@@ -1,4 +1,4 @@
-package bookkeeper.dao;
+package bookkeeper.dao.repository;
 
 import bookkeeper.dao.entity.ExchangeRate;
 import dagger.Reusable;

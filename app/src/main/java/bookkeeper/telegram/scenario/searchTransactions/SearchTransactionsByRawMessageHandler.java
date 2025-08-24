@@ -1,8 +1,8 @@
 package bookkeeper.telegram.scenario.searchTransactions;
 
-import bookkeeper.dao.AccountTransactionRepository;
 import bookkeeper.dao.entity.AccountTransaction;
 import bookkeeper.dao.entity.TelegramUser;
+import bookkeeper.dao.repository.AccountTransactionRepository;
 import bookkeeper.enums.HandlerPriority;
 import bookkeeper.exception.HandlerInterruptException;
 import bookkeeper.service.telegram.AbstractHandler;
@@ -78,7 +78,7 @@ class SearchTransactionsByRawMessageHandler implements AbstractHandler {
 
         int pageSize = Math.min(10, searchResult.size());
         for (int counter = 1; counter <= pageSize; counter++) {
-            var transaction = searchResult.remove(0);
+            var transaction = searchResult.removeFirst();
             var dateString = transaction.date().format(DateTimeFormatter.ofPattern("dd.MM"));
             response.add(
                 "%s %s. %s. %s\n`%s`".formatted(

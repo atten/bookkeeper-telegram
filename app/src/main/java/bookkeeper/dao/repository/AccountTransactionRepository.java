@@ -1,4 +1,4 @@
-package bookkeeper.dao;
+package bookkeeper.dao.repository;
 
 import bookkeeper.dao.entity.Account;
 import bookkeeper.dao.entity.AccountTransaction;
@@ -46,20 +46,27 @@ public class AccountTransactionRepository {
         return (List<AccountTransaction>)query.getResultList();
     }
 
-    @SuppressWarnings("unchecked")
-    public List<Long> findIds(Expenditure expenditure, int monthOffset, TelegramUser user) {
-        var sql = "SELECT t.id FROM account_transactions t " +
+    public Map<Expenditure, List<Long>> findIds(int monthOffset, TelegramUser user) {
+        var sql = "SELECT t.id, t.expenditure FROM account_transactions t " +
                 "JOIN accounts a ON a.id = t.account_id " +
                 "WHERE a.telegram_user = :user " +
-                "AND expenditure = :expenditure " +
                 "AND DateTime::MakeDate(DateTime::StartOfMonth(t.timestamp)) = DateTime::MakeDate(DateTime::ShiftMonths(DateTime::StartOfMonth(CurrentUtcDate()), :monthOffset))";
 
         var query = manager.createNativeQuery(sql)
                 .setParameter("user", user.getTelegramId())
-                .setParameter("expenditure", expenditure.ordinal())
                 .setParameter("monthOffset", monthOffset);
 
-        return (List<Long>)query.getResultList();
+        Map<Expenditure, List<Long>> result = new LinkedHashMap<>();
+
+        for (var entry : query.getResultList()) {
+            var arrayEntry = (Object[]) entry;
+            var id = (Long)arrayEntry[0];
+            var expenditure = Expenditure.values()[(Short)(arrayEntry[1])];
+            result.putIfAbsent(expenditure, new LinkedList<>());
+            result.get(expenditure).add(id);
+        }
+
+        return result;
     }
 
     @SuppressWarnings("unchecked")
@@ -90,42 +97,57 @@ public class AccountTransactionRepository {
             return List.of();
         }
 
-        var ids = findIds(expenditure.get(), monthOffset, user);
+        var ids = findIds(monthOffset, user).getOrDefault(expenditure.get(), List.of());
         return findByIds(ids);
     }
 
-    public Map<Expenditure, BigDecimal> getMonthlyAmount(Account account, int monthOffset) {
-        var sql = "SELECT t.expenditure, SUM(amount) FROM account_transactions t " +
+    public Map<Long, Map<Expenditure, BigDecimal>> getMonthlyAmount(TelegramUser user, int monthOffset) {
+        var sql = "SELECT t.account_id, t.expenditure, SUM(amount) FROM account_transactions t " +
                 "JOIN accounts a ON a.id = t.account_id " +
-                "WHERE a.id = :account " +
+                "WHERE a.telegram_user = :user " +
                 "AND DateTime::MakeDate(DateTime::StartOfMonth(t.timestamp)) = DateTime::MakeDate(DateTime::ShiftMonths(DateTime::StartOfMonth(CurrentUtcDate()), :monthOffset)) " +
-                "GROUP BY t.expenditure";
+                "GROUP BY t.account_id, t.expenditure";
 
         var query = manager.createNativeQuery(sql)
-            .setParameter("account", account.getId())
+            .setParameter("user", user.getTelegramId())
             .setParameter("monthOffset", monthOffset);
 
-        Map<Expenditure, BigDecimal> result = new LinkedHashMap<>();
+
+        Map<Long, Map<Expenditure, BigDecimal>> result = new LinkedHashMap<>();
 
         for (var entry : query.getResultList()) {
             var arrayEntry = (Object[]) entry;
-            result.put(Expenditure.values()[(Short)(arrayEntry[0])], (BigDecimal) arrayEntry[1]);
+            var accountId = (Long)arrayEntry[0];
+            var expenditure = Expenditure.values()[(Short)(arrayEntry[1])];
+            var amount = (BigDecimal) arrayEntry[2];
+            result.putIfAbsent(accountId, new LinkedHashMap<>());
+            result.get(accountId).put(expenditure, amount);
         }
 
         return result;
     }
 
-    public BigDecimal getTransactionBalance(Account account, int monthOffset) {
-        var sql = "SELECT SUM(amount) FROM account_transactions " +
-                "WHERE account_id = :account " +
-                "AND DateTime::MakeDate(DateTime::StartOfMonth(timestamp)) <= DateTime::MakeDate(DateTime::ShiftMonths(DateTime::StartOfMonth(CurrentUtcDate()), :monthOffset))";
+    public Map<Long, BigDecimal> getTransactionBalances(TelegramUser user, int monthOffset) {
+        var sql = "SELECT t.account_id, SUM(amount) FROM account_transactions t " +
+                "JOIN accounts a ON a.id = t.account_id " +
+                "WHERE a.telegram_user = :user " +
+                "AND DateTime::MakeDate(DateTime::StartOfMonth(t.timestamp)) <= DateTime::MakeDate(DateTime::ShiftMonths(DateTime::StartOfMonth(CurrentUtcDate()), :monthOffset)) " +
+                "GROUP BY t.account_id";
 
         var query = manager.createNativeQuery(sql)
-                .setParameter("account", account.getId())
+                .setParameter("user", user.getTelegramId())
                 .setParameter("monthOffset", monthOffset);
 
-        var result = query.getSingleResult();
-        return result == null ? BigDecimal.ZERO : (BigDecimal) result;
+        Map<Long, BigDecimal> result = new LinkedHashMap<>();
+
+        for (var entry : query.getResultList()) {
+            var arrayEntry = (Object[]) entry;
+            var accountId = (Long)arrayEntry[0];
+            var amount = (BigDecimal) arrayEntry[1];
+            result.put(accountId, amount);
+        }
+
+        return result;
     }
 
     public void approve(AccountTransaction transaction) {

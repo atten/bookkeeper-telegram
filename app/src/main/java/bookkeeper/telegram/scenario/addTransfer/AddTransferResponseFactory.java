@@ -1,8 +1,8 @@
 package bookkeeper.telegram.scenario.addTransfer;
 
-import bookkeeper.dao.AccountRepository;
 import bookkeeper.dao.entity.AccountTransfer;
 import bookkeeper.dao.entity.TelegramUser;
+import bookkeeper.dao.repository.AccountRepository;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 
 import static bookkeeper.service.telegram.StringUtils.getDateShort;

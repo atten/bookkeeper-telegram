@@ -16,7 +16,7 @@
             <property name="jakarta.persistence.schema-generation.database.action" value="update"/>
             <property name="hibernate.connection.pool_size" value="1"/>
             <property name="jakarta.persistence.jdbc.driver" value="tech.ydb.jdbc.YdbDriver"/>
-            <property name="jakarta.persistence.jdbc.url" value="jdbc:ydb:grpc://localhost:2136/local"/>
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:ydb:grpc://localhost:2136/local?useQueryService=true"/>
             <property name="jakarta.persistence.jdbc.user" value="root"/>
             <property name="jakarta.persistence.jdbc.password" value="1234"/>
         </properties>
