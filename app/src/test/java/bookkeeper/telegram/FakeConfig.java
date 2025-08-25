@@ -6,6 +6,7 @@ import bookkeeper.service.client.MockedCbrApiClient;
 import bookkeeper.service.telegram.StringShortenerCache;
 import bookkeeper.service.telegram.StringShortenerCacheMap;
 import com.pengrad.telegrambot.TelegramBot;
+import com.sun.net.httpserver.HttpServer;
 import dagger.Module;
 import dagger.Provides;
 import jakarta.persistence.EntityManager;
@@ -13,6 +14,7 @@ import jakarta.persistence.Persistence;
 
 import javax.inject.Singleton;
 import java.util.Map;
+import java.util.Optional;
 
 @Module
 class FakeConfig {
@@ -41,6 +43,10 @@ class FakeConfig {
     CbrApiClient mockedCbrApiClient() {
         return new MockedCbrApiClient();
     }
+
+    @Provides
+    @Singleton
+    Optional<HttpServer> webhookServer() { return Optional.empty(); }
 
     @Provides
     @Singleton

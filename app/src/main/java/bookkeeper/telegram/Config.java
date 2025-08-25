@@ -5,6 +5,10 @@ import bookkeeper.service.telegram.StringShortenerCache;
 import bookkeeper.service.telegram.StringShortenerCacheMap;
 import bookkeeper.service.telegram.StringShortenerCacheRedis;
 import com.pengrad.telegrambot.TelegramBot;
+import com.pengrad.telegrambot.request.DeleteWebhook;
+import com.pengrad.telegrambot.request.GetWebhookInfo;
+import com.pengrad.telegrambot.request.SetWebhook;
+import com.sun.net.httpserver.HttpServer;
 import dagger.Module;
 import dagger.Provides;
 import jakarta.persistence.EntityManager;
@@ -15,6 +19,8 @@ import redis.clients.jedis.JedisPool;
 
 import javax.inject.Singleton;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -61,6 +67,51 @@ class Config {
         }
         log.info("Current cache: map");
         return new StringShortenerCacheMap();
+    }
+
+    @Provides
+    @Singleton
+    Optional<HttpServer> webhookServer() {
+        var bot = telegramBot();
+        var webhookResult = bot.execute(new GetWebhookInfo());
+        if (!webhookResult.isOk())
+            throw new RuntimeException(webhookResult.toString());
+
+        var webhookInfo = webhookResult.webhookInfo();
+        log.info("Current webhook: {}", webhookInfo);
+
+        var webhookUrl = System.getenv("WEBHOOK_URL");
+        var port = System.getenv("PORT"); // pre-defined variable name in serverless container
+
+        if (webhookInfo.url() != null && !webhookInfo.url().isEmpty() && !Objects.equals(webhookUrl, webhookInfo.url())) {
+            log.info("Remove current webhook...");
+            bot.execute(new DeleteWebhook().dropPendingUpdates(false));
+        }
+
+        if (webhookUrl == null)
+            return Optional.empty();
+
+        if (port == null)
+            port = "80";
+
+        bot.removeGetUpdatesListener();
+
+        if (!webhookInfo.url().equals(webhookUrl)) {
+            SetWebhook request = new SetWebhook().url(webhookUrl);
+            var result = bot.execute(request);
+            var resultVerbose = result.description() != null ? result.description() : "OK";
+            log.info("Set webhook: {}... {}", request.toWebhookResponse(), resultVerbose);
+
+            if (!result.isOk())
+                throw new RuntimeException(result.toString());
+        }
+
+        try {
+            var server = HttpServer.create(new InetSocketAddress(InetAddress.getByName("0.0.0.0"), Integer.parseInt(port)), 0);
+            return Optional.of(server);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Provides

@@ -1,6 +1,5 @@
 package bookkeeper.telegram;
 
-
 import bookkeeper.dao.repository.TelegramUserRepository;
 import bookkeeper.exception.HandlerInterruptException;
 import bookkeeper.service.telegram.AbstractHandler;
@@ -14,12 +13,17 @@ import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.request.SetMyCommands;
+import com.pengrad.telegrambot.utility.BotUtils;
+import com.sun.net.httpserver.HttpServer;
 import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.inject.Inject;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Slf4j
@@ -29,6 +33,7 @@ class Bot {
     private final List<AbstractHandler> handlers;
     private final TelegramUserRepository userRepository;
     private final StringShortenerCache stringShortenerCache;
+    private final HttpServer webhookServer;
 
     @Inject
     Bot(
@@ -36,7 +41,8 @@ class Bot {
         EntityManager entityManager,
         Set<AbstractHandler> handlers,
         TelegramUserRepository userRepository,
-        StringShortenerCache stringShortenerCache
+        StringShortenerCache stringShortenerCache,
+        Optional<HttpServer> webhookServer
     ) {
         this.bot = telegramBot;
         this.entityManager = entityManager;
@@ -46,6 +52,7 @@ class Bot {
             .sorted(Comparator.comparing(AbstractHandler::getPriority))
             .toList();
         this.userRepository = userRepository;
+        this.webhookServer = webhookServer.orElse(null);
         log.info("{} handlers loaded", this.handlers.size());
     }
 
@@ -63,14 +70,31 @@ class Bot {
     }
 
     /**
-     * Run the telegram bot in a long-polling mode.
+     * Run the telegram bot in a long-polling or webhook mode depending on settings.
      */
     void listen() {
-        bot.setUpdatesListener(updates -> {
-            updates.forEach(this::processUpdate);
-            return UpdatesListener.CONFIRMED_UPDATES_ALL;
-        });
-        log.info("Start listening...");
+        if (webhookServer == null) {
+            // Run the telegram bot in a long-polling mode.
+            bot.setUpdatesListener(updates -> {
+                updates.forEach(this::processUpdate);
+                return UpdatesListener.CONFIRMED_UPDATES_ALL;
+            });
+            log.info("Start listening via API...");
+        } else {
+            webhookServer.createContext("/", httpExchange -> {
+                var update = BotUtils.parseUpdate(new InputStreamReader(httpExchange.getRequestBody(), StandardCharsets.UTF_8));
+                if (update == null) {
+                    httpExchange.sendResponseHeaders(400, 0);
+                } else if (processUpdate(update)) {
+                    httpExchange.sendResponseHeaders(200, 0);
+                } else {
+                    httpExchange.sendResponseHeaders(500, 0);
+                }
+                httpExchange.close();
+            });
+            webhookServer.start();
+            log.info("Start listening webhook on port {}...", webhookServer.getAddress().getPort());
+        }
     }
 
     private void setupCommands() {
@@ -92,7 +116,7 @@ class Bot {
      * Process a single incoming request through chain of handlers.
      * Whole procedure is wrapped into transaction.
      */
-    public void processUpdate(Update update) {
+    public Boolean processUpdate(Update update) {
         entityManager.getTransaction().begin();
 
         var request = new Request(update, bot, userRepository, stringShortenerCache);
@@ -118,5 +142,6 @@ class Bot {
 
         entityManager.getTransaction().commit();
         entityManager.clear();
+        return processed;
     }
 }
