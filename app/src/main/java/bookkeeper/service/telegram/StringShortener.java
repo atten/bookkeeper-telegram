@@ -1,8 +1,5 @@
 package bookkeeper.service.telegram;
 
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.params.SetParams;
-
 /**
  * Class used to compact callback messages for buttons.
  * <p>
@@ -11,14 +8,12 @@ import redis.clients.jedis.params.SetParams;
  * API error ( error event) will return otherwise.
  */
 class StringShortener {
-    private final SetParams SET_PARAMS = new SetParams().ex(3600 * 24 * 365);
-
-    private final JedisPool jedisPool;
     private final int maxStringLength;
+    private final StringShortenerCache cache;
 
-    StringShortener(int maxLength, JedisPool jedisPool) {
+    StringShortener(int maxLength, StringShortenerCache cache) {
         this.maxStringLength = maxLength;
-        this.jedisPool = jedisPool;
+        this.cache = cache;
     }
 
     String shrink(String input) {
@@ -29,16 +24,12 @@ class StringShortener {
         if (shrinked.length() > maxStringLength)
             throw new RuntimeException("Not enough shrinked");
 
-        try (var redis = jedisPool.getResource()) {
-            redis.set(shrinked, input, SET_PARAMS);
-        }
+        cache.put(shrinked, input);
         return shrinked;
     }
 
     String unshrink(String shrinked) {
-        try (var redis = jedisPool.getResource()) {
-            var result = redis.get(shrinked);
-            return result != null ? result : shrinked;
-        }
+        var result = cache.get(shrinked);
+        return result != null ? result : shrinked;
     }
 }

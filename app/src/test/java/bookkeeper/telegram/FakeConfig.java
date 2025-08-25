@@ -3,20 +3,19 @@ package bookkeeper.telegram;
 import bookkeeper.service.ApplicationConfiguration;
 import bookkeeper.service.client.CbrApiClient;
 import bookkeeper.service.client.MockedCbrApiClient;
+import bookkeeper.service.telegram.StringShortenerCache;
+import bookkeeper.service.telegram.StringShortenerCacheMap;
 import com.pengrad.telegrambot.TelegramBot;
 import dagger.Module;
 import dagger.Provides;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Persistence;
-import redis.clients.jedis.JedisPool;
 
 import javax.inject.Singleton;
 import java.util.Map;
-import java.util.Properties;
 
 @Module
 class FakeConfig {
-    private final Properties properties = ApplicationConfiguration.getApplicationProperties("/test.properties");
     private final Map<String, String> dataSourceConfig = ApplicationConfiguration.getConfigMap(
         "jakarta.persistence.jdbc.url",
         "jakarta.persistence.jdbc.user",
@@ -33,9 +32,8 @@ class FakeConfig {
 
     @Provides
     @Singleton
-    JedisPool redisPool() {
-        var path = properties.getProperty("jedis.redis.path");
-        return new JedisPool(path);
+    StringShortenerCache stringShortenerCache() {
+        return new StringShortenerCacheMap();
     }
 
     @Provides

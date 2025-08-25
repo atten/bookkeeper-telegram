@@ -15,7 +15,6 @@ import com.pengrad.telegrambot.request.EditMessageText;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.BaseResponse;
 import lombok.extern.slf4j.Slf4j;
-import redis.clients.jedis.JedisPool;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -31,11 +30,11 @@ public class Request {
     private final TelegramUserRepository telegramUserRepository;
     private final CallbackMessageRegistry callbackMessageRegistry;
 
-    public Request(Update update, TelegramBot bot, TelegramUserRepository telegramUserRepository, JedisPool jedisPool) {
+    public Request(Update update, TelegramBot bot, TelegramUserRepository telegramUserRepository, StringShortenerCache stringShortenerCache) {
         this.update = update;
         this.bot = bot;
         this.telegramUserRepository = telegramUserRepository;
-        this.callbackMessageRegistry = new CallbackMessageRegistry(jedisPool);
+        this.callbackMessageRegistry = new CallbackMessageRegistry(stringShortenerCache);
     }
 
     public void setupUser() {
@@ -219,7 +218,7 @@ public class Request {
         if (update.message() != null)
             return update.message().chat().id();
         if (update.callbackQuery() != null)
-            return update.callbackQuery().message().chat().id();
+            return update.callbackQuery().maybeInaccessibleMessage().chat().id();
         if (update.editedMessage() != null)
             return update.editedMessage().chat().id();
         return update.myChatMember().chat().id();
@@ -228,6 +227,6 @@ public class Request {
     private int getMessageId() {
         if (update.message() != null)
             return update.message().messageId();
-        return update.callbackQuery().message().messageId();
+        return update.callbackQuery().maybeInaccessibleMessage().messageId();
     }
 }

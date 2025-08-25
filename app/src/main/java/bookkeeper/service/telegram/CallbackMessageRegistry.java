@@ -3,21 +3,23 @@ package bookkeeper.service.telegram;
 import com.pengrad.telegrambot.model.CallbackQuery;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
-import redis.clients.jedis.JedisPool;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.io.*;
 import java.text.ParseException;
-import java.util.*;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 class CallbackMessageRegistry {
     private final StringShortener shortener;
     private final Map<String, CallbackMessage> runtimeMessageCache;
 
     @Inject
-    CallbackMessageRegistry(JedisPool jedisPool) {
-        this.shortener = new StringShortener(55, jedisPool);
+    CallbackMessageRegistry(StringShortenerCache stringShortenerCache) {
+        this.shortener = new StringShortener(55, stringShortenerCache);
         this.runtimeMessageCache = new HashMap<>();
     }
 

@@ -32,12 +32,10 @@ run-tests:
   stage: test
   image: amazoncorretto:21-alpine
   services:
-    - redis:alpine
     - name: ydbplatform/local-ydb:latest
       alias: local-ydb
   variables:
     # test container
-    JEDIS_REDIS_PATH: "redis://redis:6379"
     JAKARTA_PERSISTENCE_JDBC_URL: "jdbc:ydb:grpc://local-ydb:2136/local"
 
     # YDB container

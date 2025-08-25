@@ -2,7 +2,10 @@ package bookkeeper.service;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Properties;
 import java.util.stream.Stream;
 
 public class ApplicationConfiguration {
@@ -26,7 +29,6 @@ public class ApplicationConfiguration {
                 .of(strKey, alternateKey)
                 .map(System::getenv)
                 .filter(Objects::nonNull)
-                .filter(s -> !s.isEmpty())
                 .findFirst()
                 .ifPresent(value -> p.setProperty(strKey, value));
         }

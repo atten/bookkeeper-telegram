@@ -5,6 +5,7 @@ import bookkeeper.dao.repository.TelegramUserRepository;
 import bookkeeper.exception.HandlerInterruptException;
 import bookkeeper.service.telegram.AbstractHandler;
 import bookkeeper.service.telegram.Request;
+import bookkeeper.service.telegram.StringShortenerCache;
 import bookkeeper.service.telegram.StringUtils;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
@@ -15,7 +16,6 @@ import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.request.SetMyCommands;
 import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
-import redis.clients.jedis.JedisPool;
 
 import javax.inject.Inject;
 import java.util.Comparator;
@@ -28,7 +28,7 @@ class Bot {
     private final EntityManager entityManager;
     private final List<AbstractHandler> handlers;
     private final TelegramUserRepository userRepository;
-    private final JedisPool jedisPool;
+    private final StringShortenerCache stringShortenerCache;
 
     @Inject
     Bot(
@@ -36,11 +36,11 @@ class Bot {
         EntityManager entityManager,
         Set<AbstractHandler> handlers,
         TelegramUserRepository userRepository,
-        JedisPool jedisPool
+        StringShortenerCache stringShortenerCache
     ) {
         this.bot = telegramBot;
         this.entityManager = entityManager;
-        this.jedisPool = jedisPool;
+        this.stringShortenerCache = stringShortenerCache;
         this.handlers = handlers
             .stream()
             .sorted(Comparator.comparing(AbstractHandler::getPriority))
@@ -95,7 +95,7 @@ class Bot {
     public void processUpdate(Update update) {
         entityManager.getTransaction().begin();
 
-        var request = new Request(update, bot, userRepository, jedisPool);
+        var request = new Request(update, bot, userRepository, stringShortenerCache);
         request.setupUser();
         Boolean processed = false;
 

@@ -24,6 +24,7 @@ db_recreate:
 	docker compose -f docker-compose.dev.yml up -d ydb_dev
 
 db_dump:
+	rm -rf backup
 	$(YDB_CMD) tools dump --output backup
 
 db_restore: db_recreate

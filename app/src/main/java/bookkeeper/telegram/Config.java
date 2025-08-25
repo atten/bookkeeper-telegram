@@ -1,6 +1,9 @@
 package bookkeeper.telegram;
 
 import bookkeeper.service.ApplicationConfiguration;
+import bookkeeper.service.telegram.StringShortenerCache;
+import bookkeeper.service.telegram.StringShortenerCacheMap;
+import bookkeeper.service.telegram.StringShortenerCacheRedis;
 import com.pengrad.telegrambot.TelegramBot;
 import dagger.Module;
 import dagger.Provides;
@@ -50,9 +53,14 @@ class Config {
 
     @Provides
     @Singleton
-    JedisPool redisPool() {
+    StringShortenerCache stringShortenerCache() {
         var path = properties.getProperty("jedis.redis.path");
-        return new JedisPool(path);
+        if (path != null && !path.isEmpty() && !path.equals("null")) {
+            log.info("Current cache: redis");
+            return new StringShortenerCacheRedis(new JedisPool(path));
+        }
+        log.info("Current cache: map");
+        return new StringShortenerCacheMap();
     }
 
     @Provides
