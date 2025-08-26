@@ -76,3 +76,7 @@ docker-push:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
     - docker load --input app/build/jib-image.tar
     - docker push $IMAGE
+    # push to yandex.cloud
+    - docker login -u oauth -p $YC_OAUTH_TOKEN cr.yandex
+    - docker tag $IMAGE cr.yandex/crp45j5ffjmgsoi4vdte/bookkeeper-telegram:$CI_COMMIT_REF_SLUG
+    - docker push cr.yandex/crp45j5ffjmgsoi4vdte/bookkeeper-telegram:$CI_COMMIT_REF_SLUG
