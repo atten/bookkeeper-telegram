@@ -77,6 +77,7 @@ docker-push:
     - docker load --input app/build/jib-image.tar
     - docker push $IMAGE
     # push to yandex.cloud
+    # obtain new OAuth token: https://oauth.yandex.ru/authorize?response_type=token&client_id=1a6990aa636648e9b2ef855fa7bec2fb
     - docker login -u oauth -p $YC_OAUTH_TOKEN cr.yandex
     - docker tag $IMAGE cr.yandex/crp45j5ffjmgsoi4vdte/bookkeeper-telegram:$CI_COMMIT_REF_SLUG
     - docker push cr.yandex/crp45j5ffjmgsoi4vdte/bookkeeper-telegram:$CI_COMMIT_REF_SLUG
