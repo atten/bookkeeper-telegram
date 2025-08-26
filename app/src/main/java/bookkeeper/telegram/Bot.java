@@ -85,9 +85,11 @@ class Bot {
                 var update = BotUtils.parseUpdate(new InputStreamReader(httpExchange.getRequestBody(), StandardCharsets.UTF_8));
                 if (update == null) {
                     httpExchange.sendResponseHeaders(400, 0);
-                } else if (processUpdate(update)) {
+                }
+                try {
+                    processUpdate(update);
                     httpExchange.sendResponseHeaders(200, 0);
-                } else {
+                } catch (Exception e) {
                     httpExchange.sendResponseHeaders(500, 0);
                 }
                 httpExchange.close();
@@ -116,7 +118,7 @@ class Bot {
      * Process a single incoming request through chain of handlers.
      * Whole procedure is wrapped into transaction.
      */
-    public Boolean processUpdate(Update update) {
+    void processUpdate(Update update) {
         entityManager.getTransaction().begin();
 
         var request = new Request(update, bot, userRepository, stringShortenerCache);
@@ -142,6 +144,5 @@ class Bot {
 
         entityManager.getTransaction().commit();
         entityManager.clear();
-        return processed;
     }
 }
