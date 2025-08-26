@@ -33,7 +33,7 @@ class ViewAssetsScenarioTest {
             .sendText("/assets")
             .expectContains("-105,90 $")
             .expectContains("-30 000,00 ₽")
-            .expectContains("-33 177,00 ₽");
+            .expectContains("-33 214,07 ₽");
     }
 
     @Test

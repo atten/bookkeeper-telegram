@@ -16,8 +16,8 @@ public class MockedCbrApiClient extends CbrApiClient {
     @Override
     public Map<Currency, BigDecimal> getRubExchangeRates(LocalDate date) {
         var result = new HashMap<Currency, BigDecimal>();
-        result.put(Currency.getInstance("USD"), new BigDecimal("30"));
-        result.put(Currency.getInstance("EUR"), new BigDecimal("40"));
+        result.put(Currency.getInstance("USD"), new BigDecimal("30.3500"));
+        result.put(Currency.getInstance("EUR"), new BigDecimal("40.8000"));
         return result;
     }
 }

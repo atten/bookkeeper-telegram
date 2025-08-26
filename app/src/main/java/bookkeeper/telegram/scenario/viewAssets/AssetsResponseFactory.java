@@ -64,7 +64,7 @@ class AssetsResponseFactory {
             .entrySet()
             .stream()
             .filter(entry -> !entry.getValue().equals(BigDecimal.ONE))  // skip native currency
-            .map(entry -> "%s %s".formatted(entry.getKey().getCurrencyCode(), entry.getValue()))
+            .map(entry -> "%s %s".formatted(entry.getKey().getCurrencyCode(), entry.getValue().floatValue()))
             .collect(Collectors.joining(" | "));
     }
 }
