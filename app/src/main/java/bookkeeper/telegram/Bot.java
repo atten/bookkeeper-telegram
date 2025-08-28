@@ -74,29 +74,47 @@ class Bot {
      */
     void listen() {
         if (webhookServer == null) {
-            // Run the telegram bot in a long-polling mode.
-            bot.setUpdatesListener(updates -> {
-                updates.forEach(this::processUpdate);
-                return UpdatesListener.CONFIRMED_UPDATES_ALL;
-            });
-            log.info("Start listening via API...");
+            listenApi();
         } else {
-            webhookServer.createContext("/", httpExchange -> {
-                var update = BotUtils.parseUpdate(new InputStreamReader(httpExchange.getRequestBody(), StandardCharsets.UTF_8));
-                if (update == null) {
-                    httpExchange.sendResponseHeaders(400, 0);
-                }
+            listenWebhook();
+        }
+    }
+
+    private void listenApi() {
+        bot.setUpdatesListener(updates -> {
+            updates.forEach(this::processUpdate);
+            return UpdatesListener.CONFIRMED_UPDATES_ALL;
+        });
+        log.info("Start listening via API...");
+    }
+
+    private void listenWebhook() {
+        webhookServer.createContext("/", httpExchange -> {
+            var update = BotUtils.parseUpdate(new InputStreamReader(httpExchange.getRequestBody(), StandardCharsets.UTF_8));
+            int responseCode;
+            boolean shouldExit = false;
+
+            if (update != null) {
                 try {
                     processUpdate(update);
-                    httpExchange.sendResponseHeaders(200, 0);
+                    responseCode = 200;
                 } catch (Exception e) {
-                    httpExchange.sendResponseHeaders(500, 0);
+                    responseCode = 500;
+                    shouldExit = true;  // restart whole app in case of exception
                 }
-                httpExchange.close();
-            });
-            webhookServer.start();
-            log.info("Start listening webhook on port {}...", webhookServer.getAddress().getPort());
-        }
+            } else {
+                responseCode = 400;
+            }
+
+            httpExchange.sendResponseHeaders(responseCode, 0);
+            httpExchange.close();
+
+            if (shouldExit) {
+                System.exit(1);
+            }
+        });
+        webhookServer.start();
+        log.info("Start listening webhook on port {}...", webhookServer.getAddress().getPort());
     }
 
     private void setupCommands() {

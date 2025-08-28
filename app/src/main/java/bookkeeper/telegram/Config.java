@@ -77,15 +77,17 @@ class Config {
         if (!webhookResult.isOk())
             throw new RuntimeException(webhookResult.toString());
 
-        var webhookInfo = webhookResult.webhookInfo();
-        log.info("Current webhook: {}", webhookInfo);
-
         var webhookUrl = System.getenv("WEBHOOK_URL");
         var port = System.getenv("PORT"); // pre-defined variable name in serverless container
+        var webhookInfo = webhookResult.webhookInfo();
 
-        if (webhookInfo.url() != null && !webhookInfo.url().isEmpty() && !Objects.equals(webhookUrl, webhookInfo.url())) {
-            log.info("Remove current webhook...");
-            bot.execute(new DeleteWebhook().dropPendingUpdates(false));
+        if (webhookInfo.url() != null && !webhookInfo.url().isEmpty()) {
+            log.info("Current webhook: {}", webhookInfo);
+
+            if (!Objects.equals(webhookUrl, webhookInfo.url())) {
+                log.info("Remove current webhook...");
+                bot.execute(new DeleteWebhook().dropPendingUpdates(false));
+            }
         }
 
         if (webhookUrl == null)
