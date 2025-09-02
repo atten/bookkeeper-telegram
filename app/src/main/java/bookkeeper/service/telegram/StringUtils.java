@@ -4,6 +4,7 @@ import bookkeeper.dao.entity.Account;
 import bookkeeper.dao.entity.AccountTransaction;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -190,5 +191,29 @@ public class StringUtils {
 
     public static String strikeoutMessage(String message) {
         return "<del>%s</del>".formatted(message);
+    }
+
+    public static BigDecimal parseAmount(String amount) {
+        return new BigDecimal(
+            amount
+                .replace(" ", "")
+                .replace(",", ".")
+                // Treat '+100' amount as negative spending (double inversion means refill).
+                .replace("+", "-")
+        );
+    }
+
+    public static Currency parseCurrency(String currency) throws ParseException {
+        var value = currency
+            .toUpperCase()
+            .replace(".", "") // remove trailing dot e.g. "р." -> "р"
+            .replace("РУБ", "RUB")
+            .replace("Р", "RUB")
+            .replace("$", "USD");
+        try {
+            return Currency.getInstance(value);
+        } catch (IllegalArgumentException e) {
+            throw new ParseException(currency, 0);
+        }
     }
 }

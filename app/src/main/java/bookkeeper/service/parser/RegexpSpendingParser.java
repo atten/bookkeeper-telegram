@@ -11,6 +11,9 @@ import java.util.List;
 import java.util.StringJoiner;
 import java.util.regex.Pattern;
 
+import static bookkeeper.service.telegram.StringUtils.parseAmount;
+import static bookkeeper.service.telegram.StringUtils.parseCurrency;
+
 public class RegexpSpendingParser<T extends Spending> implements SpendingParser<T> {
     protected static String ACCOUNT_FIELD = "(\\S+)";
     protected static String TIME = "[\\d:]+";
@@ -96,30 +99,6 @@ public class RegexpSpendingParser<T extends Spending> implements SpendingParser<
         }
 
         return List.of(groups);
-    }
-
-    private static BigDecimal parseAmount(String amount) {
-        return new BigDecimal(
-            amount
-                .replace(" ", "")
-                .replace(",", ".")
-                // Treat '+100' amount as negative spending (double inversion means refill).
-                .replace("+", "-")
-        );
-    }
-
-    private static Currency parseCurrency(String currency) throws ParseException {
-        var value = currency
-            .toUpperCase()
-            .replace(".", "") // remove trailing dot e.g. "р." -> "р"
-            .replace("РУБ", "RUB")
-            .replace("Р", "RUB")
-            .replace("$", "USD");
-        try {
-            return Currency.getInstance(value);
-        } catch (IllegalArgumentException e) {
-            throw new ParseException(currency, 0);
-        }
     }
 
     private static LocalDate parseLocalDate(String localDate) throws ParseException {

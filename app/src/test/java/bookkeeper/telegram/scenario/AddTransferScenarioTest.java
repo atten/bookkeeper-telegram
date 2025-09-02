@@ -1,6 +1,7 @@
 package bookkeeper.telegram.scenario;
 
 import bookkeeper.dao.entity.Account;
+import bookkeeper.resolverAnnotations.Currency;
 import bookkeeper.resolverAnnotations.Name;
 import bookkeeper.telegram.BookkeeperParameterResolver;
 import bookkeeper.telegram.FakeSession;
@@ -27,6 +28,52 @@ class AddTransferScenarioTest {
     ) {
         session
             .sendText("/new_transfer 1000 rub")
+            .expectContains("Выберите счёт")
+            .pressButton("Account1")
+            .expectContains("Выберите счёт")
+            .pressButton("Account2")
+            .expectContains("Выберите месяц")
+            .pressButton("Готово")
+            .expectContains("Account1")
+            .expectContains("Account2")
+            .expectContains("создан");
+    }
+
+    @SuppressWarnings("unused")
+    @Test
+    void addTransferWithDifferentCurrencies(
+        @Name(name = "Account1")
+        Account account1,
+        @Name(name = "Account2")
+        @Currency(currency = "USD")
+        Account account2,
+        FakeSession session
+    ) {
+        session
+            .sendText("/new_transfer 1000 rub 10 usd")
+            .expectContains("Выберите счёт")
+            .pressButton("Account1")
+            .expectContains("Выберите счёт")
+            .pressButton("Account2")
+            .expectContains("Выберите месяц")
+            .pressButton("Готово")
+            .expectContains("Account1")
+            .expectContains("Account2")
+            .expectContains("создан");
+    }
+
+    @SuppressWarnings("unused")
+    @Test
+    void addTransferWithFractionalAmountAndLiteralCurrencies(
+        @Name(name = "Account1")
+        Account account1,
+        @Name(name = "Account2")
+        @Currency(currency = "USD")
+        Account account2,
+        FakeSession session
+    ) {
+        session
+            .sendText("/new_transfer 150.20 rub 10,55 $")
             .expectContains("Выберите счёт")
             .pressButton("Account1")
             .expectContains("Выберите счёт")

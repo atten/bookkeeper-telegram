@@ -6,22 +6,15 @@ import lombok.Getter;
 import java.math.BigDecimal;
 import java.util.Currency;
 
+@Getter
 class AddTransferCallback extends CallbackMessage {
-    @Getter
     private final BigDecimal withdrawAmount;
-    @Getter
     private final BigDecimal depositAmount;
-    @Getter
     private final Currency withdrawCurrency;
-    @Getter
     private final Currency depositCurrency;
-    @Getter
     private long withdrawAccountId = 0;
-    @Getter
     private long depositAccountId = 0;
-    @Getter
     private int monthOffset = 0;
-    @Getter
     private boolean ready = false;
 
     AddTransferCallback(BigDecimal withdrawAmount, Currency withdrawCurrency, BigDecimal depositAmount, Currency depositCurrency) {

@@ -148,7 +148,6 @@ public class BookkeeperParameterResolver implements ParameterResolver, BeforeEac
             obj.setAccount(accountCache.stream().findFirst().orElseGet(this::accountFactory));
         }
 
-
         FakeApp.container.entityManager().persist(obj);
         return obj;
     }

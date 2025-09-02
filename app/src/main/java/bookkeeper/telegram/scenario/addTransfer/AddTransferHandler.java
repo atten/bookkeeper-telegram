@@ -9,10 +9,14 @@ import bookkeeper.service.telegram.Request;
 
 import javax.inject.Inject;
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Currency;
 import java.util.List;
 import java.util.Objects;
+
+import static bookkeeper.service.telegram.StringUtils.parseAmount;
+import static bookkeeper.service.telegram.StringUtils.parseCurrency;
 
 /**
  * Scenario: User adds new transfer.
@@ -77,19 +81,19 @@ class AddTransferHandler implements AbstractHandler {
 
         try {
             if (arguments.size() == 2) {
-                amountDeposit = new BigDecimal(arguments.get(0));
-                currencyDeposit = Currency.getInstance(arguments.get(1).toUpperCase());
+                amountDeposit = parseAmount(arguments.get(0));
+                currencyDeposit = parseCurrency(arguments.get(1));
                 amountWithdraw = amountDeposit.negate();
                 currencyWithdraw = currencyDeposit;
             } else if (arguments.size() == 4) {
-                amountWithdraw = new BigDecimal(arguments.get(0)).negate();
-                currencyWithdraw = Currency.getInstance(arguments.get(1).toUpperCase());
-                amountDeposit = new BigDecimal(arguments.get(2));
-                currencyDeposit = Currency.getInstance(arguments.get(3).toUpperCase());
+                amountWithdraw = parseAmount(arguments.get(0)).negate();
+                currencyWithdraw = parseCurrency(arguments.get(1));
+                amountDeposit = parseAmount(arguments.get(2));
+                currencyDeposit = parseCurrency(arguments.get(3));
             } else {
                 return false;
             }
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException | ParseException e) {
             return false;
         }
 
