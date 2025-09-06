@@ -1,8 +1,9 @@
 package bookkeeper.telegram;
 
+import bookkeeper.dao.repository.TelegramCallbackMessageRepository;
 import bookkeeper.service.ApplicationConfiguration;
 import bookkeeper.service.telegram.StringShortenerCache;
-import bookkeeper.service.telegram.StringShortenerCacheMap;
+import bookkeeper.service.telegram.StringShortenerCacheDb;
 import bookkeeper.service.telegram.StringShortenerCacheRedis;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.request.DeleteWebhook;
@@ -38,6 +39,7 @@ class Config {
         "jakarta.persistence.jdbc.user",
         "jakarta.persistence.jdbc.password"
     );
+    private EntityManager entityManager;
 
     @Provides
     @Singleton
@@ -52,9 +54,11 @@ class Config {
     @Provides
     @Singleton
     EntityManager entityManager() {
-        var em = Persistence.createEntityManagerFactory("default", dataSourceConfig).createEntityManager();
-        migrate(em);
-        return em;
+        if (entityManager == null) {
+            entityManager = Persistence.createEntityManagerFactory("default", dataSourceConfig).createEntityManager();
+            migrate(entityManager);
+        }
+        return entityManager;
     }
 
     @Provides
@@ -65,8 +69,8 @@ class Config {
             log.info("Current cache: redis");
             return new StringShortenerCacheRedis(new JedisPool(path));
         }
-        log.info("Current cache: map");
-        return new StringShortenerCacheMap();
+        log.info("Current cache: db");
+        return new StringShortenerCacheDb(new TelegramCallbackMessageRepository(entityManager));
     }
 
     @Provides

@@ -5,12 +5,13 @@
              xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
              version="2.0">
     <persistence-unit name="default">
-        <class>bookkeeper.dao.entity.TelegramUser</class>
         <class>bookkeeper.dao.entity.Account</class>
         <class>bookkeeper.dao.entity.AccountTransaction</class>
         <class>bookkeeper.dao.entity.AccountTransfer</class>
         <class>bookkeeper.dao.entity.MerchantExpenditure</class>
         <class>bookkeeper.dao.entity.ExchangeRate</class>
+        <class>bookkeeper.dao.entity.TelegramUser</class>
+        <class>bookkeeper.dao.entity.TelegramCallbackMessage</class>
         <properties>
             <property name="hibernate.dialect" value="tech.ydb.hibernate.dialect.YdbDialect"/>
             <property name="jakarta.persistence.schema-generation.database.action" value="update"/>
