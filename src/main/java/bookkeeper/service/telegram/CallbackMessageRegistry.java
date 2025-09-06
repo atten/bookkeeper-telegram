@@ -74,6 +74,7 @@ class CallbackMessageRegistry {
     }
 
     private void prepareButtonBeforeSend(InlineKeyboardButton button) {
+        assert button.callbackData() != null;
         button.callbackData(shortener.shrink(button.callbackData()));
     }
 
