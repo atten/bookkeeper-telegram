@@ -8,4 +8,3 @@
  */
 
 rootProject.name = 'bookkeeper-telegram'
-include('app')

@@ -7,7 +7,8 @@ import java.text.ParseException;
 import java.util.Currency;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class TinkoffPurchaseSmsParserTest {
     private final TinkoffPurchaseSmsParser parser = new TinkoffPurchaseSmsParser();

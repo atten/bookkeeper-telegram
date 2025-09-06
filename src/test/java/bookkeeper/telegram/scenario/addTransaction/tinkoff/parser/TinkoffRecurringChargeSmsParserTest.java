@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.Currency;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class TinkoffRecurringChargeSmsParserTest {
     private final TinkoffRecurringChargeSmsParser parser = new TinkoffRecurringChargeSmsParser();

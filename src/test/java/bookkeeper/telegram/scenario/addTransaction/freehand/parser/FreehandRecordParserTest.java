@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 import java.text.ParseException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class FreehandRecordParserTest {
     private final FreehandRecordParser parser = new FreehandRecordParser();

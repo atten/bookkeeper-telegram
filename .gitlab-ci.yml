@@ -22,7 +22,7 @@ build:
     - key: $CI_PIPELINE_ID
       policy: push
       paths:
-        - app/build/
+        - build/
   script:
     - ./gradlew jibBuildTar --image=$IMAGE
     # build standalone jar and save as job artifact
@@ -55,7 +55,7 @@ run-tests:
         - build/
   script:
     - ./gradlew jacocoTestReport
-    - awk -F, '{ lines += $8 + $9; covered += $9 } END { print covered, "/", lines, " lines covered"; print 100*covered/lines, "% covered" }' app/build/reports/jacoco/test/jacocoTestReport.csv
+    - awk -F, '{ lines += $8 + $9; covered += $9 } END { print covered, "/", lines, " lines covered"; print 100*covered/lines, "% covered" }' build/reports/jacoco/test/jacocoTestReport.csv
   coverage: '/([\d,.]+) \% covered/'
 
 docker-push:
@@ -67,14 +67,14 @@ docker-push:
     key: $CI_PIPELINE_ID
     policy: pull
     paths:
-      - app/build/
+      - build/
   services:
     - docker:stable-dind
   variables:
     GIT_STRATEGY: none
   script:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
-    - docker load --input app/build/jib-image.tar
+    - docker load --input build/jib-image.tar
     - docker push $IMAGE
     # push to yandex.cloud
     # obtain new OAuth token: https://oauth.yandex.ru/authorize?response_type=token&client_id=1a6990aa636648e9b2ef855fa7bec2fb

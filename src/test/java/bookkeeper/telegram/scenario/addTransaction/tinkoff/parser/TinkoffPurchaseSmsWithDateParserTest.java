@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.Currency;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class TinkoffPurchaseSmsWithDateParserTest {
 
