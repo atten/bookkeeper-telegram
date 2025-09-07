@@ -22,7 +22,8 @@ public class RegexpSpendingParser<T extends Spending> implements SpendingParser<
     protected static String DATETIME = "[\\d.:\\s]+?";
     protected static String AMOUNT_FIELD = "([\\d\\s.,+-]+)";
     protected static String AMOUNT_FIELD_POSITIVE = "\\+?([\\d\\s.,]+)";  // omit plus sign
-    protected static String CURRENCY_FIELD = "(\\D+?)";
+    protected static String CURRENCY_FIELD = "([^\\d:]+?)";
+    protected static String CURRENCY_FIELD_GREEDY = "([^\\d:]+)";
     protected static String OPTIONAL_TEXT = ".*?";
     protected static String TEXT = ".+?";
     protected static String TEXT_FIELD = "[\\\"«]?(.+?)[\\\"»]?";  // trim quotes: "abc", «abc» -> abc
@@ -39,7 +40,7 @@ public class RegexpSpendingParser<T extends Spending> implements SpendingParser<
     }
 
     public RegexpSpendingParser(Class<T> clazz, String... fieldPatterns) {
-        String delimiter = "[.,:()\\s]+";
+        String delimiter = "[.,:()—\\s]+";
         String terminator = "$";
 
         var builder = new StringJoiner(delimiter);

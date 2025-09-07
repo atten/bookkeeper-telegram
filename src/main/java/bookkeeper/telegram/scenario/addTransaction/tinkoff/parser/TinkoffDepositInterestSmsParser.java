@@ -8,9 +8,9 @@ public class TinkoffDepositInterestSmsParser extends RegexpSpendingParser<Tinkof
     public TinkoffDepositInterestSmsParser() {
         super(
             TinkoffDepositInterestSms.class,
-            "Выплата процентов по вкладу:",
+            nonCapturingGroup("Выплата процентов по вкладу", "Зачислили проценты на вклад"),
             AMOUNT_FIELD,
-            CURRENCY_FIELD
+            CURRENCY_FIELD_GREEDY + OPTIONAL_TEXT
         );
     }
 }
