@@ -12,6 +12,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Reusable
 public class AccountTransferRepository {
@@ -20,6 +21,10 @@ public class AccountTransferRepository {
     @Inject
     AccountTransferRepository(EntityManager manager) {
         this.manager = manager;
+    }
+
+    public Optional<AccountTransfer> get(long transferId) {
+        return Optional.ofNullable(manager.find(AccountTransfer.class, transferId));
     }
 
     public AccountTransfer create(BigDecimal withdrawAmount, Account withdrawAccount, BigDecimal depositAmount, Account depositAccount, int monthOffset) {
@@ -53,6 +58,10 @@ public class AccountTransferRepository {
         }
 
         return result;
+    }
+
+    public void remove(AccountTransfer transfer) {
+        manager.remove(transfer);
     }
 
     private AccountTransfer transferFactory(BigDecimal withdrawAmount, Account withdrawAccount, BigDecimal depositAmount, Account depositAccount) {

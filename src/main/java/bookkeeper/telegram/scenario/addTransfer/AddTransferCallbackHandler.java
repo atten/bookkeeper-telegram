@@ -21,7 +21,7 @@ import static bookkeeper.service.telegram.StringUtils.parseCurrency;
 /**
  * Scenario: User adds new transfer.
  */
-class AddTransferHandler implements AbstractHandler {
+class AddTransferCallbackHandler implements AbstractHandler {
     private static final String COMMAND = "/new_transfer";
 
     private final AccountRepository accountRepository;
@@ -29,7 +29,7 @@ class AddTransferHandler implements AbstractHandler {
     private final AddTransferResponseFactory responseFactory;
 
     @Inject
-    AddTransferHandler(AccountRepository accountRepository, AccountTransferRepository transferRepository) {
+    AddTransferCallbackHandler(AccountRepository accountRepository, AccountTransferRepository transferRepository) {
         this.accountRepository = accountRepository;
         this.transferRepository = transferRepository;
         this.responseFactory = new AddTransferResponseFactory(accountRepository);
@@ -134,7 +134,7 @@ class AddTransferHandler implements AbstractHandler {
         var withdrawAccount = accountRepository.get(memory.getWithdrawAccountId()).orElseThrow(() -> new AccountNotFound(memory.getWithdrawAccountId()));
         var depositAccount = accountRepository.get(memory.getDepositAccountId()).orElseThrow(() -> new AccountNotFound(memory.getDepositAccountId()));
         var transfer = transferRepository.create(memory.getWithdrawAmount(), withdrawAccount, memory.getDepositAmount(), depositAccount, memory.getMonthOffset());
-        request.editMessage(responseFactory.getDescriptionForTransferCreated(transfer));
+        request.editMessage(responseFactory.getDescriptionForTransferCreated(transfer), responseFactory.getKeyboardForTransferCreated(transfer));
         return true;
     }
 }

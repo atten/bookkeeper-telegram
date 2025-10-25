@@ -22,3 +22,15 @@ Telegram bot for personal accounting
 ### Customizable bindings
 
 ![](docs/customizable_bindings.gif)
+
+## Dev notes
+
+### Run locally
+
+    make up
+    ./gradlew run
+
+### Run tests
+
+    make up
+    make test

@@ -5,8 +5,7 @@ import bookkeeper.dao.entity.TelegramUser;
 import bookkeeper.dao.repository.AccountRepository;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 
-import static bookkeeper.service.telegram.StringUtils.getDateShort;
-import static bookkeeper.service.telegram.StringUtils.getMonthYearShort;
+import static bookkeeper.service.telegram.StringUtils.*;
 
 class AddTransferResponseFactory {
     private final AccountRepository accountRepository;
@@ -32,6 +31,12 @@ class AddTransferResponseFactory {
             transfer.getWithdrawAccount().getName(),
             transfer.getDepositAccount().getName(),
             getDateShort(transfer.date())
+        );
+    }
+
+    InlineKeyboardMarkup getKeyboardForTransferCreated(AccountTransfer transfer) {
+        return new InlineKeyboardMarkup().addRow(
+            new RemoveTransferCallback(transfer.getId()).asButton(ICON_DELETE + " Отмена")
         );
     }
 

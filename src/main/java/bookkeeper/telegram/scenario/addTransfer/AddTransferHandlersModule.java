@@ -10,5 +10,9 @@ import dagger.multibindings.IntoSet;
 public abstract class AddTransferHandlersModule {
     @Binds
     @IntoSet
-    abstract AbstractHandler addTransferHandler(AddTransferHandler handler);
+    abstract AbstractHandler addTransferHandler(AddTransferCallbackHandler handler);
+
+    @Binds
+    @IntoSet
+    abstract AbstractHandler removeTransferHandler(RemoveTransferCallbackHandler handler);
 }

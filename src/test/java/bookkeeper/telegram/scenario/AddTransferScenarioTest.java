@@ -5,6 +5,7 @@ import bookkeeper.resolverAnnotations.Currency;
 import bookkeeper.resolverAnnotations.Name;
 import bookkeeper.telegram.BookkeeperParameterResolver;
 import bookkeeper.telegram.FakeSession;
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -83,5 +84,27 @@ class AddTransferScenarioTest {
             .expectContains("Account1")
             .expectContains("Account2")
             .expectContains("создан");
+    }
+
+    @SuppressWarnings("unused")
+    @Test
+    void removeTransfer(
+        @Name(name = "Account1")
+        Account account1,
+        @Name(name = "Account2")
+        Account account2,
+        FakeSession session,
+        EntityManager manager
+    ) {
+        session
+            .sendText("/new_transfer 1000 rub")
+            .expectContains("Выберите счёт")
+            .pressButton("Account1")
+            .expectContains("Выберите счёт")
+            .pressButton("Account2")
+            .expectContains("Выберите месяц")
+            .pressButton("Готово")
+            .pressButton("Отмена")
+            .expectContains("<del>");  // strikeout tag
     }
 }
