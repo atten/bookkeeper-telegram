@@ -8,17 +8,18 @@ import bookkeeper.service.telegram.Request;
 import javax.inject.Inject;
 
 import static bookkeeper.telegram.scenario.editAccount.AccountResponseFactory.getMessageKeyboard;
-import static bookkeeper.telegram.scenario.editAccount.AccountResponseFactory.getMessageText;
 
 /**
  * Scenario: User manages account visibility.
  */
 class SwitchAccountVisibilityCallbackHandler implements AbstractHandler {
     private final AccountRepository accountRepository;
+    private final AccountResponseFactory accountResponseFactory;
 
     @Inject
-    SwitchAccountVisibilityCallbackHandler(AccountRepository accountRepository) {
+    SwitchAccountVisibilityCallbackHandler(AccountRepository accountRepository, AccountResponseFactory accountResponseFactory) {
         this.accountRepository = accountRepository;
+        this.accountResponseFactory = accountResponseFactory;
     }
 
     public Boolean handle(Request request) throws AccountNotFound {
@@ -32,7 +33,7 @@ class SwitchAccountVisibilityCallbackHandler implements AbstractHandler {
         var account = accountRepository.get(cm.getAccountId()).orElseThrow(() -> new AccountNotFound(cm.getAccountId()));
 
         account.setHidden(cm.isHidden());
-        request.editMessage(getMessageText(account), getMessageKeyboard(account));
+        request.editMessage(accountResponseFactory.getMessageText(account), getMessageKeyboard(account));
 
         return true;
     }

@@ -1,6 +1,9 @@
 package bookkeeper.telegram.scenario;
 
 import bookkeeper.dao.entity.Account;
+import bookkeeper.dao.entity.AccountTransaction;
+import bookkeeper.resolverAnnotations.Amount;
+import bookkeeper.resolverAnnotations.Currency;
 import bookkeeper.resolverAnnotations.Hidden;
 import bookkeeper.resolverAnnotations.Name;
 import bookkeeper.telegram.BookkeeperParameterResolver;
@@ -12,6 +15,22 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith(BookkeeperParameterResolver.class)
 class EditAccountScenarioTest {
+    @SuppressWarnings("unused")
+    @Test
+    void showAccountBalance(
+        @Name(name = "Lupa")
+        @Currency(currency = "USD")
+        Account account,
+        @Amount(amount = -100)
+        AccountTransaction transaction,
+        FakeSession session
+    ) {
+        session
+            .sendText("/accounts")
+            .pressButton("Lupa")
+            .expectContains("Баланс: -100,00 USD");
+    }
+
     @Test
     void changeAccountName(
         @Name(name = "Lupa")

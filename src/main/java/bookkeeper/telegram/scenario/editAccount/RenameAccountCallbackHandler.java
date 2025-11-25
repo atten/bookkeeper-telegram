@@ -9,17 +9,18 @@ import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import javax.inject.Inject;
 
 import static bookkeeper.telegram.scenario.editAccount.AccountResponseFactory.getMessageKeyboard;
-import static bookkeeper.telegram.scenario.editAccount.AccountResponseFactory.getMessageText;
 
 /**
  * Scenario: User renames account.
  */
 class RenameAccountCallbackHandler implements AbstractHandler {
     private final AccountRepository accountRepository;
+    private final AccountResponseFactory accountResponseFactory;
 
     @Inject
-    RenameAccountCallbackHandler(AccountRepository accountRepository) {
+    RenameAccountCallbackHandler(AccountRepository accountRepository, AccountResponseFactory accountResponseFactory) {
         this.accountRepository = accountRepository;
+        this.accountResponseFactory = accountResponseFactory;
     }
 
     public Boolean handle(Request request) throws AccountNotFound {
@@ -49,7 +50,7 @@ class RenameAccountCallbackHandler implements AbstractHandler {
 
         account.setName(request.getMessageText());
 
-        request.editMessage(getMessageText(account), getMessageKeyboard(account), replyToMessage.messageId());
+        request.editMessage(accountResponseFactory.getMessageText(account), getMessageKeyboard(account), replyToMessage.messageId());
         request.deleteMessage();
         return true;
     }

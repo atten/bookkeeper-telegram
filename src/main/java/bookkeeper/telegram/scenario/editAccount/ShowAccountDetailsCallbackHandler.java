@@ -8,17 +8,18 @@ import bookkeeper.service.telegram.Request;
 import javax.inject.Inject;
 
 import static bookkeeper.telegram.scenario.editAccount.AccountResponseFactory.getMessageKeyboard;
-import static bookkeeper.telegram.scenario.editAccount.AccountResponseFactory.getMessageText;
 
 /**
  * Scenario: User requests account details to change attributes.
  */
 class ShowAccountDetailsCallbackHandler implements AbstractHandler {
     private final AccountRepository accountRepository;
+    private final AccountResponseFactory accountResponseFactory;
 
     @Inject
-    ShowAccountDetailsCallbackHandler(AccountRepository accountRepository) {
+    ShowAccountDetailsCallbackHandler(AccountRepository accountRepository, AccountResponseFactory accountResponseFactory) {
         this.accountRepository = accountRepository;
+        this.accountResponseFactory = accountResponseFactory;
     }
 
     public Boolean handle(Request request) throws AccountNotFound {
@@ -26,7 +27,7 @@ class ShowAccountDetailsCallbackHandler implements AbstractHandler {
             return false;
 
         var account = accountRepository.get(cm.getAccountId()).orElseThrow(() -> new AccountNotFound(cm.getAccountId()));
-        request.editMessage(getMessageText(account), getMessageKeyboard(account));
+        request.editMessage(accountResponseFactory.getMessageText(account), getMessageKeyboard(account));
         return true;
     }
 }
