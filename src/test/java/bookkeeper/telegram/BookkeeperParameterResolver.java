@@ -6,7 +6,9 @@ import bookkeeper.dao.entity.TelegramUser;
 import bookkeeper.resolverAnnotations.Month;
 import bookkeeper.resolverAnnotations.PreviousMonth;
 import bookkeeper.resolverAnnotations.Raw;
+import com.google.gson.GsonBuilder;
 import com.pengrad.telegrambot.model.User;
+import com.pengrad.telegrambot.utility.BotUtils;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.extension.*;
 
@@ -32,9 +34,13 @@ public class BookkeeperParameterResolver implements ParameterResolver, BeforeEac
     private final ArrayList<AccountTransaction> accountTransactionCache = new ArrayList<>();
 
     private User userFactory() {
-        var obj = new User(random.nextLong());
-        userCache.add(obj);
-        return obj;
+        var userMap = new LinkedHashMap<String, Object>();
+        userMap.put("id", random.nextLong());
+        userMap.put("language_code", "ru");
+        var json = new GsonBuilder().create().toJson(userMap);
+        var user = BotUtils.fromJson(json, User.class);
+        userCache.add(user);
+        return user;
     }
 
     private TelegramUser telegramUserFactory() {

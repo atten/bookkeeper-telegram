@@ -12,7 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 class ViewAnnualWorthScenarioTest {
     @Test
     void emptyWorth(FakeSession session) {
-        session.sendText("/annual").expectStartsWith("`Jan  0.00M (+0.00K)");
+        session.sendText("/annual").expectStartsWith("`Янв  0,00M (+0K)");
     }
 
     @Test

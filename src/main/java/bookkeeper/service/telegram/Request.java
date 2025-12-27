@@ -41,7 +41,6 @@ public class Request {
         var user = getTelegramUser();
         log.info("{} -> {}", user, this);
         Locale.setDefault(Locale.forLanguageTag(user.getLanguageCode()));
-        telegramUserRepository.updateLastAccess(user);
     }
 
     public TelegramUser getTelegramUser() {

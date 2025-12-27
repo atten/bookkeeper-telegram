@@ -50,10 +50,10 @@ public class StringUtils {
     }
 
     /**
-     * 100.55 ₽ (credit) | +100.55 ₽ (debit)
+     * 10 100.55 ₽ (credit) | +10 100.55 ₽ (debit)
      */
     public static String getAmount(BigDecimal amount, Currency currency) {
-        return "%.2f %s".formatted(
+        return "%,.2f %s".formatted(
             amount.negate(),
             currency.getSymbol()
         )

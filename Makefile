@@ -19,9 +19,9 @@ db_shell:
 	$(YDB_CMD)
 
 db_recreate:
-	docker stop bookkeeper-ydb-dev
-	docker container rm bookkeeper-ydb-dev
-	docker compose -f docker-compose.dev.yml up -d ydb_dev
+	docker stop bookkeeper-ydb-dev || true
+	docker container rm bookkeeper-ydb-dev || true
+	docker compose -f docker-compose.dev.yml up --pull always -d ydb_dev
 
 db_dump:
 	rm -rf backup

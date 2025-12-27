@@ -71,7 +71,11 @@ class SearchTransactionsByRawMessageHandler implements AbstractHandler {
             amountByCurrency.putIfAbsent(key, BigDecimal.ZERO);
             amountByCurrency.merge(key, transaction.getAmount(), BigDecimal::add);
         }
-        var amountByCurrencyVerbose = amountByCurrency.entrySet().stream().map(entry -> getAmount(entry.getValue(), entry.getKey())).collect(Collectors.joining(", "));
+        var amountByCurrencyVerbose = amountByCurrency
+            .entrySet()
+            .stream()
+            .map(entry -> getAmount(entry.getValue(), entry.getKey()))
+            .collect(Collectors.joining(", "));
 
         var response = new StringJoiner("\n\n");
         response.add("%s стоимостью %s за %s:".formatted(getItemsVerbose(searchResult.size()), amountByCurrencyVerbose, StringUtils.getMonthYearShort(monthOffset)));

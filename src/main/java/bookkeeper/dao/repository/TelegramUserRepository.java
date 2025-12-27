@@ -25,16 +25,18 @@ public class TelegramUserRepository {
             () -> newUserFactory(user)
         );
 
-        // update attributes:
-        // set lang only if it's different from default
+        // update language only if it's different from default ("en")
+        // (to avoid language reset when used across multiple devices)
         var updateLanguageCode = user.languageCode();
         if (updateLanguageCode != null && !updateLanguageCode.equals("en"))
             telegramUser.setLanguageCode(updateLanguageCode);
 
+        updateLastAccess(telegramUser);
+
         return manager.merge(telegramUser);
     }
 
-    public void updateLastAccess(TelegramUser telegramUser) {
+    private void updateLastAccess(TelegramUser telegramUser) {
         telegramUser.setLastAccess(LocalDate.now());
     }
 

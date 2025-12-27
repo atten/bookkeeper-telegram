@@ -138,7 +138,7 @@ class AddTransactionScenarioTest {
         session
             .sendText("еда 220\nтранспорт 1000")
             .expectContains("Добавлены 2 записи")
-            .expectContains("на сумму 1220 RUB");
+            .expectContains("на сумму 1 220 ₽");
     }
 
     @Test

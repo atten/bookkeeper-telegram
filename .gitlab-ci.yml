@@ -40,6 +40,9 @@ run-tests:
 
     # YDB container
     GRPC_PORT: 2136
+
+    # general
+    FF_NETWORK_PER_BUILD: "true"     # activate container-to-container networking
   only:
     variables:
       # run for protected branches only
@@ -54,7 +57,7 @@ run-tests:
       paths:
         - build/
   script:
-    - ./gradlew jacocoTestReport
+    - ./gradlew jacocoTestReport --info
     - awk -F, '{ lines += $8 + $9; covered += $9 } END { print covered, "/", lines, " lines covered"; print 100*covered/lines, "% covered" }' build/reports/jacoco/test/jacocoTestReport.csv
   coverage: '/([\d,.]+) \% covered/'
 
