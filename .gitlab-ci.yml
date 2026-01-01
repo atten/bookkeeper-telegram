@@ -84,3 +84,4 @@ docker-push:
     - docker login -u oauth -p $YC_OAUTH_TOKEN cr.yandex
     - docker tag $IMAGE cr.yandex/crp45j5ffjmgsoi4vdte/bookkeeper-telegram:$CI_COMMIT_REF_SLUG
     - docker push cr.yandex/crp45j5ffjmgsoi4vdte/bookkeeper-telegram:$CI_COMMIT_REF_SLUG
+    # MANUAL ACTION: create new container revision (unavailable from API)

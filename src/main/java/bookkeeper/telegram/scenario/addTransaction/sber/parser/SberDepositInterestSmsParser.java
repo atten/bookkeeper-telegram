@@ -10,11 +10,11 @@ public class SberDepositInterestSmsParser extends RegexpSpendingParser<SberDepos
             SberDepositInterestSms.class,
             TEXT_FIELD,
             ACCOUNT_FIELD,
-            "Капитализация на",
+            nonCapturingGroup("Капитализация на", "Выплатили проценты"),
             AMOUNT_FIELD + CURRENCY_FIELD,
             "Баланс:",
             AMOUNT_FIELD + CURRENCY_FIELD,
-            TEXT_FIELD
+            OPTIONAL_TEXT
         );
     }
 }
