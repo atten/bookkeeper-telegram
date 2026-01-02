@@ -9,8 +9,7 @@ public class FreehandRecordWithCurrencyParser extends RegexpSpendingParser<Freeh
         super(
             FreehandRecordWithCurrency.class,
             TEXT_FIELD,
-            AMOUNT_FIELD,
-            CURRENCY_FIELD
+            AMOUNT_FIELD + CURRENCY_FIELD
         );
     }
 }

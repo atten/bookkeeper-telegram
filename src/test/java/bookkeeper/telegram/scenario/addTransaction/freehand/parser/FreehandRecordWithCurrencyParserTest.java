@@ -24,4 +24,17 @@ class FreehandRecordWithCurrencyParserTest {
         assertEquals(referenceRecord, record);
     }
 
+    @Test
+    void parseOk_2() throws ParseException {
+        var record = parser.parse("еда 220р");
+
+        var referenceRecord = new FreehandRecordWithCurrency();
+
+        referenceRecord.setDescription("еда");
+        referenceRecord.setAmount(new BigDecimal("220"));
+        referenceRecord.setCurrency(Currency.getInstance("RUB"));
+
+        assertEquals(referenceRecord, record);
+    }
+
 }
