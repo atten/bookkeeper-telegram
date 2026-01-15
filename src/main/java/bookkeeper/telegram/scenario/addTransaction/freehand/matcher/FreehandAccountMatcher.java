@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class FreehandAccountMatcher implements AccountMatcher {
     private final AccountRepository repository;
     private final AccountTransactionRepository transactionRepository;
-    private final SpendingParserRegistry freehandSpendingParserRegistry = SpendingParserRegistry.ofProvider("freehand");
+    private final SpendingParserRegistry spendingParserRegistry = SpendingParserRegistry.ofAllParsers();
 
     public FreehandAccountMatcher(AccountRepository repository, AccountTransactionRepository transactionRepository) {
         this.repository = repository;
@@ -68,8 +68,10 @@ public class FreehandAccountMatcher implements AccountMatcher {
 
     private Boolean isFreehandRecord(AccountTransaction transaction) {
         try {
-            freehandSpendingParserRegistry.parse(transaction.getRaw());
-            return true;
+            var spending = spendingParserRegistry.parse(transaction.getRaw());
+            return
+                spending instanceof FreehandRecord ||
+                spending instanceof FreehandRecordWithCurrency;
         } catch (ParseException e) {
             return false;
         }
