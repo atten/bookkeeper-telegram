@@ -15,7 +15,7 @@ public class SberReplenishSmsWithSenderParser extends RegexpSpendingParser<SberR
             "от",
             TEXT_FIELD,
             "Баланс:",
-            AMOUNT_FIELD + CURRENCY_FIELD
+            AMOUNT_FIELD + CURRENCY_FIELD + OPTIONAL_TEXT
         );
     }
 

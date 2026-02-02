@@ -42,4 +42,20 @@ class SberReplenishSmsWithSenderParserTest {
 
         assertEquals(referenceSms, sms);
     }
+
+    @Test
+    void parseOk_3() throws ParseException {
+        var sms = parser.parse("Счёт карты MIR-1234 15:10 Перевод по СБП из Омега-Банк +123р от ДАНИИЛ К. Баланс: 656.23р «Перевод денежных средств»");
+
+        var referenceSms = new SberReplenishSmsWithSender();
+
+        referenceSms.setReplenishSum(new BigDecimal("123"));
+        referenceSms.setReplenishCurrency(Currency.getInstance("RUB"));
+        referenceSms.setReplenishSender("ДАНИИЛ К");
+        referenceSms.setAccountBalance(new BigDecimal("656.23"));
+        referenceSms.setAccountCurrency(Currency.getInstance("RUB"));
+        referenceSms.setAccountName("MIR-1234");
+
+        assertEquals(referenceSms, sms);
+    }
 }
