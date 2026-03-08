@@ -4,3 +4,4 @@ build
 bin
 logo/
 backup/
+authorized_key.json

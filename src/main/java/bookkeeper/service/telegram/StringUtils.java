@@ -193,14 +193,17 @@ public class StringUtils {
         return "<del>%s</del>".formatted(message);
     }
 
-    public static BigDecimal parseAmount(String amount) {
-        return new BigDecimal(
-            amount
-                .replace(" ", "")
-                .replace(",", ".")
-                // Treat '+100' amount as negative spending (double inversion means refill).
-                .replace("+", "-")
-        );
+    public static BigDecimal parseAmount(String amount) throws ParseException {
+        var value = amount
+            .replace(" ", "")
+            .replace(",", ".")
+            // Treat '+100' amount as negative spending (double inversion means refill).
+            .replace("+", "-");
+        try {
+            return new BigDecimal(value);
+        } catch (NumberFormatException e) {
+            throw new ParseException(amount, 0);
+        }
     }
 
     public static Currency parseCurrency(String currency) throws ParseException {
