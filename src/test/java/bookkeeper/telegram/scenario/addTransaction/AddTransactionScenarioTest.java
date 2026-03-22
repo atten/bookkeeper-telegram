@@ -37,8 +37,9 @@ class AddTransactionScenarioTest {
 
     private static Collection<String> validTinkoffInputs() {
         return List.of(
-            "Покупка, карта *0964. 621.8 RUB. VKUSVILL 2. Доступно 499.28 RUB",
-            "Покупка 17.07.2023. Карта *0964. 56 RUB. MOS.TRANSP. Доступно 499.28 RUB",
+            "Покупка, карта *1234. 621.8 RUB. VKUSVILL 2. Доступно 499.28 RUB",
+            "Покупка, счет карты *1234. 259 ₽. LICHI ATRIUM. Доступно 185,38 ₽",
+            "Покупка 17.07.2023. Карта *1234. 56 RUB. MOS.TRANSP. Доступно 499.28 RUB",
             "Перевод. Счет RUB. 500 RUB. Сергей С. Баланс 653.04 RUB",
             "Покупка, счет RUB. 350 RUB. FERMERPQR. Доступно 225,62 RUB",
             "Платеж. Счет RUB. 360 RUB. Йота. Баланс 416.84 RUB",

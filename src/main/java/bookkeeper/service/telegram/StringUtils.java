@@ -212,6 +212,7 @@ public class StringUtils {
             .replace(".", "") // remove trailing dot e.g. "р." -> "р"
             .replace("РУБ", "RUB")
             .replace("Р", "RUB")
+            .replace("₽", "RUB")
             .replace("$", "USD");
         try {
             return Currency.getInstance(value);

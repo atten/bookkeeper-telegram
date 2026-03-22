@@ -9,7 +9,7 @@ public class TinkoffPurchaseSmsParser extends RegexpSpendingParser<TinkoffPurcha
     public TinkoffPurchaseSmsParser() {
         super(
             TinkoffPurchaseSms.class,
-            "Покупка, карта",
+            nonCapturingGroup("Покупка, карта", "Покупка, счет карты"),
             TEXT_FIELD,
             AMOUNT_FIELD,
             CURRENCY_FIELD,

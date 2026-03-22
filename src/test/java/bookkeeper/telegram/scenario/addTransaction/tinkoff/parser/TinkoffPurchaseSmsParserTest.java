@@ -14,7 +14,7 @@ class TinkoffPurchaseSmsParserTest {
     private final TinkoffPurchaseSmsParser parser = new TinkoffPurchaseSmsParser();
 
     @Test
-    void parseOk() throws ParseException {
+    void parseOk_1() throws ParseException {
         var sms = parser.parse("Покупка, карта *0964. 621.8 RUB. VKUSVILL 2. Доступно 499.28 RUB");
 
         var referenceSms = new TinkoffPurchaseSms();
@@ -24,6 +24,22 @@ class TinkoffPurchaseSmsParserTest {
         referenceSms.purchaseCurrency = Currency.getInstance("RUB");
         referenceSms.merchant = "VKUSVILL 2";
         referenceSms.accountBalance = new BigDecimal("499.28");
+        referenceSms.accountCurrency = Currency.getInstance("RUB");
+
+        assertEquals(referenceSms, sms);
+    }
+
+    @Test
+    void parseOk_2() throws ParseException {
+        var sms = parser.parse("Покупка, счет карты *1234. 259 ₽. LICHI ATRIUM. Доступно 185,38 ₽");
+
+        var referenceSms = new TinkoffPurchaseSms();
+
+        referenceSms.cardIdentifier = "*1234";
+        referenceSms.purchaseSum = new BigDecimal("259");
+        referenceSms.purchaseCurrency = Currency.getInstance("RUB");
+        referenceSms.merchant = "LICHI ATRIUM";
+        referenceSms.accountBalance = new BigDecimal("185.38");
         referenceSms.accountCurrency = Currency.getInstance("RUB");
 
         assertEquals(referenceSms, sms);
