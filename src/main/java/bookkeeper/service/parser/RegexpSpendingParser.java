@@ -67,11 +67,11 @@ public class RegexpSpendingParser<T extends Spending> implements SpendingParser<
             String rawValue = groups.get(index);
             Object value;
             if (field.getType().equals(Currency.class)) {
-                value = parseCurrency(rawValue);
+                value = parseCurrencyField(rawValue);
             } else if (field.getType().equals(BigDecimal.class)) {
-                value = parseAmount(rawValue);
+                value = parseAmountField(rawValue);
             } else if (field.getType().equals(LocalDate.class)) {
-                value = parseLocalDate(rawValue);
+                value = parseLocalDateField(rawValue);
             } else {
                 value = rawValue;
             }
@@ -102,7 +102,15 @@ public class RegexpSpendingParser<T extends Spending> implements SpendingParser<
         return List.of(groups);
     }
 
-    private static LocalDate parseLocalDate(String localDate) throws ParseException {
+    protected Currency parseCurrencyField(String currency) throws ParseException {
+        return parseCurrency(currency);
+    }
+
+    protected BigDecimal parseAmountField(String amount) throws ParseException {
+        return parseAmount(amount);
+    }
+
+    protected LocalDate parseLocalDateField(String localDate) throws ParseException {
         var datePatterns = new String[]{"dd.MM.yyyy", "d.MM.yyyy"};
         for (var datePattern : datePatterns) {
             try {

@@ -50,12 +50,10 @@ dependencies {
 }
 
 application {
-    // Define the main class for the application.
     mainClass = 'bookkeeper.telegram.App'
 }
 
-tasks.named('test') {
-    // Use JUnit Platform for unit tests.
+test {
     useJUnitPlatform()
 }
 

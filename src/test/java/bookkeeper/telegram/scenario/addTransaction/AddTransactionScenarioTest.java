@@ -24,7 +24,8 @@ class AddTransactionScenarioTest {
             "транспорт 100.50",
             "транспорт 100,50",
             " на метро 150 ", // starts and ends with space
-            "на метро 150 EUR"
+            "на метро 150 EUR",
+            "такси 100,5+150"
         );
     }
 

@@ -61,13 +61,13 @@ public class SpendingParserRegistry {
 
         // Multiple SmsParsers found suitable.
         // Do the best guess and suggest the most detailed candidate.
-        // Otherwise, parser with a higher rank wins.
+        // Otherwise, parser with a higher weight wins.
         var uniqueFieldsCount = candidates
             .stream()
             .map(spending -> spending.getClass().getFields().length)
             .collect(Collectors.toSet());
 
-        var uniqueRanks = parsers
+        var uniqueWeights = parsers
             .stream()
             .map(SpendingParser::weight)
             .collect(Collectors.toSet());
@@ -81,7 +81,7 @@ public class SpendingParserRegistry {
                 .getFirst();
         }
 
-        if (uniqueRanks.size() != 1) {
+        if (uniqueWeights.size() != 1) {
             return parsers
                 .stream()
                 .sorted(Comparator.comparingInt(SpendingParser::weight))
