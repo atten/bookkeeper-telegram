@@ -11,6 +11,8 @@ import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.BotCommand;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.ParseMode;
+import com.pengrad.telegrambot.request.DeleteWebhook;
+import com.pengrad.telegrambot.request.GetWebhookInfo;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.request.SetMyCommands;
 import com.pengrad.telegrambot.utility.BotUtils;
@@ -81,6 +83,17 @@ class Bot {
     }
 
     private void listenApi() {
+        var webhookResult = bot.execute(new GetWebhookInfo());
+        if (!webhookResult.isOk())
+            throw new RuntimeException(webhookResult.toString());
+
+        var webhookInfo = webhookResult.webhookInfo();
+
+        if (webhookInfo.url() != null && !webhookInfo.url().isEmpty()) {
+            log.info("Remove current webhook...");
+            bot.execute(new DeleteWebhook().dropPendingUpdates(false));
+        }
+
         bot.setUpdatesListener(updates -> {
             updates.forEach(this::processUpdate);
             return UpdatesListener.CONFIRMED_UPDATES_ALL;

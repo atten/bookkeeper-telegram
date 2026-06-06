@@ -15,20 +15,20 @@ import dagger.Provides;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Persistence;
 import lombok.extern.slf4j.Slf4j;
+import okhttp3.OkHttpClient;
 import org.hibernate.JDBCException;
 import redis.clients.jedis.JedisPool;
 
 import javax.inject.Singleton;
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.URISyntaxException;
+import java.net.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
 @Module
 @Slf4j
@@ -44,7 +44,16 @@ class Config {
     @Provides
     @Singleton
     TelegramBot telegramBot() {
-        return new TelegramBot(botToken());
+        var httpClient = new OkHttpClient.Builder()
+            .connectTimeout(10L, TimeUnit.SECONDS)
+            .writeTimeout(10L, TimeUnit.SECONDS)
+            .readTimeout(10L, TimeUnit.SECONDS)
+            .proxy(proxy())
+            .build();
+
+        return new TelegramBot.Builder(botToken())
+            .okHttpClient(httpClient)
+            .build();
     }
 
     /**
@@ -153,5 +162,34 @@ class Config {
 
     private String botToken() {
         return System.getenv("BOT_TOKEN");
+    }
+
+    private Proxy proxy() {
+        String proxyHost = System.getenv("PROXY_HOST");
+
+        if (proxyHost != null && !proxyHost.isEmpty()) {
+            int proxyPort = Integer.parseInt(System.getenv("PROXY_PORT"));
+
+            String proxyUser = System.getenv("PROXY_USER");
+            String proxyPassword = System.getenv("PROXY_PASSWORD");
+
+            if (proxyUser != null && !proxyUser.isEmpty()) {
+                Authenticator.setDefault(new Authenticator() {
+                    @Override
+                    protected PasswordAuthentication getPasswordAuthentication() {
+                        if (getRequestingHost().equalsIgnoreCase(proxyHost)) {
+                            if (proxyPort == getRequestingPort()) {
+                                return new PasswordAuthentication(proxyUser, proxyPassword.toCharArray());
+                            }
+                        }
+                        return null;
+                    }
+                });
+            }
+
+            return new Proxy(Proxy.Type.SOCKS, new InetSocketAddress(proxyHost, proxyPort));
+        }
+
+        return Proxy.NO_PROXY;
     }
 }
