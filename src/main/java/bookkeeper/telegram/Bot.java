@@ -103,7 +103,9 @@ class Bot {
 
     private void listenWebhook() {
         webhookServer.createContext("/", httpExchange -> {
+            log.debug("parse request from %s...".formatted(httpExchange.getRemoteAddress()));
             var update = BotUtils.parseUpdate(new InputStreamReader(httpExchange.getRequestBody(), StandardCharsets.UTF_8));
+            log.debug("parsed update: %s".formatted(update));
             int responseCode;
             boolean shouldExit = false;
 
@@ -119,6 +121,7 @@ class Bot {
                 responseCode = 400;
             }
 
+            log.debug("response code: %s".formatted(responseCode));
             httpExchange.sendResponseHeaders(responseCode, 0);
             httpExchange.close();
 
