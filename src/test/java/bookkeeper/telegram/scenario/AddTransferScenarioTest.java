@@ -14,7 +14,7 @@ class AddTransferScenarioTest {
     @Test
     void justCommand(FakeSession session) {
         session
-            .sendText("/new_transfer")
+            .sendText("/transfer")
             .expectContains("Пример");
     }
 
@@ -28,7 +28,7 @@ class AddTransferScenarioTest {
         FakeSession session
     ) {
         session
-            .sendText("/new_transfer 1000 rub")
+            .sendText("/transfer 1000 rub")
             .expectContains("Выберите счёт")
             .pressButton("Account1")
             .expectContains("Выберите счёт")
@@ -51,7 +51,7 @@ class AddTransferScenarioTest {
         FakeSession session
     ) {
         session
-            .sendText("/new_transfer 1000 rub 10 usd")
+            .sendText("/transfer 1000 rub 10 usd")
             .expectContains("Выберите счёт")
             .pressButton("Account1")
             .expectContains("Выберите счёт")
@@ -74,7 +74,7 @@ class AddTransferScenarioTest {
         FakeSession session
     ) {
         session
-            .sendText("/new_transfer 150.20 rub 10,55 $")
+            .sendText("/transfer 150.20 rub 10,55 $")
             .expectContains("Выберите счёт")
             .pressButton("Account1")
             .expectContains("Выберите счёт")
@@ -97,7 +97,7 @@ class AddTransferScenarioTest {
         EntityManager manager
     ) {
         session
-            .sendText("/new_transfer 1000 rub")
+            .sendText("/transfer 1000 rub")
             .expectContains("Выберите счёт")
             .pressButton("Account1")
             .expectContains("Выберите счёт")

@@ -22,7 +22,7 @@ import static bookkeeper.service.telegram.StringUtils.parseCurrency;
  * Scenario: User adds new transfer.
  */
 class AddTransferCallbackHandler implements AbstractHandler {
-    private static final String COMMAND = "/new_transfer";
+    private static final String COMMAND = "/transfer";
 
     private final AccountRepository accountRepository;
     private final AccountTransferRepository transferRepository;
