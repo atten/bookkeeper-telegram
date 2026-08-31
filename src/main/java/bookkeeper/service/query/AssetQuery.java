@@ -71,7 +71,7 @@ public class AssetQuery {
     }
 
     public Map<Currency, BigDecimal> getExchangeRates(TelegramUser user, LocalDate exchangeDate) {
-        var accounts = accountRepository.filter(user);
+        var accounts = accountRepository.filter(user).stream().filter(Account::isVisible).toList();
         var currencies = accounts.stream().map(Account::getCurrency).collect(Collectors.toSet());
         var exchangeRates = exchangeRateRepository.getExchangeRates(currencies, exchangeCurrency, exchangeDate);
         var missingRates = currencies.stream().filter(currency -> !exchangeRates.containsKey(currency)).collect(Collectors.toSet());
