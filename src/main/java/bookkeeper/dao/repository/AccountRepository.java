@@ -64,6 +64,36 @@ public class AccountRepository {
         return (List<Account>)query.getResultList();
     }
 
+    public void deleteOldHiddenOrphans(TelegramUser user) {
+        int minAgeDays = 30;
+        var candidateIds = findOldHiddenOrphanIds(user, minAgeDays);
+        if (candidateIds.isEmpty())
+            return;
+
+        var sql = "DELETE FROM accounts WHERE id IN :ids";
+        manager.createNativeQuery(sql)
+            .setParameter("ids", candidateIds)
+            .executeUpdate();
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<Long> findOldHiddenOrphanIds(TelegramUser user, int minAgeDays) {
+        var sql = """
+        SELECT a.id FROM accounts a
+            LEFT JOIN account_transactions t ON t.account_id = a.id
+            LEFT JOIN account_transfers w ON w.withdraw_account_id = a.id
+            LEFT JOIN account_transfers d ON d.deposit_account_id = a.id
+        WHERE a.telegram_user = :user
+            AND a.created_at < :createdAt
+            AND a.is_hidden = true
+            AND t.id IS NULL AND w.id IS NULL AND d.id IS NULL
+        """;
+        var query = manager.createNativeQuery(sql)
+            .setParameter("user", user.getTelegramId())
+            .setParameter("createdAt", Instant.now().minusSeconds(minAgeDays * 24L * 60 * 60));
+        return (List<Long>) query.getResultList();
+    }
+
     private Account newAccountFactory(String name, Currency currency, TelegramUser user) {
         var account = new Account();
         account.setName(name);

@@ -43,7 +43,15 @@ class ListAccountsCallbackHandler implements AbstractHandler {
     }
 
     private void sendMessageWithAccounts(Request request, boolean includeHidden, boolean edit) {
-        var text = ICON_ACCOUNT + " Выберите счёт для редактирования:";
+        String text;
+        if (includeHidden) {
+            text = ICON_ACCOUNT + " Выберите скрытый счёт для редактирования.\n\nПустые скрытые счета старше 30 дней удаляются автоматически!";
+        } else {
+            text = ICON_ACCOUNT + " Выберите счёт для редактирования:";
+        }
+
+        accountRepository.deleteOldHiddenOrphans(request.getTelegramUser());
+
         var buttons = accountRepository
             .filter(request.getTelegramUser())
             .stream()
