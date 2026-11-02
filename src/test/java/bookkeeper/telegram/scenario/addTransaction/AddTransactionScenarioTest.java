@@ -1,5 +1,7 @@
 package bookkeeper.telegram.scenario.addTransaction;
 
+import bookkeeper.dao.entity.Account;
+import bookkeeper.resolverAnnotations.Name;
 import bookkeeper.telegram.BookkeeperParameterResolver;
 import bookkeeper.telegram.FakeSession;
 import org.junit.jupiter.api.Test;
@@ -171,6 +173,28 @@ class AddTransactionScenarioTest {
             .pressButton("Путешествия") // expenditure reassigned manually
             .sendText("такси 350")
             .expectContains("Транспорт"); // auto-detected expenditure
+    }
+
+    @SuppressWarnings("unused")
+    @Test
+    void addFreehandTransactionsAndDetectAccount(
+        @Name(name = "Для еды")
+        Account account1,
+        @Name(name = "Для вещей")
+        Account account2,
+        FakeSession session
+    ) {
+        session
+            .sendText("еда 150")
+            .pressButton("Счёт")
+            .pressButton("Для еды") // account assigned manually
+            .sendText("вещи 500")
+            .pressButton("Счёт")
+            .pressButton("Для вещей") // another account assigned manually
+            .sendText("еда 200")
+            .expectContains("Для еды") // auto-detected account
+            .sendText("вещи 1000")
+            .expectContains("Для вещей"); // auto-detected another account
     }
 
     @Test

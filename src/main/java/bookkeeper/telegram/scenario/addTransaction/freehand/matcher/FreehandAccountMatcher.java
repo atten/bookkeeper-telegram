@@ -5,6 +5,7 @@ import bookkeeper.dao.entity.AccountTransaction;
 import bookkeeper.dao.entity.TelegramUser;
 import bookkeeper.dao.repository.AccountRepository;
 import bookkeeper.dao.repository.AccountTransactionRepository;
+import bookkeeper.enums.Expenditure;
 import bookkeeper.service.matcher.AccountMatcher;
 import bookkeeper.service.parser.Spending;
 import bookkeeper.service.parser.SpendingParserRegistry;
@@ -29,16 +30,16 @@ public class FreehandAccountMatcher implements AccountMatcher {
      * Find most recent user account or create one as a fallback.
      */
     @Override
-    public Optional<Account> match(Spending spending, TelegramUser user) {
+    public Optional<Account> match(Spending spending, Expenditure expenditure, TelegramUser user) {
         if (spending instanceof FreehandRecordWithCurrency obj) {
             var accounts = repository.filter(user, obj.getCurrency());
-            var account = getLastUsedAccount(accounts)
+            var account = getLastUsedAccount(accounts, expenditure)
                 .orElseGet(() -> getOrCreateAccount(user, obj.getCurrency()));
             return Optional.of(account);
         }
         if (spending instanceof FreehandRecord) {
             var accounts = repository.filter(user);
-            var account = getLastUsedAccount(accounts)
+            var account = getLastUsedAccount(accounts, expenditure)
                 .orElseGet(() -> getOrCreateAccount(user, Currency.getInstance("RUB")));
             return Optional.of(account);
         }
@@ -48,8 +49,8 @@ public class FreehandAccountMatcher implements AccountMatcher {
     /**
      * Find account among provided with the biggest count of recently added freehand transactions.
      */
-    private Optional<Account> getLastUsedAccount(Collection<Account> accounts) {
-        return transactionRepository.findRecentAdded(accounts, 10)
+    private Optional<Account> getLastUsedAccount(Collection<Account> accounts, Expenditure expenditure) {
+        return transactionRepository.findRecentAdded(accounts, expenditure, 10)
             .stream()
             .collect(Collectors.toMap(AccountTransaction::getAccount, i -> isFreehandRecord(i) ? 1 : 0, Integer::sum))
             .entrySet()

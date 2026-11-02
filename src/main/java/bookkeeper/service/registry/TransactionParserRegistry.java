@@ -54,11 +54,12 @@ public class TransactionParserRegistry {
 
     public AccountTransaction parse(String rawMessage, TelegramUser user) throws ParseException {
         var spending = spendingParserRegistry.parse(rawMessage);
+        var expenditure = matchExpenditure(spending, user);
         var transaction = new AccountTransaction();
 
-        transaction.setAccount(matchAccount(spending, user));
+        transaction.setAccount(matchAccount(spending, expenditure, user));
         transaction.setAmount(matchAmount(spending));
-        transaction.setExpenditure(matchExpenditure(spending, user));
+        transaction.setExpenditure(expenditure);
         transaction.setTimestamp(matchTimestamp(spending));
         transaction.setRaw(rawMessage);
         transaction.setCreatedAt(Instant.now());
@@ -94,10 +95,10 @@ public class TransactionParserRegistry {
     /**
      * First matched account is preferred.
      */
-    private Account matchAccount(Spending spending, TelegramUser user) {
+    private Account matchAccount(Spending spending, Expenditure expenditure, TelegramUser user) {
         return accountMatchers
                 .stream()
-                .map(matcher -> matcher.match(spending, user))
+                .map(matcher -> matcher.match(spending, expenditure, user))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .findFirst()

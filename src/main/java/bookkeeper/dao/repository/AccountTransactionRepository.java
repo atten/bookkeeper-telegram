@@ -37,10 +37,21 @@ public class AccountTransactionRepository {
     }
 
     @SuppressWarnings("unchecked")
-    public List<AccountTransaction> findRecentAdded(Collection<Account> accounts, int count) {
+    private List<AccountTransaction> findRecentAdded(Collection<Account> accounts, int count) {
         var sql = "SELECT * FROM account_transactions i WHERE account_id IN :accounts ORDER BY id DESC LIMIT :count";
         var query = manager.createNativeQuery(sql, AccountTransaction.class)
             .setParameter("accounts", accounts.stream().map(Account::getId).toList())
+            .setParameter("count", count);
+
+        return (List<AccountTransaction>)query.getResultList();
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<AccountTransaction> findRecentAdded(Collection<Account> accounts, Expenditure expenditure, int count) {
+        var sql = "SELECT * FROM account_transactions i WHERE account_id IN :accounts AND expenditure = :expenditure ORDER BY id DESC LIMIT :count";
+        var query = manager.createNativeQuery(sql, AccountTransaction.class)
+            .setParameter("accounts", accounts.stream().map(Account::getId).toList())
+            .setParameter("expenditure", expenditure)
             .setParameter("count", count);
 
         return (List<AccountTransaction>)query.getResultList();

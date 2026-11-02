@@ -3,6 +3,7 @@ package bookkeeper.telegram.scenario.addTransaction.sber.matcher;
 import bookkeeper.dao.entity.Account;
 import bookkeeper.dao.entity.TelegramUser;
 import bookkeeper.dao.repository.AccountRepository;
+import bookkeeper.enums.Expenditure;
 import bookkeeper.service.matcher.AccountMatcher;
 import bookkeeper.service.parser.Spending;
 import bookkeeper.telegram.scenario.addTransaction.sber.parser.*;
@@ -18,7 +19,7 @@ public class SberAccountMatcher implements AccountMatcher {
     }
 
     @Override
-    public Optional<Account> match(Spending spending, TelegramUser user) {
+    public Optional<Account> match(Spending spending, Expenditure expenditure, TelegramUser user) {
         if (spending instanceof SberPurchaseSms obj) {
             return Optional.of(getSberAccount(obj.getAccountName(), obj.getAccountCurrency(), user));
         }
